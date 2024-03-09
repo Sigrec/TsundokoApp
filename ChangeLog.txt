@@ -11,8 +11,16 @@ TODO:
 ❌ Fix padding issue in Series Note w/ Scrollbar
 ❌ Fix issue where clicking or minimizing would sometimes cause the the main window to scroll up (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 
-v4.X.X.X - March
-❌ Fixed issue where sorting/filtering would keep other pane showing even though it's a dif series
+v4.1.0.0 - March 8th
+⌛Updated Avalonia to v11.0.10
+✅Added new portion to AddSeries window to allow for a custom image from a url instead of default AniList image
+✅Added indication "[O]" next to titles in "Add Series" window to indicate that it is optional
+✅Added "Forbidden Planet" and "TravellingMan" websites to scrape
+✅Removed "Wordery" website from scrape until further notice
+🔥Fixed issue where cover link would contain non roman characters
+🔥No longer uses synonyms for alternate cover file paths, instead appends id
+🔥Fixed issue where MangaDex covers were not being downloaded
+🔥Fixed issue where sorting/filtering would keep other pane(s) showing even though it's a dif series
 
 v4.0.0.0 - March 3rd
 ✅ Changed Series Card Edit Button Icon to a Gear
