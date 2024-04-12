@@ -1,52 +1,52 @@
-using System.ComponentModel;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Tsundoku.Models
 {
-    public class TsundokuTheme : ICloneable, IComparable, IDisposable
+    public class TsundokuTheme : ReactiveObject, ICloneable, IComparable, IDisposable
     {
         [JsonIgnore] private bool disposedValue;
-        public string ThemeName { get; set; }
-        public string MenuBGColor { get; set; }
-        public string UsernameColor { get; set; }
-        public string MenuTextColor { get; set; }
-        public string SearchBarBGColor { get; set; }
-        public string SearchBarBorderColor { get; set; }
-        public string SearchBarTextColor { get; set; }
-        public string DividerColor { get; set; }
-        public string MenuButtonBGColor { get; set; } 
-        public string MenuButtonBGHoverColor { get; set; }
-        public string MenuButtonBorderColor { get; set; }
-        public string MenuButtonBorderHoverColor { get; set; }
-        public string MenuButtonTextAndIconColor { get; set; }
-        public string MenuButtonTextAndIconHoverColor { get; set; }
-        public string CollectionBGColor { get; set; }
-        public string StatusAndBookTypeBGColor { get; set; }
-        public string StatusAndBookTypeBGHoverColor { get; set; }
-        public string StatusAndBookTypeTextColor { get; set; }
-        public string StatusAndBookTypeTextHoverColor { get; set; }
-        public string SeriesCardBGColor { get; set; }
-        public string SeriesCardTitleColor { get; set; }
-        public string SeriesCardStaffColor { get; set; }
-        public string SeriesCardDescColor { get; set; }
-        public string SeriesProgressBGColor { get; set; }
-        public string SeriesProgressBarColor { get; set; }
-        public string SeriesProgressBarBGColor { get; set; }
-        public string SeriesProgressBarBorderColor { get; set; }
-        public string SeriesProgressTextColor { get; set; }
-        public string SeriesProgressButtonsHoverColor { get; set; }
-        public string SeriesButtonIconColor { get; set; }
-        public string SeriesButtonIconHoverColor { get; set; }
-        public string SeriesEditPaneBGColor { get; set; }
-        public string SeriesNotesBGColor  { get; set; }
-        public string SeriesNotesBorderColor { get; set; }
-        public string SeriesNotesTextColor { get; set; }
-        public string SeriesEditPaneButtonsBGColor { get; set; }
-        public string SeriesEditPaneButtonsBGHoverColor { get; set; }
-        public string SeriesEditPaneButtonsBorderColor { get; set; }
-        public string SeriesEditPaneButtonsBorderHoverColor { get; set; }
-        public string SeriesEditPaneButtonsIconColor { get; set; }
-        public string SeriesEditPaneButtonsIconHoverColor { get; set; }
+        [Reactive] public string ThemeName { get; set; }
+        [Reactive] public string MenuBGColor { get; set; }
+        [Reactive] public string UsernameColor { get; set; }
+        [Reactive] public string MenuTextColor { get; set; }
+        [Reactive] public string SearchBarBGColor { get; set; }
+        [Reactive] public string SearchBarBorderColor { get; set; }
+        [Reactive] public string SearchBarTextColor { get; set; }
+        [Reactive] public string DividerColor { get; set; }
+        [Reactive] public string MenuButtonBGColor { get; set; } 
+        [Reactive] public string MenuButtonBGHoverColor { get; set; }
+        [Reactive] public string MenuButtonBorderColor { get; set; }
+        [Reactive] public string MenuButtonBorderHoverColor { get; set; }
+        [Reactive] public string MenuButtonTextAndIconColor { get; set; }
+        [Reactive] public string MenuButtonTextAndIconHoverColor { get; set; }
+        [Reactive] public string CollectionBGColor { get; set; }
+        [Reactive] public string StatusAndBookTypeBGColor { get; set; }
+        [Reactive] public string StatusAndBookTypeBGHoverColor { get; set; }
+        [Reactive] public string StatusAndBookTypeTextColor { get; set; }
+        [Reactive] public string StatusAndBookTypeTextHoverColor { get; set; }
+        [Reactive] public string SeriesCardBGColor { get; set; }
+        [Reactive] public string SeriesCardTitleColor { get; set; }
+        [Reactive] public string SeriesCardStaffColor { get; set; }
+        [Reactive] public string SeriesCardDescColor { get; set; }
+        [Reactive] public string SeriesProgressBGColor { get; set; }
+        [Reactive] public string SeriesProgressBarColor { get; set; }
+        [Reactive] public string SeriesProgressBarBGColor { get; set; }
+        [Reactive] public string SeriesProgressBarBorderColor { get; set; }
+        [Reactive] public string SeriesProgressTextColor { get; set; }
+        [Reactive] public string SeriesProgressButtonsHoverColor { get; set; }
+        [Reactive] public string SeriesButtonIconColor { get; set; }
+        [Reactive] public string SeriesButtonIconHoverColor { get; set; }
+        [Reactive] public string SeriesEditPaneBGColor { get; set; }
+        [Reactive] public string SeriesNotesBGColor  { get; set; }
+        [Reactive] public string SeriesNotesBorderColor { get; set; }
+        [Reactive] public string SeriesNotesTextColor { get; set; }
+        [Reactive] public string SeriesEditPaneButtonsBGColor { get; set; }
+        [Reactive] public string SeriesEditPaneButtonsBGHoverColor { get; set; }
+        [Reactive] public string SeriesEditPaneButtonsBorderColor { get; set; }
+        [Reactive] public string SeriesEditPaneButtonsBorderHoverColor { get; set; }
+        [Reactive] public string SeriesEditPaneButtonsIconColor { get; set; }
+        [Reactive] public string SeriesEditPaneButtonsIconHoverColor { get; set; }
 
         public static readonly TsundokuTheme DEFAULT_THEME = new TsundokuTheme(
             "Default", //ThemeName

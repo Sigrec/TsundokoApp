@@ -8,8 +8,18 @@ Legend
 
 TODO:
 ❌ ComboboxItem Styles not applying properly in Theme & AdvancedQuery windows
-❌ Fix padding issue in Series Note w/ Scrollbar
-❌ Fix issue where clicking or minimizing would sometimes cause the the main window to scroll up (https://github.com/AvaloniaUI/Avalonia/issues/7593)
+❌ Fix padding issue in Series Note w/ Scrollbar (seems like it's not fixable tbh)
+❌ Fix RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
+❌ Fix issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
+
+v4.1.1.0 - April 12th, 2024
+✅ Added watermark to series notes textbox
+🔥 Fixed issue where other windows don't open on the same monitor as the main window
+🔥 Fixed series desc scrollbar bg color on hover to not be same color as the card bg
+🔥 Fixed issue where when scrolling in the series notes, when reaches the bottom it would scroll the collection
+🔥 Fixed issue where changing colors in theme window would cause lag
+🔥 Fixed issue where changing filter/sort it would sometimes not load all info correctly (Something due to virtualization, disabling fixes problem)
+🔥 Fixed issue where search text would not clear when using advanced search/query
 
 v4.1.0.0 - March 8th
 ⌛Updated Avalonia to v11.0.10

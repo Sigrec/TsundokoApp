@@ -1,10 +1,13 @@
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using Avalonia.VisualTree;
 using DynamicData;
 using ReactiveUI;
 using Tsundoku.Models;
@@ -14,11 +17,11 @@ namespace Tsundoku.Views
 {
     public partial class CollectionThemeWindow : ReactiveWindow<ThemeSettingsViewModel>
     {
-        public ThemeSettingsViewModel? ThemeSettingsVM => DataContext as ThemeSettingsViewModel;
-        private TsundokuTheme NewTheme { get; set; }
-        private TsundokuTheme SelectedTheme { get; set; }
+        private ThemeSettingsViewModel? ThemeSettingsVM => DataContext as ThemeSettingsViewModel;
+        private TsundokuTheme? NewTheme { get; set; }
+        private string SelectedTheme;
         public bool IsOpen, ThemeChanged = false;
-        MainWindow CollectionWindow;
+        private MainWindow CollectionWindow;
 
         public CollectionThemeWindow () 
         {
@@ -29,7 +32,7 @@ namespace Tsundoku.Views
             {
                 CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
                 NewTheme = ThemeSettingsVM.CurrentTheme.Cloning();
-                SelectedTheme = CollectionWindow.CollectionViewModel.CurrentTheme.Cloning();
+                SelectedTheme = ThemeSettingsVM.CurrentTheme.ThemeName;
                 IsOpen ^= true;
                 ThemeChanged = false;
 
@@ -50,7 +53,8 @@ namespace Tsundoku.Views
                     NewThemeName.Text = "";
                     Topmost = false;
                     IsOpen ^= true;
-                    UpdateAllWindowColors(SelectedTheme);
+                    UpdateAllWindowColors(ViewModelBase.MainUser.SavedThemes.Single(theme => theme.ThemeName.Equals(SelectedTheme)));
+                    NewTheme = null;
                 }
                 e.Cancel = true;
             };
@@ -322,12 +326,12 @@ namespace Tsundoku.Views
         private void ChangeTheme()
         {
             ThemeChanged = true;
-            string toThemeName = ThemeSelector.SelectedItem.ToString();
+            string toThemeName = ThemeSelector.SelectedItem == null ? SelectedTheme : ThemeSelector.SelectedItem.ToString();
 
             // Update Windows
             UpdateAllWindowColors(ViewModelBase.MainUser.SavedThemes.Single(theme => theme.ThemeName.Equals(toThemeName)));
             ApplyColors();
-            SelectedTheme = CollectionWindow.CollectionViewModel.CurrentTheme.Cloning();
+            SelectedTheme = toThemeName;
 
             LOGGER.Info("Theme Changed To {}", toThemeName);
             ThemeChanged = false;
@@ -401,84 +405,84 @@ namespace Tsundoku.Views
             {
                 Menu_BG_Button.Background = new SolidColorBrush(Menu_BG.Color);
                 NewTheme.MenuBGColor = Menu_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             Username.ColorChanged += (sender, e) =>
             {
                 Username_Button.Background = new SolidColorBrush(Username.Color);
                 NewTheme.UsernameColor = Username.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             Menu_Text.ColorChanged += (sender, e) =>
             {
                 Menu_Text_Button.Background = new SolidColorBrush(Menu_Text.Color);
                 NewTheme.MenuTextColor = Menu_Text.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             SearchBar_BG.ColorChanged += (sender, e) =>
             {
                 SearchBar_BG_Button.Background = new SolidColorBrush(SearchBar_BG.Color);
                 NewTheme.SearchBarBGColor = SearchBar_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             SearchBar_Border.ColorChanged += (sender, e) =>
             {
                 SearchBar_Border_Button.Background = new SolidColorBrush(SearchBar_Border.Color);
                 NewTheme.SearchBarBorderColor = SearchBar_Border.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             SearchBar_Text.ColorChanged += (sender, e) =>
             {
                 SearchBar_Text_Button.Background = new SolidColorBrush(SearchBar_Text.Color);
                 NewTheme.SearchBarTextColor = SearchBar_Text.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             Divider.ColorChanged += (sender, e) =>
             {
                 Divider_Button.Background = new SolidColorBrush(Divider.Color);
                 NewTheme.DividerColor = Divider.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             MenuButton_BG.ColorChanged += (sender, e) =>
             {
                 MenuButton_BG_Button.Background = new SolidColorBrush(MenuButton_BG.Color);
                 NewTheme.MenuButtonBGColor = MenuButton_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             MenuButton_BG_Hover.ColorChanged += (sender, e) =>
             {
                 MenuButton_BG_Hover_Button.Background = new SolidColorBrush(MenuButton_BG_Hover.Color);
                 NewTheme.MenuButtonBGHoverColor = MenuButton_BG_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             MenuButton_Border.ColorChanged += (sender, e) =>
             {
                 MenuButton_Border_Button.Background = new SolidColorBrush(MenuButton_Border.Color);
                 NewTheme.MenuButtonBorderColor = MenuButton_Border.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             MenuButton_Border_Hover.ColorChanged += (sender, e) =>
             {
                 MenuButton_Border_Hover_Button.Background = new SolidColorBrush(MenuButton_Border_Hover.Color);
                 NewTheme.MenuButtonBorderHoverColor = MenuButton_Border_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             MenuButton_IconAndText.ColorChanged += (sender, e) =>
             {
                 MenuButton_IconAndText_Button.Background = new SolidColorBrush(MenuButton_IconAndText.Color);
                 NewTheme.MenuButtonTextAndIconColor = MenuButton_IconAndText.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             MenuButton_IconAndText_Hover.ColorChanged += (sender, e) =>
@@ -486,7 +490,7 @@ namespace Tsundoku.Views
                 //CollectionWindow.SettingsButton.PointerEntered += new EventHandler<Avalonia.Input.PointerEventArgs>(Button_PointerEnter);
                 MenuButton_IconAndText_Hover_Button.Background = new SolidColorBrush(MenuButton_IconAndText_Hover.Color);
                 NewTheme.MenuButtonTextAndIconHoverColor = MenuButton_IconAndText_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
         }
 
@@ -499,217 +503,189 @@ namespace Tsundoku.Views
             {
                 Collection_BG_Button.Background = new SolidColorBrush(Collection_BG.Color);
                 NewTheme.CollectionBGColor = Collection_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             Status_And_BookType_BG.ColorChanged += (sender, e) =>
             {
                 Status_And_BookType_BG_Button.Background = new SolidColorBrush(Status_And_BookType_BG.Color);
                 NewTheme.StatusAndBookTypeBGColor = Status_And_BookType_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             Status_And_BookType_BG_Hover.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(Status_And_BookType_BG_Hover.Color);
                 Status_And_BookType_BG_Hover_Button.Background = new SolidColorBrush(Status_And_BookType_BG_Hover.Color);
                 NewTheme.StatusAndBookTypeBGHoverColor = Status_And_BookType_BG_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             Status_And_BookType_Text.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(Status_And_BookType_Text.Color);
                 Status_And_BookType_Text_Button.Background = new SolidColorBrush(Status_And_BookType_Text.Color);
                 NewTheme.StatusAndBookTypeTextColor = Status_And_BookType_Text.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             Status_And_BookType_Text_Hover.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(Status_And_BookType_Text_Hover.Color);
                 Status_And_BookType_Text_Hover_Button.Background = new SolidColorBrush(Status_And_BookType_Text_Hover.Color);
                 NewTheme.StatusAndBookTypeTextHoverColor = Status_And_BookType_Text_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesCard_BG.ColorChanged += (sender, e) =>
             {
-                // foreach (var x in CollectionWindow.CollectionItems.GetLogicalChildren())
-                // {
-                //     (x.FindLogicalDescendantOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).GetLogicalChildren().ElementAt(2) as Grid).Background = new SolidColorBrush(SeriesCard_BG.Color);
-                // }
                 SeriesCard_BG_Button.Background = new SolidColorBrush(SeriesCard_BG.Color);
                 NewTheme.SeriesCardBGColor = SeriesCard_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesCard_Title.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesCard_Title.Color);
                 SeriesCard_Title_Button.Background = new SolidColorBrush(SeriesCard_Title.Color);
                 NewTheme.SeriesCardTitleColor = SeriesCard_Title.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesCard_Staff.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesCard_Staff.Color);
                 SeriesCard_Staff_Button.Background = new SolidColorBrush(SeriesCard_Staff.Color);
                 NewTheme.SeriesCardStaffColor = SeriesCard_Staff.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesCard_Desc.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesCard_Desc.Color);
                 SeriesCard_Desc_Button.Background = new SolidColorBrush(SeriesCard_Desc.Color);
                 NewTheme.SeriesCardDescColor = SeriesCard_Desc.Color.ToString();
-                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 
             SeriesProgress_BG.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesProgress_BG.Color);
                 SeriesProgress_BG_Button.Background = new SolidColorBrush(SeriesProgress_BG.Color);
                 NewTheme.SeriesProgressBGColor = SeriesProgress_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesProgress_Bar.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesProgress_Bar.Color);
                 SeriesProgress_Bar_Button.Background = new SolidColorBrush(SeriesProgress_Bar.Color);
                 NewTheme.SeriesProgressBarColor = SeriesProgress_Bar.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesProgress_Bar_BG.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesProgress_Bar_BG.Color);
                 SeriesProgress_Bar_BG_Button.Background = new SolidColorBrush(SeriesProgress_Bar_BG.Color);
                 NewTheme.SeriesProgressBarBGColor = SeriesProgress_Bar_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesProgress_Bar_Border.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesProgress_Bar_Border.Color);
                 SeriesProgress_Bar_Border_Button.Background = new SolidColorBrush(SeriesProgress_Bar_Border.Color);
                 NewTheme.SeriesProgressBarBorderColor = SeriesProgress_Bar_Border.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesProgress_Text.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesProgress_Text.Color);
                 SeriesProgress_Text_Button.Background = new SolidColorBrush(SeriesProgress_Text.Color);
                 NewTheme.SeriesProgressTextColor = SeriesProgress_Text.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesProgress_Buttons_Hover.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesProgress_Buttons_Hover.Color);
                 SeriesProgress_Buttons_Hover_Button.Background = new SolidColorBrush(SeriesProgress_Buttons_Hover.Color);
                 NewTheme.SeriesProgressButtonsHoverColor = SeriesProgress_Buttons_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesButton_Icon.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesButton_Icon.Color);
                 SeriesButton_Icon_Button.Background = new SolidColorBrush(SeriesButton_Icon.Color);
                 NewTheme.SeriesButtonIconColor = SeriesButton_Icon.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesButton_Icon_Hover.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesButton_Icon_Hover.Color);
                 SeriesButton_Icon_Hover_Button.Background = new SolidColorBrush(SeriesButton_Icon_Hover.Color);
                 NewTheme.SeriesButtonIconHoverColor = SeriesButton_Icon_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesEditPane_BG.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesEditPane_BG.Color);
                 SeriesEditPane_BG_Button.Background = new SolidColorBrush(SeriesEditPane_BG.Color);
                 NewTheme.SeriesEditPaneBGColor = SeriesEditPane_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesNotes_BG.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesNotes_BG.Color);
                 SeriesNotes_BG_Button.Background = new SolidColorBrush(SeriesNotes_BG.Color);
                 NewTheme.SeriesNotesBGColor = SeriesNotes_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesNotes_Border.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesNotes_Border.Color);
                 SeriesNotes_Border_Button.Background = new SolidColorBrush(SeriesNotes_Border.Color);
                 NewTheme.SeriesNotesBorderColor = SeriesNotes_Border.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesNotes_Text.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesNotes_Text.Color);
                 SeriesNotes_Text_Button.Background = new SolidColorBrush(SeriesNotes_Text.Color);
                 NewTheme.SeriesNotesTextColor = SeriesNotes_Text.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesEditPane_Buttons_BG.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesEditPane_Buttons_BG.Color);
                 SeriesEditPane_Buttons_BG_Button.Background = new SolidColorBrush(SeriesEditPane_Buttons_BG.Color);
                 NewTheme.SeriesEditPaneButtonsBGColor = SeriesEditPane_Buttons_BG.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesEditPane_Buttons_BG_Hover.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesEditPane_Buttons_BG_Hover.Color);
                 SeriesEditPane_Buttons_BG_Hover_Button.Background = new SolidColorBrush(SeriesEditPane_Buttons_BG_Hover.Color);
                 NewTheme.SeriesEditPaneButtonsBGHoverColor = SeriesEditPane_Buttons_BG_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesEditPane_Buttons_Border.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesEditPane_Buttons_Border.Color);
                 SeriesEditPane_Buttons_Border_Button.Background = new SolidColorBrush(SeriesEditPane_Buttons_Border.Color);
                 NewTheme.SeriesEditPaneButtonsBorderColor = SeriesEditPane_Buttons_Border.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesEditPane_Buttons_Border_Hover.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesEditPane_Buttons_Border_Hover.Color);
                 SeriesEditPane_Buttons_Border_Hover_Button.Background = new SolidColorBrush(SeriesEditPane_Buttons_Border_Hover.Color);
                 NewTheme.SeriesEditPaneButtonsBorderHoverColor = SeriesEditPane_Buttons_Border_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesEditPane_Buttons_Icon.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesEditPane_Buttons_Icon.Color);
                 SeriesEditPane_Buttons_Icon_Button.Background = new SolidColorBrush(SeriesEditPane_Buttons_Icon.Color);
                 NewTheme.SeriesEditPaneButtonsIconColor = SeriesEditPane_Buttons_Icon.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 
             SeriesEditPane_Buttons_Icon_Hover.ColorChanged += (sender, e) =>
             {
-                //CollectionWindow.CollectionTheme.Background = new SolidColorBrush(SeriesEditPane_Buttons_Icon_Hover.Color);
                 SeriesEditPane_Buttons_Icon_Hover_Button.Background = new SolidColorBrush(SeriesEditPane_Buttons_Icon_Hover.Color);
                 NewTheme.SeriesEditPaneButtonsIconHoverColor = SeriesEditPane_Buttons_Icon_Hover.Color.ToString();
-                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme.Cloning()); }
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
         }
     }

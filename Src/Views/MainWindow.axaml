@@ -30,8 +30,8 @@
 		</ResourceDictionary>
 	</Window.Resources>
 
-    <!-- Advanced Search Popup -->
     <Panel>
+        <!-- Advanced Search Popup -->
         <Panel Name="AdvancedSearchPopup" ZIndex="1" IsVisible="false" PointerPressed="UnShowAdvancedSearchPopup">
             <Rectangle Fill="Black" Opacity="0.55"/>
             <StackPanel Margin="0,165,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -103,35 +103,35 @@
                                 Height="35"
                                 FontSize="15"
                                 Theme="{StaticResource MenuButton}"
-                                Command="{CompiledBinding OpenSettingsWindow}"/>
+                                Click="OpenSettingsDialog"/>
                         <Button Name="AddNewSeriesButton"
                                 Theme="{StaticResource MenuButton}"
                                 Content="Add Series"
                                 Width="95"
                                 Height="35"
                                 FontSize="15"
-                                Command="{CompiledBinding OpenAddNewSeriesWindow}"/>
+                                Click="OpenAddSeriesDialog"/>
                         <Button Name="ThemeButton" 
                                 Theme="{StaticResource MenuButton}"
                                 Content="Themes"
                                 Width="95"
                                 Height="35"
                                 FontSize="15"
-                                Command="{CompiledBinding OpenThemeSettingsWindow}"/>
+                                Click="OpenThemeSettingsDialog"/>
                         <Button Name="StatsButton"
                                 Theme="{StaticResource MenuButton}"
                                 Content="Stats"
                                 Width="95"
                                 Height="35"
                                 FontSize="15"
-                                Command="{CompiledBinding OpenCollectionStatsWindow}"/>
+                                Click="OpenCollectionStatsDialog"/>
                         <Button Name="AnalysisButton"
                                 Theme="{StaticResource MenuButton}"
                                 Content="Scrape"
                                 Width="95"
                                 Height="35"
                                 FontSize="15"
-                                Command="{CompiledBinding OpenPriceAnalysisWindow}"/>
+                                Click="OpenPriceAnalysisDialog"/>
                         <Button Name="DonateButton"
                                 Theme="{StaticResource MenuButton}"
                                 Content="Donate"
@@ -250,11 +250,13 @@
             <!-- TODO Issue w/ virtualization where refreshing covers causes height to bug -->
             <!-- Collection -->
             <ScrollViewer Name="CollectionTheme" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Bottom" Theme="{StaticResource CollectionScroll}"> 
-                <ItemsRepeater Name="CollectionItems" Margin="20,50,20,50" ItemsSource="{CompiledBinding SearchedCollection}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <ItemsRepeater.Layout>
-                        <UniformGridLayout MinItemHeight="290" ItemsJustification="Center" ItemsStretch="None" Orientation="Horizontal"/>
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
+                <ItemsControl Name="CollectionItems" Margin="20,50,20,50" ItemsSource="{CompiledBinding SearchedCollection}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel ItemHeight="290" Orientation="Horizontal" HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
                         <!-- Full Card Display -->
                         <DataTemplate>
                             <Border Background="Transparent" Margin="20" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" BoxShadow="0 0 15 6 #B3000000" Width="{CompiledBinding Source={x:Static local:Constants.CARD_WIDTH}}">
@@ -380,6 +382,13 @@
                                                 IsVisible="{CompiledBinding IsEditPaneOpen}"
                                                 ZIndex="1">
                                                 <Grid.Styles>
+                                                    <Style Selector="ScrollBar:vertical">
+                                                        <Style Selector="^[IsExpanded=true]">
+                                                            <Style Selector="^ /template/ Rectangle#TrackRect">
+                                                                <Setter Property="Fill" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.MenuBGColor, Converter={StaticResource ConvertColor}}" />
+                                                            </Style>
+                                                        </Style>
+                                                    </Style>
                                                     <Style Selector="TextBox">
                                                         <Style Selector="^:pointerover /template/ Border#PART_BorderElement, ^:focus /template/ Border#PART_BorderElement">
                                                             <Setter Property="Background" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBGColor, Converter={StaticResource ConvertColor}}"/>
@@ -397,6 +406,8 @@
                                                          BorderThickness="2"
                                                          TextAlignment="Left"
                                                          HorizontalContentAlignment="Left"
+                                                         Watermark="Notes..."
+                                                         ScrollViewer.IsScrollChainingEnabled="false"
                                                          BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBorderColor, Converter={StaticResource ConvertColor}}"
                                                          FontWeight="Bold"
                                                          Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesTextColor, Converter={StaticResource ConvertColor}}"
@@ -516,8 +527,7 @@
                                                         VerticalAlignment="Center"
                                                         HorizontalAlignment="Center"
                                                         Click="ChangeSeriesCover"
-                                                        Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsIconColor, Converter={StaticResource ConvertColor}}">
-                                                    </Button>
+                                                        Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsIconColor, Converter={StaticResource ConvertColor}}"/>
                                                     <Button i:Attached.Icon="fa-solid fa-floppy-disk"
                                                             Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBGColor, Converter={StaticResource ConvertColor}}"
                                                             BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBorderColor, Converter={StaticResource ConvertColor}}" 
@@ -734,6 +744,15 @@
                                                     Grid.RowDefinitions="Auto,Auto,*"
                                                     Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesCardBGColor, Converter={StaticResource ConvertColor}}"
                                                     ShowGridLines="false">
+                                                <Grid.Styles>
+                                                    <Style Selector="ScrollBar:vertical">
+                                                        <Style Selector="^[IsExpanded=true]">
+                                                            <Style Selector="^ /template/ Rectangle#TrackRect">
+                                                                <Setter Property="Fill" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}" />
+                                                            </Style>
+                                                        </Style>
+                                                    </Style>
+                                                </Grid.Styles>
                                                 <!-- <Border Grid.Row="0" BorderBrush="Red" BorderThickness="1"> -->
                                                 <TextBlock Grid.Row="0"
                                                         TextWrapping="Wrap"
@@ -872,6 +891,7 @@
                                                         Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesProgressBGColor, Converter={StaticResource ConvertColor}}"
                                                         FontSize="27"
                                                         BorderThickness="0"
+                                                        HorizontalAlignment="Left"
                                                         HorizontalContentAlignment="Center"
                                                         BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesButtonIconColor, Converter={StaticResource ConvertColor}}"
                                                         Height="{CompiledBinding Source={x:Static local:Constants.BOTTOM_SECTION_CARD_HEIGHT}}"
@@ -884,8 +904,8 @@
                                 </Border>
                             </Border>
                         </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 		    </ScrollViewer>
 	    </DockPanel>
     </Panel>

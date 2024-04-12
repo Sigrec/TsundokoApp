@@ -17,6 +17,7 @@ using MangaAndLightNovelWebScrape.Websites;
 using Avalonia.Collections;
 using System.Reflection;
 using Src.Helpers;
+using LiveChartsCore.Themes;
 
 namespace Tsundoku.ViewModels
 {
@@ -94,95 +95,12 @@ namespace Tsundoku.ViewModels
         private void ConfigureWindows()
         {
             newSeriesWindow = new AddNewSeriesWindow();
-            OpenAddNewSeriesWindow = ReactiveCommand.CreateFromTask(() =>
-            {
-                if (newSeriesWindow.WindowState == WindowState.Minimized) 
-                {
-                    newSeriesWindow.WindowState = WindowState.Normal;
-                }
-                else if(!newSeriesWindow.IsActive && newSeriesWindow.IsOpen)
-                {
-                    newSeriesWindow.Activate();
-                }
-                else
-                {
-                    newSeriesWindow.Show();
-                }
-                return Task.CompletedTask;
-            });
 
             settingsWindow = new SettingsWindow();
-            OpenSettingsWindow = ReactiveCommand.CreateFromTask(() =>
-            {
-                if (settingsWindow.WindowState == WindowState.Minimized) 
-                {
-                    settingsWindow.WindowState = WindowState.Normal;
-                }
-                else if(!settingsWindow.IsActive && settingsWindow.IsOpen)
-                {
-                    settingsWindow.Activate();
-                }
-                else
-                {
-                    settingsWindow.Show();
-                }
-                return Task.CompletedTask;
-            });
-
-            themeSettingsWindow = new CollectionThemeWindow();
-            OpenThemeSettingsWindow = ReactiveCommand.CreateFromTask(() =>
-            {
-                if (themeSettingsWindow.WindowState == WindowState.Minimized) 
-                {
-                    themeSettingsWindow.WindowState = WindowState.Normal;
-                }
-                else if(!themeSettingsWindow.IsActive && themeSettingsWindow.IsOpen)
-                {
-                    themeSettingsWindow.Activate();
-                }
-                else
-                {
-                    themeSettingsWindow.Show();
-                }
-                return Task.CompletedTask;
-            });
-
+            themeSettingsWindow = new CollectionThemeWindow();;
             priceAnalysisWindow = new PriceAnalysisWindow();
             priceAnalysisWindow.PriceAnalysisVM.CurRegion = MainUser.Region;
-            OpenPriceAnalysisWindow = ReactiveCommand.CreateFromTask(() =>
-            {
-                if (priceAnalysisWindow.WindowState == WindowState.Minimized) 
-                {
-                    priceAnalysisWindow.WindowState = WindowState.Normal;
-                }
-                else if(!priceAnalysisWindow.IsActive && priceAnalysisWindow.IsOpen)
-                {
-                    priceAnalysisWindow.Activate();
-                }
-                else
-                {
-                    priceAnalysisWindow.Show();
-                }
-                return Task.CompletedTask;
-            });
-
             collectionStatsWindow = new CollectionStatsWindow();
-            OpenCollectionStatsWindow = ReactiveCommand.CreateFromTask(() =>
-            {
-                if (collectionStatsWindow.WindowState == WindowState.Minimized) 
-                {
-                    collectionStatsWindow.WindowState = WindowState.Normal;
-                }
-                else if(!collectionStatsWindow.IsActive && collectionStatsWindow.IsOpen)
-                {
-                    collectionStatsWindow.Activate();
-                }
-                else
-                {
-                    collectionStatsWindow.Show();
-                }
-                return Task.CompletedTask;
-            });
         }
 
         /// <summary>
@@ -307,6 +225,7 @@ namespace Tsundoku.ViewModels
                 }
                 SearchedCollection.Clear();
                 SearchedCollection.AddRange(FilteredCollection);
+                FilteredCollection = null;
             }
         }
 
@@ -346,6 +265,11 @@ namespace Tsundoku.ViewModels
             if (!string.IsNullOrWhiteSpace(AdvancedSearchQuery) && AdvancedQueryRegex().IsMatch(AdvancedSearchQuery))
             {
                 AdvancedSearchQuery = AdvancedSearchQuery.Trim();
+                if (!string.IsNullOrWhiteSpace(SearchText)) // Checks if the user searching and remove the text
+                {
+                    SearchIsBusy = false;
+                    SearchText = string.Empty;
+                }
                 if (!CurFilter.Equals("Query"))
                 {
                     CanFilter = false;

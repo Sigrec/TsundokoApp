@@ -31,6 +31,7 @@ namespace Tsundoku.Views
         public MainWindow()
         {
             InitializeComponent();
+
             SetupAdvancedSearchBar(" & ");
 
             CoverFolderWatcher.OnCreated += (s, e) =>
@@ -124,6 +125,31 @@ namespace Tsundoku.Views
             };
 
             Closing += (s, e) => { SaveOnClose(ViewModelBase.isReloading); };
+        }
+
+        private void OpenAddSeriesDialog(object sender, RoutedEventArgs args)
+        {
+            MainWindowViewModel.newSeriesWindow.Show(this);
+        }
+
+        private void OpenSettingsDialog(object sender, RoutedEventArgs args)
+        {
+            MainWindowViewModel.settingsWindow.Show(this);
+        }
+
+        private void OpenCollectionStatsDialog(object sender, RoutedEventArgs args)
+        {
+           MainWindowViewModel.collectionStatsWindow.Show(this);
+        }
+
+        private void OpenPriceAnalysisDialog(object sender, RoutedEventArgs args)
+        {
+            MainWindowViewModel.priceAnalysisWindow.Show(this);
+        }
+
+        private void OpenThemeSettingsDialog(object sender, RoutedEventArgs args)
+        {
+            MainWindowViewModel.themeSettingsWindow.Show(this);
         }
 
         public void SetupAdvancedSearchBar(string delimeter)

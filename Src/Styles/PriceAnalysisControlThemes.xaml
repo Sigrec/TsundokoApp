@@ -95,78 +95,78 @@
 		<Setter Property="FontSize" Value="15" />
 		<Setter Property="MinHeight" Value="32" />
 		<Setter Property="Template">
-		<ControlTemplate>
-			<Border x:Name="HeaderBorder"
-					Background="{TemplateBinding Background}"
-					BorderBrush="{TemplateBinding BorderBrush}"
-					BorderThickness="{TemplateBinding BorderThickness}"
-					CornerRadius="{TemplateBinding CornerRadius}">
-			<Grid Name="PART_ColumnHeaderRoot" ColumnDefinitions="*,Auto">
-				<Panel Margin="{TemplateBinding Padding}"
-					HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-					VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*" />
-					</Grid.ColumnDefinitions>
-				
-					<ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
-				</Grid>
-				</Panel>
+            <ControlTemplate>
+                <Border x:Name="HeaderBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                <Grid Name="PART_ColumnHeaderRoot" ColumnDefinitions="*,Auto">
+                    <Panel Margin="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                    
+                        <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Grid>
+                    </Panel>
 
-				<Rectangle Name="VerticalSeparator"
-							Grid.Column="1"
-							Width="1"
-							VerticalAlignment="Stretch"
-							Fill="{TemplateBinding SeparatorBrush}"
-							IsVisible="{TemplateBinding AreSeparatorsVisible}" />
+                    <Rectangle Name="VerticalSeparator"
+                                Grid.Column="1"
+                                Width="1"
+                                VerticalAlignment="Stretch"
+                                Fill="{TemplateBinding SeparatorBrush}"
+                                IsVisible="{TemplateBinding AreSeparatorsVisible}" />
 
-				<Grid x:Name="FocusVisual" IsHitTestVisible="False" IsVisible="False">
-					<Rectangle x:Name="FocusVisualPrimary"
-								HorizontalAlignment="Stretch"
-								VerticalAlignment="Stretch"
-								Fill="Transparent"
-								IsHitTestVisible="False"
-								Stroke="{DynamicResource DataGridCellFocusVisualPrimaryBrush}"
-								StrokeThickness="2" />
-					<Rectangle x:Name="FocusVisualSecondary"
-								Margin="2"
-								HorizontalAlignment="Stretch"
-								VerticalAlignment="Stretch"
-								Fill="Transparent"
-								IsHitTestVisible="False"
-								Stroke="{DynamicResource DataGridCellFocusVisualSecondaryBrush}"
-								StrokeThickness="1" />
-				</Grid>
-			</Grid>
-			</Border>
-		</ControlTemplate>
+                    <Grid x:Name="FocusVisual" IsHitTestVisible="False" IsVisible="False">
+                        <Rectangle x:Name="FocusVisualPrimary"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Fill="Transparent"
+                                    IsHitTestVisible="False"
+                                    Stroke="{DynamicResource DataGridCellFocusVisualPrimaryBrush}"
+                                    StrokeThickness="2" />
+                        <Rectangle x:Name="FocusVisualSecondary"
+                                    Margin="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Fill="Transparent"
+                                    IsHitTestVisible="False"
+                                    Stroke="{DynamicResource DataGridCellFocusVisualSecondaryBrush}"
+                                    StrokeThickness="1" />
+                    </Grid>
+                </Grid>
+                </Border>
+            </ControlTemplate>
 		</Setter>
 
 		<Style Selector="^:focus-visible /template/ Grid#FocusVisual">
-		<Setter Property="IsVisible" Value="True" />
+		    <Setter Property="IsVisible" Value="True" />
 		</Style>
 
 		<Style Selector="^:pointerover /template/ Grid#PART_ColumnHeaderRoot">
-		<Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderHoveredBackgroundBrush}" />
+		    <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderHoveredBackgroundBrush}" />
 		</Style>
 
 		<Style Selector="^:pressed /template/ Grid#PART_ColumnHeaderRoot">
-		<Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderPressedBackgroundBrush}" />
+		    <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderPressedBackgroundBrush}" />
 		</Style>
 
 		<Style Selector="^:dragIndicator">
-		<Setter Property="Opacity" Value="0.5" />
+		    <Setter Property="Opacity" Value="0.5" />
 		</Style>
 
 		<Style Selector="^:sortascending /template/ Path#SortIcon">
-		<Setter Property="IsVisible" Value="True" />
-		<Setter Property="Data" Value="{StaticResource DataGridSortIconAscendingPath}" />
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Data" Value="{StaticResource DataGridSortIconAscendingPath}" />
 		</Style>
 
 		<Style Selector="^:sortdescending /template/ Path#SortIcon">
-		<Setter Property="IsVisible" Value="True" />
-		<Setter Property="Data" Value="{StaticResource DataGridSortIconDescendingPath}" />
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Data" Value="{StaticResource DataGridSortIconDescendingPath}" />
 		</Style>
 	</ControlTheme>
 
