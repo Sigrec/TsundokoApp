@@ -424,6 +424,7 @@ namespace Tsundoku.Views
                     // CollectionViewModel.SearchIsBusy = false;
                     CollectionViewModel.SearchText = string.Empty;
                 }
+                // AddNewSeriesWindow.PreviousLanguage = CollectionViewModel.CurLanguage;
                 CollectionViewModel.CurLanguage = (LanguageSelector.SelectedItem as ComboBoxItem).Content.ToString();
                 LOGGER.Info($"Changed Langauge to {CollectionViewModel.CurLanguage}");
                 MainWindowViewModel.SortCollection();
@@ -485,36 +486,6 @@ namespace Tsundoku.Views
             if (!isReloading) { MainWindowViewModel.SaveUsersData(); }
             Helpers.DiscordRP.Deinitialize();
             CoverFolderWatcher.Dispose();
-
-            if (MainWindowViewModel.newSeriesWindow != null)
-            {
-                MainWindowViewModel.newSeriesWindow.Closing += (s, e) => { e.Cancel = false; };
-                MainWindowViewModel.newSeriesWindow.Close();
-            }
-
-            if (MainWindowViewModel.settingsWindow != null)
-            {
-                MainWindowViewModel.settingsWindow.Closing += (s, e) => { e.Cancel = false; };
-                MainWindowViewModel.settingsWindow.Close();
-            }
-
-            if (MainWindowViewModel.themeSettingsWindow != null)
-            {
-                MainWindowViewModel.themeSettingsWindow.Closing += (s, e) => { e.Cancel = false; };
-                MainWindowViewModel.themeSettingsWindow.Close();
-            }
-
-            if (MainWindowViewModel.priceAnalysisWindow != null)
-            {
-                MainWindowViewModel.priceAnalysisWindow.Closing += (s, e) => { e.Cancel = false; };
-                MainWindowViewModel.priceAnalysisWindow.Close();
-            }
-
-            if (MainWindowViewModel.collectionStatsWindow != null)
-            {
-                MainWindowViewModel.collectionStatsWindow.Closing += (s, e) => { e.Cancel = false; };
-                MainWindowViewModel.collectionStatsWindow.Close();
-            }
 
             NLog.LogManager.Shutdown();
             App.DisposeMutex();

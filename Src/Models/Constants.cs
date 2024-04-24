@@ -124,7 +124,7 @@ namespace Tsundoku.Models
             { "Norwegian" , "nb-NO" },
             { "Persian" , "fa-IR" },
             { "Polish" , "pl-PL" },
-            { "Portugese" , "pt-BR" }, // Portuguese (Brazil)
+            { "Portuguese" , "pt-BR" }, // Portuguese (Brazil)
             { "Romanian" , "ro-RO" },
             { "Russian" , "ru-RU" },
             { "Serbian" , "sr-Latn-RS" },
@@ -143,6 +143,7 @@ namespace Tsundoku.Models
 		public readonly static Dictionary<string, string> MANGADEX_LANG_CODES = new()
 		{
 			{ "ja", "Japanese" },
+            { "ja-ro", "Romaji" },
 			{ "ko" , "Korean" },
 			{ "fr" , "French" },
 			{ "en" , "English" },
@@ -178,8 +179,8 @@ namespace Tsundoku.Models
 			{ "no" , "Norwegian" },
 			{ "fa" , "Persian" },
 			{ "pl" , "Polish" },
-			{ "pt" , "Portugese" },
-			{ "pt-br" , "Portugese" },
+			{ "pt" , "Portuguese" },
+			{ "pt-br" , "Portuguese" },
 			{ "ro" , "Romanian" },
 			{ "ru" , "Russian" },
 			{ "sr" , "Serbian" },

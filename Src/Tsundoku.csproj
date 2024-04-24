@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" AfterTargets="ClickOncePublish">
 	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
+		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<AvaloniaNameGeneratorBehavior>InitializeComponent</AvaloniaNameGeneratorBehavior>
@@ -9,15 +9,15 @@
 		<AvaloniaNameGeneratorFilterByNamespace>*</AvaloniaNameGeneratorFilterByNamespace>
 		<PlatformTarget>x64</PlatformTarget>
 		<StartupObject>Tsundoku.Program</StartupObject>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
 		<PublishTrimmed>true</PublishTrimmed>
 		<TrimMode>partial</TrimMode>
 		<PublishReadyToRun>True</PublishReadyToRun>
 		<Optimize>True</Optimize>
 		<SelfContained>True</SelfContained>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<Version>4.1.1</Version>
-		<FileVersion>4.1.1.0</FileVersion>
+		<Version>4.1.2</Version>
+		<FileVersion>4.1.2.0</FileVersion>
 		<RepositoryUrl>https://github.com/Sigrec/Tsundoku</RepositoryUrl>
         <LangVersion>preview</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -87,7 +87,7 @@
     <PackageReference Include="NLog" Version="5.2.8" />
 	<PackageReference Include="FileWatcherEx" Version="2.6.0" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.3.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.10" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.12" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.4" />
 	<PackageReference Include="TextCopy" Version="6.2.1" />
     <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />

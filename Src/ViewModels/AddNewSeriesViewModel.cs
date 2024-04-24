@@ -4,9 +4,8 @@ using Avalonia.Media.Imaging;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using System.Collections.Specialized;
-using OpenQA.Selenium;
-using System.Net;
-using System.Net.Http.Headers;
+using LiveChartsCore.Kernel;
+using ReactiveUI;
 
 namespace Tsundoku.ViewModels
 {
@@ -18,7 +17,7 @@ namespace Tsundoku.ViewModels
         [Reactive] public string CurVolumeCount { get; set; }
         [Reactive] public string AdditionalLanguagesToolTipText { get; set; }
         [Reactive] public bool IsAddSeriesButtonEnabled { get; set; } = false;
-        public ObservableCollection<ListBoxItem> SelectedAdditionalLanguages { get; set; } = new ObservableCollection<ListBoxItem>();
+        public static ObservableCollection<ListBoxItem> SelectedAdditionalLanguages { get; set; } = new ObservableCollection<ListBoxItem>();
         private static readonly StringBuilder CurLanguages = new StringBuilder();
         public AddNewSeriesViewModel()
         {

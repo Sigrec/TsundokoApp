@@ -12,6 +12,14 @@ TODO:
 ❌ Fix RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
 ❌ Fix issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 
+v4.1.2.0 - April 23rd, 2024
+🔥 Fixed incorrect version in settings window
+🔥 Fixed styling & overflow trimming of series title & staff
+🔥 Fixed issue when adding a new series would crash if adding additional langs ("ja-ro" lang code not added to dictionary)
+🔥 Fixed incorrect language names for a couple languages
+🔥 Fixed formatting for MangaDex descriptions
+🔥 Correctly pulls romaji title from MangaDex instead of English if it's an Asian comic
+
 v4.1.1.0 - April 12th, 2024
 ✅ Added watermark to series notes textbox
 🔥 Fixed issue where other windows don't open on the same monitor as the main window

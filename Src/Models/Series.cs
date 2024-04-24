@@ -100,18 +100,22 @@ namespace Tsundoku.Models
             string curMangaDexId = string.Empty;
 			if (int.TryParse(title, out int seriesId))
 			{
+                LOGGER.Debug("Getting AniList ID Data");
 				seriesDataDoc = await AniListQuery.GetSeriesByIDAsync(seriesId, bookType, pageNum);
 				isAniListID = true;
 			}
             else if (MangaDexIDRegex().IsMatch(title))
             {
+                LOGGER.Debug("Getting MangaDex ID Data");
                 seriesDataDoc = await MangadexQuery.GetSeriesByIdAsync(title);
 				curMangaDexId = title;
                 isMangaDexId = true;
             }
 			else
 			{
+                LOGGER.Debug("Getting AniList Title Data");
 				seriesDataDoc = await AniListQuery.GetSeriesByTitleAsync(title, bookType, pageNum);
+                LOGGER.Debug(seriesDataDoc == null);
 			}
 
 			string countryOfOrigin = string.Empty, nativeTitle = string.Empty, japaneseTitle = string.Empty, romajiTitle = string.Empty, englishTitle = string.Empty, coverPath = string.Empty;
@@ -201,6 +205,7 @@ namespace Tsundoku.Models
 					}
 					else
 					{
+                        LOGGER.Debug("Alt Titles Empty so Making Call to Mangadex");
                         AddAdditionalLanguages(ref newTitles, additionalLanguages, MangadexQuery.GetAdditionalMangaDexTitleList((await MangadexQuery.GetSeriesByTitleAsync(romajiTitle)).RootElement.GetProperty("data")).ToList());
 					}
 				}
@@ -253,11 +258,12 @@ namespace Tsundoku.Models
 						foreach (JsonElement series in data.EnumerateArray())
 						{
 							attributes = series.GetProperty("attributes");
-							altTitles = attributes.GetProperty("altTitles").EnumerateArray();
-							englishTitle = attributes.GetProperty("title").GetProperty("en").GetString();
-							englishAltTitle = GetAltTitle("en", altTitles);
+                            altTitles = attributes.GetProperty("altTitles").EnumerateArray();
+                            englishAltTitle = GetAltTitle("en", altTitles);
 							japaneseAltTitle = GetAltTitle("ja", altTitles);
-							if (!IsSeriesInvalid(title, englishTitle, englishAltTitle)
+                            englishTitle = attributes.GetProperty("title").TryGetProperty("en", out JsonElement englishElement) ? englishElement.GetString() : englishAltTitle;
+
+                            if (!IsSeriesInvalid(title, englishTitle, englishAltTitle)
                                 && (
                                     data.GetArrayLength() == 1
                                     || (
@@ -296,7 +302,7 @@ namespace Tsundoku.Models
 
 					relationships = data.GetProperty("relationships").EnumerateArray();
 					curMangaDexId = string.IsNullOrWhiteSpace(curMangaDexId) ? data.GetProperty("id").GetString() : curMangaDexId;
-					romajiTitle = attributes.GetProperty("title").GetProperty("en").GetString();
+					romajiTitle = GetAltTitle("ja-ro", altTitles); romajiTitle = string.IsNullOrWhiteSpace(romajiTitle) ? englishTitle : romajiTitle;
 					description = MangadexQuery.ParseMangadexDescription(attributes.GetProperty("description").GetProperty("en").GetString());
 					Status = GetSeriesStatus(attributes.GetProperty("status").GetString());
 					link = !attributes.GetProperty("links").TryGetProperty("al", out JsonElement aniListId) ? @$"https://mangadex.org/title/{curMangaDexId}" : @$"https://anilist.co/manga/{aniListId}";
@@ -540,13 +546,12 @@ namespace Tsundoku.Models
             string coverName = ExtensionMethods.RemoveInPlaceCharArray(string.Concat(title.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries))).Replace(",", string.Empty);
             string format = bookType.ToString().ToUpper();
 			string newPath = @$"Covers\{coverName}_{format}.{coverLink[^3..]}";
-            LOGGER.Debug("(0) {}", newPath);
 
             if (File.Exists(@$"Covers\{coverName}_{format}.jpg") || File.Exists(@$"Covers\{coverName}_{format}.png"))
             {
+                LOGGER.Info($"{coverName}_{format} Already Exists Creating New Path");
                 newPath = @$"Covers\{coverName}_{seriesId}_{format}.{coverLink[^3..]}";
             }
-            LOGGER.Debug("(1) {}", newPath);
 
 			return newPath;
 		}

@@ -33,7 +33,7 @@ namespace Tsundoku.ViewModels
         [Reactive] public string AdvancedSearchText { get; set; } = string.Empty;
         [Reactive] public bool LanguageChanged { get; set; } = false;
         [Reactive] public Bitmap? UserIcon { get; set; }
-        [Reactive] public string CurLanguage { get; set; }
+        // [Reactive] public string CurLanguage { get; set; }
         [Reactive] public int LanguageIndex { get; set; }
         [Reactive] public int FilterIndex { get; set; }
         public static bool SearchIsBusy { get; set; } = false;

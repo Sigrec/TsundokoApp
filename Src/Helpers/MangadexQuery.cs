@@ -1,12 +1,13 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Tsundoku.Helpers
 {
     public partial class MangadexQuery
     {
         private static readonly HttpClient MangadexClient;
-        [GeneratedRegex(@"- Winner.*$|\n\n\n---[\S\s.]*|\n\n\*\*[\S\s.]*|\[Official.*?\].*|\[Wikipedia.*?\].*|\n\n---\n\*\*Links:\*\*\n\n.*")] private static partial Regex MangaDexDescRegex();
+        [GeneratedRegex(@"- Winner.*$|\n\n\n---[\S\s.]*|\n\n\*\*[\S\s.]*|\[Official.*?\].*|\[Wikipedia.*?\].*|\n\n---\n\*\*Links:\*\*\n\n.*|\n___\n.*")] private static partial Regex MangaDexDescRegex();
 
         static MangadexQuery()
         {
@@ -30,13 +31,14 @@ namespace Tsundoku.Helpers
         {
             try
             {
-                LOGGER.Debug($"MangaDex Getting Series By Title Async \"{MangadexClient.BaseAddress}manga?title={title.Replace(" ", "%20")}\"");
-                var response = await MangadexClient.GetStringAsync($"manga?title={title.Replace(" ", "%20")}");
+                title = HttpUtility.UrlEncode(title);
+                LOGGER.Debug($"MangaDex Getting Series By Title Async \"{MangadexClient.BaseAddress}manga?title={title}\"");
+                var response = await MangadexClient.GetStringAsync($"manga?title={title}");
                 return JsonDocument.Parse(response);
             }
             catch (HttpRequestException e)
             {
-                LOGGER.Error($"MangaDex GetSeriesByTitle w/ {title} Request Failed HttpRequestException {e.Message}");
+                LOGGER.Error($"MangaDex GetSeriesByTitle w/ \"{title}\" Request Failed HttpRequestException {e.Message}");
             }
             return null;
         }
@@ -139,6 +141,7 @@ namespace Tsundoku.Helpers
         /// <returns></returns>
         public static string ParseMangadexDescription(string seriesDescription)
 		{
+
 			return MangaDexDescRegex().Replace(seriesDescription, "").TrimEnd('\n').Trim();
 		}
     }

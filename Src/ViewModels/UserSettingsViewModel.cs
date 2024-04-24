@@ -16,6 +16,8 @@ namespace Tsundoku.ViewModels
         [Reactive] public bool BooksAMillionMember { get; set; } = MainUser.Memberships[BooksAMillion.WEBSITE_TITLE];
         [Reactive] public bool KinokuniyaUSAMember { get; set; } = MainUser.Memberships[KinokuniyaUSA.WEBSITE_TITLE];
         public ICommand ExportToSpreadSheetAsyncCommand { get; }
+        // public const string CurTsundokuVersion = "4.1.2.0";
+        // [Reactive] public static string CurTsundokuVersion { get; set; } = "4.1.2.0";
 
         public UserSettingsViewModel()
         {

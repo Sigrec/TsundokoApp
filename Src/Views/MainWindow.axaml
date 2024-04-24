@@ -173,7 +173,7 @@
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">French</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">German</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Greek</ComboBoxItem>
-                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Hewbrew</ComboBoxItem>
+                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Hebrew</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Hindi</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Hungarian</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Indonesian</ComboBoxItem>
@@ -188,7 +188,7 @@
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Norwegian</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Persian</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Polish</ComboBoxItem>
-                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Portugese</ComboBoxItem>
+                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Portuguese</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Romanian</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Russian</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Serbian</ComboBoxItem>
@@ -198,7 +198,7 @@
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Tamil</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Thai</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Turkish</ComboBoxItem>
-                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Ukranian</ComboBoxItem>
+                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Ukrainian</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Vietnamese</ComboBoxItem>
                         </ComboBox>
                         <ComboBox Name="CollectionFilterSelector"
@@ -761,11 +761,12 @@
                                                         FontSize="23"
                                                         MaxHeight="{CompiledBinding Source={x:Static local:Constants.TOP_SECTION_CARD_HEIGHT}}"
                                                         PointerPressed="CopySeriesTitleAsync"
-                                                        Padding="8,1,7,6"
+                                                        Padding="8,2,7,3"
                                                         Cursor="Hand"
                                                         TextAlignment="Left"
-                                                        MaxLines="4"
-                                                        LineHeight="24.0">
+                                                        TextTrimming="CharacterEllipsis"
+                                                        MaxLines="3"
+                                                        LineHeight="25">
                                                     <TextBlock.Text>
                                                         <MultiBinding Converter="{StaticResource ConvertTitle}">
                                                             <Binding Path="Titles"/>
@@ -777,7 +778,10 @@
                                                 <TextBlock TextWrapping="Wrap"
                                                            Grid.Row="1"
                                                            Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesCardStaffColor, Converter={StaticResource ConvertColor}}"
-                                                           Padding="9,0,4,2">
+                                                           MaxLines="2"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontSize="15"
+                                                           Padding="9,0,4,3">
                                                     <TextBlock.Text>
                                                         <MultiBinding Converter="{StaticResource ConvertStaff}" Mode="OneWay">
                                                             <Binding Path="Staff"/>
