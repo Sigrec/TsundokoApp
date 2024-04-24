@@ -264,6 +264,13 @@
                                     <Grid Width="{CompiledBinding Source={x:Static local:Constants.CARD_WIDTH}}"
                                           Grid.ColumnDefinitions="Auto,Auto"
                                           ShowGridLines="false">
+                                        <Grid.Styles>
+                                            <Style Selector="ToolTip">
+                                                <Setter Property="Background" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.MenuBGColor, Converter={StaticResource ConvertColor}}"/>
+                                                <Setter Property="BorderBrush" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.MenuButtonBorderColor, Converter={StaticResource ConvertColor}}"/>
+                                                <Setter Property="Foreground" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.MenuButtonTextAndIconColor, Converter={StaticResource ConvertColor}}"/>
+                                            </Style>
+                                        </Grid.Styles>
 
                                         <!-- Left Side Card -->
                                         <Canvas Grid.Column="0"
@@ -490,7 +497,7 @@
                                                         <Setter Property="BorderBrush" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBorderColor, Converter={StaticResource ConvertColor}}"/>
                                                     </Style>
                                                 </Grid.Styles>
-                                                <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5" Margin="22,15,22,0">
+                                                <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5" Margin="22,20,22,0">
                                                     <StackPanel.Styles>
                                                         <Style Selector="ToggleButton">
                                                             <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter, ^:pressed /template/ ContentPresenter#PART_ContentPresenter">
@@ -516,18 +523,30 @@
                                                             </Style>
                                                         </Style>
                                                     </StackPanel.Styles>
+                                                    <Button i:Attached.Icon="fa-solid fa-arrows-rotate"
+                                                            Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBGColor, Converter={StaticResource ConvertColor}}"
+                                                            BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBorderColor, Converter={StaticResource ConvertColor}}" 
+                                                            BorderThickness="2"
+                                                            FontWeight="Bold"
+                                                            FontSize="22"
+                                                            VerticalContentAlignment="Center"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalAlignment="Center"
+                                                            Click="RefreshSeries"
+                                                            Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsIconColor, Converter={StaticResource ConvertColor}}"/>
                                                     <Button i:Attached.Icon="fa-solid fa-image"
-                                                        Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBGColor, Converter={StaticResource ConvertColor}}"
-                                                        BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBorderColor, Converter={StaticResource ConvertColor}}" 
-                                                        BorderThickness="2"
-                                                        FontWeight="Bold"
-                                                        FontSize="22"
-                                                        VerticalContentAlignment="Center"
-                                                        HorizontalContentAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        HorizontalAlignment="Center"
-                                                        Click="ChangeSeriesCover"
-                                                        Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsIconColor, Converter={StaticResource ConvertColor}}"/>
+                                                            Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBGColor, Converter={StaticResource ConvertColor}}"
+                                                            BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBorderColor, Converter={StaticResource ConvertColor}}" 
+                                                            BorderThickness="2"
+                                                            FontWeight="Bold"
+                                                            FontSize="22"
+                                                            VerticalContentAlignment="Center"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalAlignment="Center"
+                                                            Click="ChangeSeriesCover"
+                                                            Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsIconColor, Converter={StaticResource ConvertColor}}"/>
                                                     <Button i:Attached.Icon="fa-solid fa-floppy-disk"
                                                             Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBGColor, Converter={StaticResource ConvertColor}}"
                                                             BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBorderColor, Converter={StaticResource ConvertColor}}" 
@@ -764,8 +783,9 @@
                                                         Padding="8,2,7,3"
                                                         Cursor="Hand"
                                                         TextAlignment="Left"
-                                                        TextTrimming="CharacterEllipsis"
+                                                        TextTrimming="WordEllipsis"
                                                         MaxLines="3"
+                                                        Width="{CompiledBinding Source={x:Static local:Constants.RIGHT_SIDE_CARD_WIDTH}}"
                                                         LineHeight="25">
                                                     <TextBlock.Text>
                                                         <MultiBinding Converter="{StaticResource ConvertTitle}">
@@ -773,13 +793,28 @@
                                                             <Binding Path="#CollectionTheme.DataContext.CurLanguage"/>
                                                         </MultiBinding>
                                                     </TextBlock.Text>
+                                                    <ToolTip.Tip>
+                                                        <TextBlock TextWrapping="Wrap"
+                                                                FontWeight="Bold"
+                                                                FontSize="18"
+                                                                TextTrimming="None"
+                                                                MaxLines="100"
+                                                                LineHeight="25">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding Converter="{StaticResource ConvertTitle}">
+                                                                <Binding Path="Titles"/>
+                                                                <Binding Path="#CollectionTheme.DataContext.CurLanguage"/>
+                                                            </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </ToolTip.Tip>
                                                 </TextBlock>
                                                 <!-- </Border> -->
                                                 <TextBlock TextWrapping="Wrap"
                                                            Grid.Row="1"
                                                            Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesCardStaffColor, Converter={StaticResource ConvertColor}}"
                                                            MaxLines="2"
-                                                           TextTrimming="CharacterEllipsis"
+                                                           TextTrimming="WordEllipsis"
                                                            FontSize="15"
                                                            Padding="9,0,4,3">
                                                     <TextBlock.Text>
@@ -788,6 +823,19 @@
                                                             <Binding Path="#CollectionTheme.DataContext.CurLanguage"/>
                                                         </MultiBinding>
                                                     </TextBlock.Text>
+                                                    <ToolTip.Tip>
+                                                        <TextBlock TextWrapping="Wrap"
+                                                                FontWeight="Bold"
+                                                                TextTrimming="None"
+                                                                MaxLines="100">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding Converter="{StaticResource ConvertStaff}" Mode="OneWay">
+                                                                    <Binding Path="Staff"/>
+                                                                    <Binding Path="#CollectionTheme.DataContext.CurLanguage"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </ToolTip.Tip>
                                                 </TextBlock>
                                                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                                                               HorizontalScrollBarVisibility="Disabled"

@@ -745,5 +745,11 @@ namespace Tsundoku.ViewModels
             collectionStatsWindow.CollectionStatsVM.UpdateAllStats(series.CurVolumeCount, (uint)(series.MaxVolumeCount - series.CurVolumeCount));
             LOGGER.Info("Removed {} From Collection", series.Titles["Romaji"]);
         }
+
+        public static void UpdateChartStats()
+        {
+            collectionStatsWindow.CollectionStatsVM.UpdateStatusChartValues();
+            collectionStatsWindow.CollectionStatsVM.UpdateStatusPercentages();
+        }
     }
 }

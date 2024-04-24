@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" AfterTargets="ClickOncePublish">
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
+		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<AvaloniaNameGeneratorBehavior>InitializeComponent</AvaloniaNameGeneratorBehavior>
@@ -9,15 +9,15 @@
 		<AvaloniaNameGeneratorFilterByNamespace>*</AvaloniaNameGeneratorFilterByNamespace>
 		<PlatformTarget>x64</PlatformTarget>
 		<StartupObject>Tsundoku.Program</StartupObject>
-		<!--<RuntimeIdentifier>win-x64</RuntimeIdentifier>-->
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<PublishTrimmed>true</PublishTrimmed>
 		<TrimMode>partial</TrimMode>
 		<PublishReadyToRun>True</PublishReadyToRun>
 		<Optimize>True</Optimize>
 		<SelfContained>True</SelfContained>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-		<Version>4.1.2</Version>
-		<FileVersion>4.1.2.0</FileVersion>
+		<Version>4.1.3</Version>
+		<FileVersion>4.1.3.0</FileVersion>
 		<RepositoryUrl>https://github.com/Sigrec/Tsundoku</RepositoryUrl>
         <LangVersion>preview</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -80,15 +80,15 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0-beta1" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.0-beta1" />
     <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
-    <PackageReference Include="GraphQL.Client" Version="6.0.3" />
-	<PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="6.0.3" />
-    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.0.3" />
+    <PackageReference Include="GraphQL.Client" Version="6.0.5" />
+	<PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="6.0.5" />
+    <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.0.5" />
 	<PackageReference Include="MangaAndLightNovelWebScrape" Version="2.2.0" />
     <PackageReference Include="NLog" Version="5.2.8" />
 	<PackageReference Include="FileWatcherEx" Version="2.6.0" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.3.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.12" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.4" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.0-preview.3.24172.9" />
 	<PackageReference Include="TextCopy" Version="6.2.1" />
     <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
 	<PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc2" />

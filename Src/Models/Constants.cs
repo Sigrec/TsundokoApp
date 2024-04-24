@@ -145,6 +145,7 @@ namespace Tsundoku.Models
 			{ "ja", "Japanese" },
             { "ja-ro", "Romaji" },
 			{ "ko" , "Korean" },
+            { "ko-ro", "Romanized Korean"},
 			{ "fr" , "French" },
 			{ "en" , "English" },
 			{ "ar" , "Arabic" },
@@ -153,8 +154,9 @@ namespace Tsundoku.Models
 			{ "bg" , "Bulgarian" },
 			{ "my" , "Burmese" },
 			{ "ca" , "Catalan" },
-			{ "zh" , "Chinese" },
-			{ "zh-hk" , "Chinese" },
+			{ "zh" , "Chinese" }, // Simplified Chinese
+			{ "zh-hk" , "Chinese" }, // Traditional Chinese
+            { "zh-ro", "Romanized Chinese" },
 			{ "hr" , "Croatian" },
 			{ "cs" , "Czech" },
 			{ "da" , "Danish" },
@@ -180,12 +182,12 @@ namespace Tsundoku.Models
 			{ "fa" , "Persian" },
 			{ "pl" , "Polish" },
 			{ "pt" , "Portuguese" },
-			{ "pt-br" , "Portuguese" },
+			{ "pt-br" , "Portuguese" }, // Brazilian Portuguese
 			{ "ro" , "Romanian" },
 			{ "ru" , "Russian" },
 			{ "sr" , "Serbian" },
 			{ "sk" , "Slovak" },
-			{ "es" , "Spanish" },
+			{ "es" , "Spanish" }, // Castilian Spanish
 			{ "es-la" , "Spanish" },
 			{ "sv" , "Swedish" },
 			{ "ta" , "Tamil" },

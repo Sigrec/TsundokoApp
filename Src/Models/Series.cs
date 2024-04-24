@@ -10,7 +10,6 @@ namespace Tsundoku.Models
 {
     public partial class Series : IDisposable, IEquatable<Series?>
     {
-		[GeneratedRegex(@"[a-z0-9]")] private static partial Regex AlphaNumericOnlyRegex();
         [GeneratedRegex(@" \(.*\)")] private static partial Regex StaffRegex();
         [GeneratedRegex(@" \((.*)\)")] private static partial Regex NativeStaffRegex();
         [GeneratedRegex(@"^.*(?= \(.*\))")] private static partial Regex FullStaffRegex();
@@ -25,21 +24,20 @@ namespace Tsundoku.Models
         });
 
 		[JsonIgnore] private bool disposedValue;
-		[JsonIgnore] public string Synonyms { get; }
 		[JsonIgnore] public Bitmap CoverBitMap { get; set; }
-		public Dictionary<string, string> Titles { get; }
-        public Dictionary<string, string> Staff { get; }
-		public string Description { get; }
+		public Dictionary<string, string> Titles { get; set; }
+        public Dictionary<string, string> Staff { get; set; }
+		public string Description { get; set; }
 
 		/// <summary>
 		/// The format of the series (Manga, Manhwa, Manhua, Manfra, Comic, or Novel)
 		/// </summary>
-		public Format Format { get; }
+		public Format Format { get; set; }
 
 		/// <summary>
 		/// The serialization status of the series (Finished, Ongoing, Hiatus, Cancelled, or Error)
 		/// </summary>
-		public Status Status { get; }
+		public Status Status { get; set; }
 
 		/// <summary>
 		/// Path to the cover for a series
@@ -92,7 +90,7 @@ namespace Tsundoku.Models
         /// <param name="MD_Query">MangaDexQuery object for the MangaDex HTTP client</param>
         /// <param name="additionalLanguages">List of additional languages to query for</param>
         /// <returns></returns>
-        public static async Task<Series?> CreateNewSeriesCardAsync(string title, Format bookType, ushort maxVolCount, ushort minVolCount, ObservableCollection<string> additionalLanguages, string customImageUrl = "", Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal cost = 0)
+        public static async Task<Series?> CreateNewSeriesCardAsync(string title, Format bookType, ushort maxVolCount, ushort minVolCount, ObservableCollection<string> additionalLanguages, Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal cost = 0, string customImageUrl = "")
         {
 			JsonDocument? seriesDataDoc;
 			int pageNum = 1;
@@ -234,7 +232,8 @@ namespace Tsundoku.Models
                         volumesRead,
                         cost,
 						demographic,
-                        string.IsNullOrWhiteSpace(customImageUrl) ? await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl) : await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl)
+                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl)
+                        // string.IsNullOrWhiteSpace(customImageUrl) ? await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl) : await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl)
 					);
 			}
 			else if (isMangaDexId || bookType == Format.Manga) // MangadexQuery
@@ -405,7 +404,7 @@ namespace Tsundoku.Models
                         volumesRead,
                         cost,
                         demographic,
-						string.IsNullOrWhiteSpace(customImageUrl) ? await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, coverLink, string.Empty) : await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, coverLink, customImageUrl)
+                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, coverLink, string.IsNullOrWhiteSpace(customImageUrl) ? string.Empty : customImageUrl)
 					);
 				}
 			}
@@ -555,6 +554,19 @@ namespace Tsundoku.Models
 
 			return newPath;
 		}
+
+        public ObservableCollection<string> SeriesContainsAdditionalLanagues()
+        {
+            ObservableCollection<string> additionalLangs = new ObservableCollection<string>();
+            foreach (string lang in AVAILABLE_LANGUAGES.Skip(3))
+            {
+                if (this.Titles.ContainsKey(lang))
+                {
+                    additionalLangs.Add(lang);
+                }
+            }
+            return additionalLangs;
+        }
 
         public override string ToString()
         {

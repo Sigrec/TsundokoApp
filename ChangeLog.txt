@@ -12,6 +12,13 @@ TODO:
 ❌ Fix RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
 ❌ Fix issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 
+v4.1.3.0 - April 24th, 2024
+✅ Added refresh button for series to refresh info (example would be when a series is complete and u refresh then then the status will get updated)
+✅ Added tooltip to series titles for titles that are very long
+✅ Added tooltip to series staff for series with a lot of staff
+🔥 Theme settings controls now correctly centered at all times
+🔥 Windows are no longer topmost always only on the collection app
+
 v4.1.2.0 - April 23rd, 2024
 🔥 Fixed incorrect version in settings window
 🔥 Fixed styling & overflow trimming of series title & staff

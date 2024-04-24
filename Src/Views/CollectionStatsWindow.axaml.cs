@@ -22,7 +22,7 @@ namespace Tsundoku.Views
             DataContext = new CollectionStatsViewModel();
             Opened += (s, e) =>
             {
-                var sub = UnknownRectangle.Bind(Avalonia.Controls.Shapes.Rectangle.FillProperty, UnknownRectangleColorSource);
+                var sub = UnknownRectangle.Bind(Avalonia.Controls.Shapes.Shape.FillProperty, UnknownRectangleColorSource);
                 UnknownRectangleColorSource.OnNext(SolidColorBrush.Parse(CollectionStatsVM.CurrentTheme.SeriesCardDescColor == CollectionStatsVM.CurrentTheme.MenuTextColor ? CollectionStatsVM.CurrentTheme.SeriesCardTitleColor : CollectionStatsVM.CurrentTheme.SeriesCardDescColor));
                 if (CanUpdate) { UpdateChartColors(); }
                 CanUpdate = false;

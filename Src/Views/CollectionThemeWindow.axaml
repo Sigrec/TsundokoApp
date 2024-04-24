@@ -13,7 +13,6 @@
         FontFamily="Segoe UI"
         WindowState="2"
         Classes="menu"
-        Topmost="true"
         WindowStartupLocation="2"
         KeyboardNavigation.TabNavigation="None"
         x:DataType="vm:ThemeSettingsViewModel"
@@ -28,7 +27,7 @@
 
 	<Border Classes="menu" BorderThickness="3" CornerRadius="0,0,8,8" ClipToBounds="True">
 		<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Theme="{StaticResource ReverseCollectionScroll}">
-			<StackPanel Spacing="10" Margin="20,10,20,20">
+			<StackPanel Spacing="10" Margin="20,10,20,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Border BorderBrush="{CompiledBinding CurrentTheme.DividerColor, Converter={StaticResource ConvertColor}}" BorderThickness="0,0,0,3">
                     <StackPanel HorizontalAlignment="Center" Margin="0,0,0,20">
                         <TextBlock Text="Menu / Nav Bar" FontSize="30" FontWeight="Bold" Classes="menu" HorizontalAlignment="Center" TextDecorations="Underline"/>

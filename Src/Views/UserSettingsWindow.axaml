@@ -9,7 +9,6 @@
         x:DataType="vm:UserSettingsViewModel"
         Icon="\Assets\Icons\Tsundoku-Logo.ico"
         Title="Settings"
-        Topmost="true"
         FontFamily="Segoe UI"
         MaxWidth="491"
         MinWidth="491"

@@ -11,6 +11,8 @@ using ReactiveUI;
 using Avalonia.Platform.Storage;
 using Avalonia.Media.Imaging;
 using FileWatcherEx;
+using Tsundoku.Helpers;
+using DynamicData;
 
 namespace Tsundoku.Views
 {
@@ -228,12 +230,61 @@ namespace Tsundoku.Views
             CoverChangedSeriesList.Clear();
         }
 
+        private async void RefreshSeries(object sender, RoutedEventArgs args)
+        {
+            ViewModelBase.newCoverCheck = true;
+            Series curSeries = (Series)((Button)sender).DataContext;
+            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(curSeries.Titles["Romaji"], curSeries.Format, curSeries.MaxVolumeCount, curSeries.CurVolumeCount, curSeries.SeriesContainsAdditionalLanagues(), curSeries.Demographic, curSeries.VolumesRead, curSeries.Rating, curSeries.Cost);
+
+            if (newSeriesData != null)
+            {
+                LOGGER.Info($"Refreshing/Updating \"{curSeries.Titles["Romaji"]}\" Data");
+
+                int searchIndex = MainWindowViewModel.SearchedCollection.ToList().BinarySearch(curSeries, new SeriesComparer(ViewModelBase.MainUser.CurLanguage));
+                searchIndex = searchIndex < 0 ? ~searchIndex : searchIndex;
+                if (searchIndex > -1)
+                {
+                    MainWindowViewModel.SearchedCollection.RemoveAt(searchIndex);
+                    MainWindowViewModel.SearchedCollection.Insert(searchIndex, curSeries);
+                }
+
+                int mainIndex = MainWindowViewModel.UserCollection.BinarySearch(curSeries, new SeriesComparer(ViewModelBase.MainUser.CurLanguage));
+                mainIndex = mainIndex < 0 ? ~mainIndex : mainIndex;
+
+                if (!curSeries.Titles.Equals(newSeriesData.Titles))
+                {
+                    curSeries.Titles = newSeriesData.Titles;
+                    MainWindowViewModel.UserCollection[mainIndex].Titles = newSeriesData.Titles;
+                }
+                if (!curSeries.Staff.Equals(newSeriesData.Staff))
+                {
+                    curSeries.Staff = newSeriesData.Staff;
+                    MainWindowViewModel.UserCollection[mainIndex].Staff = newSeriesData.Staff;
+                }
+                if (!curSeries.Description.Equals(newSeriesData.Description))
+                {
+                    curSeries.Description = newSeriesData.Description;
+                    MainWindowViewModel.UserCollection[mainIndex].Description = newSeriesData.Description;
+                }
+                if (curSeries.Status != newSeriesData.Status)
+                {
+                    curSeries.Status = newSeriesData.Status;
+                    MainWindowViewModel.UserCollection[mainIndex].Status = newSeriesData.Status;
+                    MainWindowViewModel.UpdateChartStats();
+                }
+            }
+            else
+            {
+                LOGGER.Error($"Refresh Returned Null Series Data for \"{curSeries.Titles["Romaji"]}\"");
+            }
+        }
+
         private async void ChangeSeriesCover(object sender, RoutedEventArgs args)
         {
             ViewModelBase.newCoverCheck = true;
             var file = await this.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions {
-                AllowMultiple = false,
-                FileTypeFilter = new List<FilePickerFileType>() { new FilePickerFileType("Images") { Patterns = ["*.png", "*.jpg"] } }
+            AllowMultiple = false,
+            FileTypeFilter = new List<FilePickerFileType>() { new FilePickerFileType("Images") { Patterns = ["*.png", "*.jpg"] } }
             });
             if (file.Count > 0)
             {
@@ -370,7 +421,7 @@ namespace Tsundoku.Views
                         parentControl = null;
                         seriesProgressBar = null; 
                         ((MaskedTextBox)textBoxes.ElementAt(1)).Text = "";
-                        ((MaskedTextBox)textBoxes.ElementAt(2)).Text = ""; 
+                        ((MaskedTextBox)textBoxes.ElementAt(2)).Text = "";
                     }
                     else
                     {

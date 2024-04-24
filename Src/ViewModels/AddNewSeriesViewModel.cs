@@ -63,7 +63,7 @@ namespace Tsundoku.ViewModels
         /// <returns>Whether the series can be added to the users collection or not</returns>
         public static async Task<bool> GetSeriesDataAsync(string title, Format bookType, ushort curVolCount, ushort maxVolCount, ObservableCollection<string> additionalLanguages, string customImageUrl, Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal cost = 0)
         {
-            Series? newSeries = await Series.CreateNewSeriesCardAsync(title, bookType, maxVolCount, curVolCount, additionalLanguages, customImageUrl, demographic, volumesRead, rating, cost);
+            Series? newSeries = await Series.CreateNewSeriesCardAsync(title, bookType, maxVolCount, curVolCount, additionalLanguages, demographic, volumesRead, rating, cost, customImageUrl);
             bool duplicateSeriesCheck = true;
             if (newSeries != null)
             {
