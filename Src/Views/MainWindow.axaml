@@ -780,7 +780,7 @@
                                                         FontSize="23"
                                                         MaxHeight="{CompiledBinding Source={x:Static local:Constants.TOP_SECTION_CARD_HEIGHT}}"
                                                         PointerPressed="CopySeriesTitleAsync"
-                                                        Padding="8,2,7,3"
+                                                        Padding="8,4,7,3"
                                                         Cursor="Hand"
                                                         TextAlignment="Left"
                                                         TextTrimming="WordEllipsis"

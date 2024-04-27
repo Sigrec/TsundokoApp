@@ -296,7 +296,9 @@ namespace Tsundoku.ViewModels
                     countRating++;
                 }
             }
-            MeanRating = decimal.Round(decimal.Divide(rating, countRating), 1);
+            LOGGER.Debug(countRating);
+            LOGGER.Debug(rating);
+            MeanRating = countRating != 0 ? decimal.Round(decimal.Divide(rating, countRating), 1) : 0;
         }
 
         public void UpdateAllStats(uint additionalCurVols, uint additionalVolToBeCol)
