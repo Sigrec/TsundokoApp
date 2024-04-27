@@ -11,6 +11,11 @@ TODO:
 ❌ Fix padding issue in Series Note w/ Scrollbar (seems like it's not fixable tbh)
 ❌ Fix RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
 ❌ Fix issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
+❌ Add popup window for add series failure
+
+v4.1.3.2 - April 27th, 2024
+🔥 Fixed issue where app would crash if MangaDex API call fails
+🔥 Fixed another MangaDex desc parsing issue
 
 v4.1.3.1 - April 27th, 2024
 ⌛ Avalonia Library Update

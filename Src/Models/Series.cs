@@ -155,7 +155,13 @@ namespace Tsundoku.Models
 				if (!bookType.Equals("NOVEL") && (countryOfOrigin.Equals("KR") || countryOfOrigin.Equals("CW") || countryOfOrigin.Equals("TW")))
 				{
                     LOGGER.Info("Getting Japanese Title for Non-Japanese Series");
-					mangaDexAltTitles = MangadexQuery.GetAdditionalMangaDexTitleList((await MangadexQuery.GetSeriesByTitleAsync(romajiTitle)).RootElement.GetProperty("data"));
+                    JsonDocument? getJapnAltTitle = await MangadexQuery.GetSeriesByTitleAsync(romajiTitle);
+                    if (getJapnAltTitle == null)
+                    {
+                        LOGGER.Warn($"Unable to get MangaDex alt titles for \"{romajiTitle}\"");
+						return null;
+                    }
+					mangaDexAltTitles = MangadexQuery.GetAdditionalMangaDexTitleList(getJapnAltTitle.RootElement.GetProperty("data"));
 					japaneseTitle = GetAltTitle("ja", mangaDexAltTitles);
 				}
 
@@ -204,7 +210,13 @@ namespace Tsundoku.Models
 					else
 					{
                         LOGGER.Debug("Alt Titles Empty so Making Call to Mangadex");
-                        AddAdditionalLanguages(ref newTitles, additionalLanguages, MangadexQuery.GetAdditionalMangaDexTitleList((await MangadexQuery.GetSeriesByTitleAsync(romajiTitle)).RootElement.GetProperty("data")).ToList());
+                        JsonDocument? altTitlesAgain = await MangadexQuery.GetSeriesByTitleAsync(romajiTitle);
+                        if (altTitlesAgain == null)
+                        {
+                            LOGGER.Warn($"Unable to get MangaDex info for \"{romajiTitle}\"");
+                            return null;
+                        }
+                        AddAdditionalLanguages(ref newTitles, additionalLanguages, MangadexQuery.GetAdditionalMangaDexTitleList(altTitlesAgain.RootElement.GetProperty("data")).ToList());
 					}
 				}
 
@@ -281,7 +293,7 @@ namespace Tsundoku.Models
 
 						if(notFoundCondition)
 						{
-							LOGGER.Warn("User Input Invalid Series Title or ID or Can't Determine Series Needs to be more Specific");
+							LOGGER.Warn($"User Input Invalid Series Title or ID {title} or Can't Determine Series Needs to be more Specific");
 							return null;
 						}
 					}
@@ -306,8 +318,14 @@ namespace Tsundoku.Models
 					Status = GetSeriesStatus(attributes.GetProperty("status").GetString());
 					link = !attributes.GetProperty("links").TryGetProperty("al", out JsonElement aniListId) ? @$"https://mangadex.org/title/{curMangaDexId}" : @$"https://anilist.co/manga/{aniListId}";
 					countryOfOrigin = attributes.GetProperty("originalLanguage").GetString();
-					string coverLink = @$"https://uploads.mangadex.org/covers/{curMangaDexId}/{await MangadexQuery.GetCoverAsync(relationships.Single(x => x.GetProperty("type").GetString().Equals("cover_art")).GetProperty("id").GetString())}";
-                    LOGGER.Debug("COVER LINK = {}", coverLink);
+
+                    string? mangadexCover = await MangadexQuery.GetCoverAsync(relationships.Single(x => x.GetProperty("type").GetString().Equals("cover_art")).GetProperty("id").GetString());
+                    if (mangadexCover == null)
+                    {
+                        LOGGER.Warn($"Unable to get MangaDex cover for \"{romajiTitle}\"");
+                        return null;
+                    }
+					string coverLink = @$"https://uploads.mangadex.org/covers/{curMangaDexId}/{mangadexCover}";
 					coverPath = CreateCoverFilePath(coverLink, romajiTitle, GetCorrectFormat(countryOfOrigin), curMangaDexId);
 					demographic = GetSeriesDemographic(attributes.GetProperty("publicationDemographic").GetString());
 
@@ -358,6 +376,11 @@ namespace Tsundoku.Models
                                 fullStaffBuilder.AppendFormat("{0} | ", staffName);
                             }
                         }
+                        else
+						{
+							LOGGER.Warn($"Unable to get MangaDex author info for \"{romajiTitle}\"");
+							return null;
+						}
 					}
 
 					Dictionary<string, string> newStaff = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

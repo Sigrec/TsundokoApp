@@ -7,7 +7,7 @@ namespace Tsundoku.Helpers
     public partial class MangadexQuery
     {
         private static readonly HttpClient MangadexClient;
-        [GeneratedRegex(@"- Winner.*$|\n\n\n---[\S\s.]*|\n\n\*\*[\S\s.]*|\[Official.*?\].*|\[Wikipedia.*?\].*|\n\n---\n\*\*Links:\*\*\n\n.*|\n___\n.*")] private static partial Regex MangaDexDescRegex();
+        [GeneratedRegex(@"- Winner.*$|\n\n\n---[\S\s.]*|\n\n\*\*[\S\s.]*|\[Official.*?\].*|\[Wikipedia.*?\].*|\n\n---\n\*\*Links:\*\*\n\n.*|\n___\n.*|\r\n\s+\r\n.*")] private static partial Regex MangaDexDescRegex();
 
         static MangadexQuery()
         {
