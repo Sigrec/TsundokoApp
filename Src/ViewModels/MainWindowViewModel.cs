@@ -97,7 +97,7 @@ namespace Tsundoku.ViewModels
             settingsWindow = new SettingsWindow();
             themeSettingsWindow = new CollectionThemeWindow();;
             priceAnalysisWindow = new PriceAnalysisWindow();
-            priceAnalysisWindow.PriceAnalysisVM.CurRegion = MainUser.Region;
+            priceAnalysisWindow.ViewModel.CurRegion = MainUser.Region;
             collectionStatsWindow = new CollectionStatsWindow();
         }
 
@@ -740,14 +740,14 @@ namespace Tsundoku.ViewModels
             DeleteCover(series);
             SearchedCollection.Remove(series);
             UserCollection.Remove(series);
-            collectionStatsWindow.CollectionStatsVM.UpdateAllStats(series.CurVolumeCount, (uint)(series.MaxVolumeCount - series.CurVolumeCount));
+            collectionStatsWindow.ViewModel.UpdateAllStats(series.CurVolumeCount, (uint)(series.MaxVolumeCount - series.CurVolumeCount));
             LOGGER.Info("Removed {} From Collection", series.Titles["Romaji"]);
         }
 
         public static void UpdateChartStats()
         {
-            collectionStatsWindow.CollectionStatsVM.UpdateStatusChartValues();
-            collectionStatsWindow.CollectionStatsVM.UpdateStatusPercentages();
+            collectionStatsWindow.ViewModel.UpdateStatusChartValues();
+            collectionStatsWindow.ViewModel.UpdateStatusPercentages();
         }
     }
 }

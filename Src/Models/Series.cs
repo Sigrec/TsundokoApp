@@ -293,7 +293,7 @@ namespace Tsundoku.Models
 
 						if(notFoundCondition)
 						{
-							LOGGER.Warn($"User Input Invalid Series Title or ID {title} or Can't Determine Series Needs to be more Specific");
+							LOGGER.Warn($"User Input Invalid Series Title or ID \"{title}\" or Can't Determine Series Needs to be more Specific");
 							return null;
 						}
 					}
@@ -432,7 +432,7 @@ namespace Tsundoku.Models
 				}
 			}
 
-            LOGGER.Warn($"User Input Invalid Series Title or ID or Can't Determine Series Needs to be more Specific for {title}");
+            LOGGER.Warn($"User Input Invalid Series Title or ID \"{title}\" or Can't Determine Series Needs to be more Specific");
 			return null;
         }
 

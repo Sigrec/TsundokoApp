@@ -17,7 +17,6 @@ namespace Tsundoku.Views
 {
     public partial class CollectionThemeWindow : ReactiveWindow<ThemeSettingsViewModel>
     {
-        private ThemeSettingsViewModel? ThemeSettingsVM => DataContext as ThemeSettingsViewModel;
         private TsundokuTheme? NewTheme { get; set; }
         private string SelectedTheme;
         public bool IsOpen, ThemeChanged = false;
@@ -31,13 +30,13 @@ namespace Tsundoku.Views
             Opened += (s, e) =>
             {
                 CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
-                NewTheme = ThemeSettingsVM.CurrentTheme.Cloning();
-                SelectedTheme = ThemeSettingsVM.CurrentTheme.ThemeName;
+                NewTheme = ViewModel.CurrentTheme.Cloning();
+                SelectedTheme = ViewModel.CurrentTheme.ThemeName;
                 IsOpen ^= true;
                 ThemeChanged = false;
 
-                int index = ThemeSettingsViewModel.UserThemesDisplay.IndexOf(ThemeSettingsVM.CurrentTheme.ThemeName);
-                ThemeSettingsVM.CurThemeIndex = index != -1 ? index : ThemeSettingsViewModel.UserThemesDisplay.IndexOf("Default");
+                int index = ThemeSettingsViewModel.UserThemesDisplay.IndexOf(ViewModel.CurrentTheme.ThemeName);
+                ViewModel.CurThemeIndex = index != -1 ? index : ThemeSettingsViewModel.UserThemesDisplay.IndexOf("Default");
 
                 // Apply colors before applying listeners
                 // ApplyColors();
@@ -59,7 +58,7 @@ namespace Tsundoku.Views
                 e.Cancel = true;
             };
 
-            this.WhenAnyValue(x => x.NewThemeName.Text, x => x.MainColor1.Text, x => x.MainColor2.Text, x => x.TextColor1.Text, x => x.TextColor2.Text, x => x.AccentColor1.Text, x => x.AccentColor2.Text, (name, mc1 ,mc2, tc1, tc2, ac1, ac2) => !string.IsNullOrWhiteSpace(name) && !name.Equals("Default", StringComparison.OrdinalIgnoreCase) && !mc1.Contains('_') && !mc2.Contains('_') && !tc1.Contains('_') && !tc2.Contains('_') && !ac1.Contains('_') && !ac2.Contains('_')).Subscribe(x => ThemeSettingsVM.IsGenerateThemeButtonEnabled = x);
+            this.WhenAnyValue(x => x.NewThemeName.Text, x => x.MainColor1.Text, x => x.MainColor2.Text, x => x.TextColor1.Text, x => x.TextColor2.Text, x => x.AccentColor1.Text, x => x.AccentColor2.Text, (name, mc1 ,mc2, tc1, tc2, ac1, ac2) => !string.IsNullOrWhiteSpace(name) && !name.Equals("Default", StringComparison.OrdinalIgnoreCase) && !mc1.Contains('_') && !mc2.Contains('_') && !tc1.Contains('_') && !tc2.Contains('_') && !ac1.Contains('_') && !ac2.Contains('_')).Subscribe(x => ViewModel.IsGenerateThemeButtonEnabled = x);
         }
 
         /// <summary>
@@ -257,8 +256,8 @@ namespace Tsundoku.Views
         private void ExportCurrentTheme(object sender, RoutedEventArgs args)
         {
             Directory.CreateDirectory(@"Themes");
-            File.WriteAllText(@$"Themes\{ThemeSettingsVM.CurrentTheme.ThemeName.Replace(" ", "_")}.json", JsonSerializer.Serialize(ThemeSettingsVM.CurrentTheme, typeof(TsundokuTheme), User.UserJsonModel));
-            LOGGER.Info("Exported {} Theme", ThemeSettingsVM.CurrentTheme.ThemeName);
+            File.WriteAllText(@$"Themes\{ViewModel.CurrentTheme.ThemeName.Replace(" ", "_")}.json", JsonSerializer.Serialize(ViewModel.CurrentTheme, typeof(TsundokuTheme), User.UserJsonModel));
+            LOGGER.Info("Exported {} Theme", ViewModel.CurrentTheme.ThemeName);
         }
 
         private async void ImportCurrentTheme(object sender, RoutedEventArgs args)
@@ -297,7 +296,7 @@ namespace Tsundoku.Views
             if (!ThemeSelector.SelectedItem.ToString().Equals("Default"))
             {
                 LOGGER.Info($"Removed Theme \"{ThemeSelector.SelectedItem}\"");
-                int curIndex = ViewModelBase.MainUser.SavedThemes.IndexOf(ThemeSettingsVM.CurrentTheme);
+                int curIndex = ViewModelBase.MainUser.SavedThemes.IndexOf(ViewModel.CurrentTheme);
                 ViewModelBase.MainUser.SavedThemes.RemoveAt(curIndex);
                 ThemeSettingsViewModel.UserThemesDisplay.RemoveAt(curIndex);
                 ThemeChanged = true;
@@ -309,17 +308,17 @@ namespace Tsundoku.Views
 
         private void UpdateMainWindowColors(TsundokuTheme newTheme)
         {
-            CollectionWindow.CollectionViewModel.CurrentTheme = newTheme;
+            CollectionWindow.ViewModel.CurrentTheme = newTheme;
         }
 
         private void UpdateAllWindowColors(TsundokuTheme newTheme)
         {
             UpdateMainWindowColors(newTheme);
-            MainWindowViewModel.newSeriesWindow.AddNewSeriesVM.CurrentTheme = newTheme;
-            MainWindowViewModel.settingsWindow.UserSettingsVM.CurrentTheme = newTheme;
-            MainWindowViewModel.collectionStatsWindow.CollectionStatsVM.CurrentTheme = newTheme;
-            MainWindowViewModel.priceAnalysisWindow.PriceAnalysisVM.CurrentTheme = newTheme;
-            ThemeSettingsVM.CurrentTheme = newTheme;
+            MainWindowViewModel.newSeriesWindow.ViewModel.CurrentTheme = newTheme;
+            MainWindowViewModel.settingsWindow.ViewModel.CurrentTheme = newTheme;
+            MainWindowViewModel.collectionStatsWindow.ViewModel.CurrentTheme = newTheme;
+            MainWindowViewModel.priceAnalysisWindow.ViewModel.CurrentTheme = newTheme;
+            ViewModel.CurrentTheme = newTheme;
             MainWindowViewModel.collectionStatsWindow.UpdateChartColors();
         }
 
@@ -352,46 +351,46 @@ namespace Tsundoku.Views
         /// </summary>
         private void ApplyColors()
         {
-            Menu_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuBGColor);
-            Username.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.UsernameColor);
-            Menu_Text.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuTextColor);
-            SearchBar_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SearchBarBGColor);
-            SearchBar_Border.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SearchBarBorderColor);
-            SearchBar_Text.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SearchBarTextColor);
-            Divider.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.DividerColor);
-            MenuButton_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuButtonBGColor);
-            MenuButton_BG_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuButtonBGHoverColor);
-            MenuButton_Border.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuButtonBorderColor);
-            MenuButton_Border_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuButtonBorderHoverColor);
-            MenuButton_IconAndText.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuButtonTextAndIconColor);
-            MenuButton_IconAndText_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.MenuButtonTextAndIconHoverColor);
-            Collection_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.CollectionBGColor);
-            Status_And_BookType_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.StatusAndBookTypeBGColor);
-            Status_And_BookType_BG_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.StatusAndBookTypeBGHoverColor);
-            Status_And_BookType_Text.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.StatusAndBookTypeTextColor);
-            Status_And_BookType_Text_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.StatusAndBookTypeTextHoverColor);
-            SeriesCard_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesCardBGColor);
-            SeriesCard_Title.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesCardTitleColor);
-            SeriesCard_Staff.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesCardStaffColor);
-            SeriesCard_Desc.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesCardDescColor);
-            SeriesProgress_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesProgressBGColor);
-            SeriesProgress_Bar.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesProgressBarColor);
-            SeriesProgress_Bar_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesProgressBarBGColor);
-            SeriesProgress_Bar_Border.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesProgressBarBorderColor);
-            SeriesProgress_Text.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesProgressTextColor);
-            SeriesProgress_Buttons_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesProgressButtonsHoverColor);
-            SeriesButton_Icon.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesButtonIconColor);
-            SeriesButton_Icon_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesButtonIconHoverColor);
-            SeriesEditPane_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesEditPaneBGColor);
-            SeriesNotes_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesNotesBGColor);
-            SeriesNotes_Border.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesNotesBorderColor);
-            SeriesNotes_Text.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesNotesTextColor);
-            SeriesEditPane_Buttons_BG.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesEditPaneButtonsBGColor);
-            SeriesEditPane_Buttons_BG_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesEditPaneButtonsBGHoverColor);
-            SeriesEditPane_Buttons_Border.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesEditPaneButtonsBorderColor);
-            SeriesEditPane_Buttons_Border_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesEditPaneButtonsBorderHoverColor);
-            SeriesEditPane_Buttons_Icon.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesEditPaneButtonsIconColor);
-            SeriesEditPane_Buttons_Icon_Hover.Color = Color.Parse(ThemeSettingsVM.CurrentTheme.SeriesEditPaneButtonsIconHoverColor);
+            Menu_BG.Color = Color.Parse(ViewModel.CurrentTheme.MenuBGColor);
+            Username.Color = Color.Parse(ViewModel.CurrentTheme.UsernameColor);
+            Menu_Text.Color = Color.Parse(ViewModel.CurrentTheme.MenuTextColor);
+            SearchBar_BG.Color = Color.Parse(ViewModel.CurrentTheme.SearchBarBGColor);
+            SearchBar_Border.Color = Color.Parse(ViewModel.CurrentTheme.SearchBarBorderColor);
+            SearchBar_Text.Color = Color.Parse(ViewModel.CurrentTheme.SearchBarTextColor);
+            Divider.Color = Color.Parse(ViewModel.CurrentTheme.DividerColor);
+            MenuButton_BG.Color = Color.Parse(ViewModel.CurrentTheme.MenuButtonBGColor);
+            MenuButton_BG_Hover.Color = Color.Parse(ViewModel.CurrentTheme.MenuButtonBGHoverColor);
+            MenuButton_Border.Color = Color.Parse(ViewModel.CurrentTheme.MenuButtonBorderColor);
+            MenuButton_Border_Hover.Color = Color.Parse(ViewModel.CurrentTheme.MenuButtonBorderHoverColor);
+            MenuButton_IconAndText.Color = Color.Parse(ViewModel.CurrentTheme.MenuButtonTextAndIconColor);
+            MenuButton_IconAndText_Hover.Color = Color.Parse(ViewModel.CurrentTheme.MenuButtonTextAndIconHoverColor);
+            Collection_BG.Color = Color.Parse(ViewModel.CurrentTheme.CollectionBGColor);
+            Status_And_BookType_BG.Color = Color.Parse(ViewModel.CurrentTheme.StatusAndBookTypeBGColor);
+            Status_And_BookType_BG_Hover.Color = Color.Parse(ViewModel.CurrentTheme.StatusAndBookTypeBGHoverColor);
+            Status_And_BookType_Text.Color = Color.Parse(ViewModel.CurrentTheme.StatusAndBookTypeTextColor);
+            Status_And_BookType_Text_Hover.Color = Color.Parse(ViewModel.CurrentTheme.StatusAndBookTypeTextHoverColor);
+            SeriesCard_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardBGColor);
+            SeriesCard_Title.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardTitleColor);
+            SeriesCard_Staff.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardStaffColor);
+            SeriesCard_Desc.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardDescColor);
+            SeriesProgress_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesProgressBGColor);
+            SeriesProgress_Bar.Color = Color.Parse(ViewModel.CurrentTheme.SeriesProgressBarColor);
+            SeriesProgress_Bar_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesProgressBarBGColor);
+            SeriesProgress_Bar_Border.Color = Color.Parse(ViewModel.CurrentTheme.SeriesProgressBarBorderColor);
+            SeriesProgress_Text.Color = Color.Parse(ViewModel.CurrentTheme.SeriesProgressTextColor);
+            SeriesProgress_Buttons_Hover.Color = Color.Parse(ViewModel.CurrentTheme.SeriesProgressButtonsHoverColor);
+            SeriesButton_Icon.Color = Color.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
+            SeriesButton_Icon_Hover.Color = Color.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor);
+            SeriesEditPane_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesEditPaneBGColor);
+            SeriesNotes_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesNotesBGColor);
+            SeriesNotes_Border.Color = Color.Parse(ViewModel.CurrentTheme.SeriesNotesBorderColor);
+            SeriesNotes_Text.Color = Color.Parse(ViewModel.CurrentTheme.SeriesNotesTextColor);
+            SeriesEditPane_Buttons_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsBGColor);
+            SeriesEditPane_Buttons_BG_Hover.Color = Color.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsBGHoverColor);
+            SeriesEditPane_Buttons_Border.Color = Color.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsBorderColor);
+            SeriesEditPane_Buttons_Border_Hover.Color = Color.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsBorderHoverColor);
+            SeriesEditPane_Buttons_Icon.Color = Color.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsIconColor);
+            SeriesEditPane_Buttons_Icon_Hover.Color = Color.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsIconHoverColor);
 
             // if (MainWindowViewModel.collectionStatsWindow.) { MainWindowViewModel.collectionStatsWindow.UpdateChartColors(); }
         }

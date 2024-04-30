@@ -11,7 +11,6 @@ namespace Tsundoku.Views
 {
     public partial class CollectionStatsWindow : ReactiveWindow<CollectionStatsViewModel>
     {
-        public CollectionStatsViewModel? CollectionStatsVM => DataContext as CollectionStatsViewModel;
         public bool IsOpen = false;
         public bool CanUpdate = true; // On First Update
         Subject<SolidColorBrush> UnknownRectangleColorSource = new Subject<SolidColorBrush>();
@@ -23,7 +22,7 @@ namespace Tsundoku.Views
             Opened += (s, e) =>
             {
                 var sub = UnknownRectangle.Bind(Avalonia.Controls.Shapes.Shape.FillProperty, UnknownRectangleColorSource);
-                UnknownRectangleColorSource.OnNext(SolidColorBrush.Parse(CollectionStatsVM.CurrentTheme.SeriesCardDescColor == CollectionStatsVM.CurrentTheme.MenuTextColor ? CollectionStatsVM.CurrentTheme.SeriesCardTitleColor : CollectionStatsVM.CurrentTheme.SeriesCardDescColor));
+                UnknownRectangleColorSource.OnNext(SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesCardDescColor == ViewModel.CurrentTheme.MenuTextColor ? ViewModel.CurrentTheme.SeriesCardTitleColor : ViewModel.CurrentTheme.SeriesCardDescColor));
                 if (CanUpdate) { UpdateChartColors(); }
                 CanUpdate = false;
                 IsOpen ^= true;
@@ -48,56 +47,56 @@ namespace Tsundoku.Views
 
         public void UpdateChartColors()
         {
-            PieSeries<ObservableValue> ShounenObject = (PieSeries<ObservableValue>)CollectionStatsVM.Demographics[0];
-            ShounenObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuBGColor));
-            ShounenObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> ShounenObject = (PieSeries<ObservableValue>)ViewModel.Demographics[0];
+            ShounenObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuBGColor));
+            ShounenObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            PieSeries<ObservableValue> SeinenObject = (PieSeries<ObservableValue>)CollectionStatsVM.Demographics[1];
-            SeinenObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuButtonBGColor));
-            SeinenObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> SeinenObject = (PieSeries<ObservableValue>)ViewModel.Demographics[1];
+            SeinenObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuButtonBGColor));
+            SeinenObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            PieSeries<ObservableValue> ShoujoObject = (PieSeries<ObservableValue>)CollectionStatsVM.Demographics[2];
-            ShoujoObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuTextColor));
-            ShoujoObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> ShoujoObject = (PieSeries<ObservableValue>)ViewModel.Demographics[2];
+            ShoujoObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuTextColor));
+            ShoujoObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            PieSeries<ObservableValue> JoseiObject = (PieSeries<ObservableValue>)CollectionStatsVM.Demographics[3];
-            JoseiObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
-            JoseiObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> JoseiObject = (PieSeries<ObservableValue>)ViewModel.Demographics[3];
+            JoseiObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
+            JoseiObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            PieSeries<ObservableValue> UnknownObject = (PieSeries<ObservableValue>)CollectionStatsVM.Demographics[4];
-            UnknownObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.SeriesCardDescColor == CollectionStatsVM.CurrentTheme.MenuTextColor ? CollectionStatsVM.CurrentTheme.SeriesCardTitleColor : CollectionStatsVM.CurrentTheme.SeriesCardDescColor));
-            UnknownObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> UnknownObject = (PieSeries<ObservableValue>)ViewModel.Demographics[4];
+            UnknownObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.SeriesCardDescColor == ViewModel.CurrentTheme.MenuTextColor ? ViewModel.CurrentTheme.SeriesCardTitleColor : ViewModel.CurrentTheme.SeriesCardDescColor));
+            UnknownObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            PieSeries<ObservableValue> OngoingObject = (PieSeries<ObservableValue>)CollectionStatsVM.StatusDistribution[0];
-            OngoingObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuBGColor));
-            OngoingObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> OngoingObject = (PieSeries<ObservableValue>)ViewModel.StatusDistribution[0];
+            OngoingObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuBGColor));
+            OngoingObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
             
-            PieSeries<ObservableValue> FinishedObject = (PieSeries<ObservableValue>)CollectionStatsVM.StatusDistribution[1];
-            FinishedObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuButtonBGColor));
-            FinishedObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> FinishedObject = (PieSeries<ObservableValue>)ViewModel.StatusDistribution[1];
+            FinishedObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuButtonBGColor));
+            FinishedObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            PieSeries<ObservableValue> CancelledObject = (PieSeries<ObservableValue>)CollectionStatsVM.StatusDistribution[2];
-            CancelledObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
-            CancelledObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> CancelledObject = (PieSeries<ObservableValue>)ViewModel.StatusDistribution[2];
+            CancelledObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
+            CancelledObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            PieSeries<ObservableValue> HiatusObject = (PieSeries<ObservableValue>)CollectionStatsVM.StatusDistribution[3];
-            HiatusObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuTextColor));
-            HiatusObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            PieSeries<ObservableValue> HiatusObject = (PieSeries<ObservableValue>)ViewModel.StatusDistribution[3];
+            HiatusObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuTextColor));
+            HiatusObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            Color behindBarColor = Color.Parse(CollectionStatsVM.CurrentTheme.MenuButtonBGColor);
-            ColumnSeries<ObservableValue> BarBehindObject = (ColumnSeries<ObservableValue>)CollectionStatsVM.RatingDistribution[0];
+            Color behindBarColor = Color.Parse(ViewModel.CurrentTheme.MenuButtonBGColor);
+            ColumnSeries<ObservableValue> BarBehindObject = (ColumnSeries<ObservableValue>)ViewModel.RatingDistribution[0];
             BarBehindObject.Fill = new SolidColorPaint(new SKColor(behindBarColor.R, behindBarColor.G, behindBarColor.B, 120));
 
-            ColumnSeries<ObservableValue> BarObject = (ColumnSeries<ObservableValue>)CollectionStatsVM.RatingDistribution[1];
-            BarObject.Fill = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuBGColor));
-            BarObject.DataLabelsPaint = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuTextColor));
-            BarObject.Stroke = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            ColumnSeries<ObservableValue> BarObject = (ColumnSeries<ObservableValue>)ViewModel.RatingDistribution[1];
+            BarObject.Fill = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuBGColor));
+            BarObject.DataLabelsPaint = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuTextColor));
+            BarObject.Stroke = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
 
-            Axis XAxisObject = CollectionStatsVM.RatingXAxes[0];
-            XAxisObject.LabelsPaint = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuTextColor));
-            XAxisObject.TicksPaint = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.MenuTextColor));
+            Axis XAxisObject = ViewModel.RatingXAxes[0];
+            XAxisObject.LabelsPaint = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuTextColor));
+            XAxisObject.TicksPaint = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.MenuTextColor));
 
-            CollectionStatsVM.RatingYAxes[0].SeparatorsPaint = new SolidColorPaint(SKColor.Parse(CollectionStatsVM.CurrentTheme.DividerColor));
+            ViewModel.RatingYAxes[0].SeparatorsPaint = new SolidColorPaint(SKColor.Parse(ViewModel.CurrentTheme.DividerColor));
         }
 
         private async void CopyTextAsync(object sender, PointerPressedEventArgs args)

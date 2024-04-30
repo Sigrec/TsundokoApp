@@ -7,12 +7,12 @@ using System.Reactive.Linq;
 using MangaAndLightNovelWebScrape.Websites;
 using MangaAndLightNovelWebScrape.Models;
 using System.Collections;
+using Avalonia.ReactiveUI;
 
 namespace Tsundoku.Views
 {
-    public partial class PriceAnalysisWindow : Window
+    public partial class PriceAnalysisWindow : ReactiveWindow<PriceAnalysisViewModel>
     {
-        public PriceAnalysisViewModel? PriceAnalysisVM => DataContext as PriceAnalysisViewModel;
         public bool IsOpen = false, Manga;
         public readonly MasterScrape Scrape = new MasterScrape(StockStatusFilter.EXCLUDE_NONE_FILTER);
 
@@ -37,7 +37,7 @@ namespace Tsundoku.Views
                 e.Cancel = true;
             };
 
-            this.WhenAnyValue(x => x.TitleBox.Text, x => x.MangaButton.IsChecked, x => x.NovelButton.IsChecked, x => x.BrowserSelector.SelectedItem, x => x.RegionSelector.SelectedItem, x => x.PriceAnalysisVM.WebsitesSelected, (title, manga, novel, browser, region, websiteCheck) => !string.IsNullOrWhiteSpace(title) && !(manga == false && novel == false && websiteCheck) && browser != null && region != null && websiteCheck).Subscribe(x => PriceAnalysisVM.IsAnalyzeButtonEnabled = x);
+            this.WhenAnyValue(x => x.TitleBox.Text, x => x.MangaButton.IsChecked, x => x.NovelButton.IsChecked, x => x.BrowserSelector.SelectedItem, x => x.RegionSelector.SelectedItem, x => x.ViewModel.WebsitesSelected, (title, manga, novel, browser, region, websiteCheck) => !string.IsNullOrWhiteSpace(title) && !(manga == false && novel == false && websiteCheck) && browser != null && region != null && websiteCheck).Subscribe(x => ViewModel.IsAnalyzeButtonEnabled = x);
         }
 
         private void IsMangaButtonClicked(object sender, RoutedEventArgs args)
@@ -95,18 +95,18 @@ namespace Tsundoku.Views
                 Scrape.IsKinokuniyaUSAMember = ViewModelBase.MainUser.Memberships[KinokuniyaUSA.WEBSITE_TITLE];
                 Scrape.IsIndigoMember = ViewModelBase.MainUser.Memberships[Indigo.WEBSITE_TITLE];
 
-                LOGGER.Info($"Started Scrape For \"{TitleBox.Text}\" on {Scrape.Browser} Browser w/ Region = \"{Scrape.Region}\" & \"{(StockFilterSelector.SelectedItem as ComboBoxItem).Content} Filter\" & Websites = [{string.Join(", ", PriceAnalysisVM.SelectedWebsites.Select(site => site.Content.ToString()))}] & Memberships = ({string.Join(" & ", ViewModelBase.MainUser.Memberships)})");
+                LOGGER.Info($"Started Scrape For \"{TitleBox.Text}\" on {Scrape.Browser} Browser w/ Region = \"{Scrape.Region}\" & \"{(StockFilterSelector.SelectedItem as ComboBoxItem).Content} Filter\" & Websites = [{string.Join(", ", ViewModel.SelectedWebsites.Select(site => site.Content.ToString()))}] & Memberships = ({string.Join(" & ", ViewModelBase.MainUser.Memberships)})");
                 
                 await Scrape.InitializeScrapeAsync(
                         TitleBox.Text, 
                         MangaButton.IsChecked != null && MangaButton.IsChecked.Value ? BookType.Manga : BookType.LightNovel, 
-                        Scrape.GenerateWebsiteList(PriceAnalysisVM.SelectedWebsites.Select(site => site.Content.ToString()).ToList())
+                        Scrape.GenerateWebsiteList(ViewModel.SelectedWebsites.Select(site => site.Content.ToString()).ToList())
                     );
-                StartScrapeButton.IsEnabled = PriceAnalysisVM.IsAnalyzeButtonEnabled;
+                StartScrapeButton.IsEnabled = ViewModel.IsAnalyzeButtonEnabled;
                 LOGGER.Info($"Scrape Finished");
 
-                PriceAnalysisVM.AnalyzedList.Clear();
-                PriceAnalysisVM.AnalyzedList.AddRange(Scrape.GetResults());
+                ViewModel.AnalyzedList.Clear();
+                ViewModel.AnalyzedList.AddRange(Scrape.GetResults());
                 AnalysisDataGrid.Columns[3].Width = DataGridLength.SizeToCells;
                 this.SizeToContent = SizeToContent.Height;
             }
@@ -123,14 +123,14 @@ namespace Tsundoku.Views
                 Region newRegion = MangaAndLightNovelWebScrape.Helpers.GetRegionFromString((RegionSelector.SelectedItem as ComboBoxItem).Content.ToString());
                 LOGGER.Info("Region Changed to {}", newRegion.ToString());
                 ViewModelBase.MainUser.Region = newRegion;
-                PriceAnalysisVM.CurRegion = newRegion;
+                ViewModel.CurRegion = newRegion;
             }
         }
 
         private void WebsiteSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var list = (sender as ListBox).SelectedItems;
-            PriceAnalysisVM.WebsitesSelected = list.Count != 0 && IsWebsiteListValid(list);
+            ViewModel.WebsitesSelected = list.Count != 0 && IsWebsiteListValid(list);
         }
 
         private void OpenSiteLink(object sender, PointerPressedEventArgs args)

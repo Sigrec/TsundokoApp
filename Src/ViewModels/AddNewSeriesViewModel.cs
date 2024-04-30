@@ -4,8 +4,6 @@ using Avalonia.Media.Imaging;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using System.Collections.Specialized;
-using LiveChartsCore.Kernel;
-using ReactiveUI;
 
 namespace Tsundoku.ViewModels
 {
@@ -79,7 +77,7 @@ namespace Tsundoku.ViewModels
                         LOGGER.Debug("No Filter Insert");
                         MainWindowViewModel.SearchedCollection.Insert(index, newSeries);
                     }
-                    else if (DetermineFilter(newSeries, ((Views.MainWindow)((Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow).CollectionViewModel.CurFilter) || (MainWindowViewModel.SearchIsBusy && (newSeries.Titles.Values.AsParallel().Any(title => title.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)) || newSeries.Staff.Values.AsParallel().Any(staff => staff.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)))))
+                    else if (DetermineFilter(newSeries, ((Views.MainWindow)((Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow).ViewModel.CurFilter) || (MainWindowViewModel.SearchIsBusy && (newSeries.Titles.Values.AsParallel().Any(title => title.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)) || newSeries.Staff.Values.AsParallel().Any(staff => staff.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)))))
                     {
                         int searchedIndex = MainWindowViewModel.SearchedCollection.ToList().BinarySearch(newSeries, new SeriesComparer(MainUser.CurLanguage));
                         searchedIndex = searchedIndex < 0 ? ~searchedIndex : searchedIndex;

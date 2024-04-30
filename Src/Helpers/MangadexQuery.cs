@@ -13,7 +13,7 @@ namespace Tsundoku.Helpers
         {
             MangadexClient = new HttpClient(new SocketsHttpHandler
             {
-                PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+                PooledConnectionLifetime = TimeSpan.FromMinutes(1)
             })
             {
                 BaseAddress = new Uri("https://api.mangadex.org/"),

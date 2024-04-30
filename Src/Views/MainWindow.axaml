@@ -454,6 +454,7 @@
                                                                     Padding="1,6,0,0"
                                                                     SelectionBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesTextColor, Converter={StaticResource ConvertColor}}"
                                                                     SelectionForegroundBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBGColor, Converter={StaticResource ConvertColor}}"
+                                                                    ToolTip.Tip="Cur"
                                                                     Mask="###"/>
                                                     <MaskedTextBox MinHeight="40"
                                                                     MinWidth="51"
@@ -471,6 +472,7 @@
                                                                     Padding="1,6,0,0"
                                                                     SelectionBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesTextColor, Converter={StaticResource ConvertColor}}"
                                                                     SelectionForegroundBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBGColor, Converter={StaticResource ConvertColor}}"
+                                                                    ToolTip.Tip="Max"
                                                                     Mask="###"/>
                                                     <Button FontSize="26"
                                                             Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesEditPaneButtonsBGColor, Converter={StaticResource ConvertColor}}" 

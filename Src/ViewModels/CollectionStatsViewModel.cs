@@ -285,7 +285,7 @@ namespace Tsundoku.ViewModels
 
         public void UpdateCollectionRating()
         {
-            // MainWindowViewModel.collectionStatsWindow.CollectionStatsVM.UpdateRatingChartValues();
+            // MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateRatingChartValues();
             decimal rating = decimal.Zero;
             uint countRating = 0;
             foreach (Series x in MainWindowViewModel.UserCollection.ToList())

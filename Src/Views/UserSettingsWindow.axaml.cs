@@ -8,12 +8,12 @@ using Avalonia.Platform.Storage;
 using Tsundoku.Models;
 using System.Text.Json.Nodes;
 using System.Diagnostics.CodeAnalysis;
+using Avalonia.ReactiveUI;
 
 namespace Tsundoku.Views
 {
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow : ReactiveWindow<UserSettingsViewModel>
     {
-        public UserSettingsViewModel? UserSettingsVM => DataContext as UserSettingsViewModel;
         public bool IsOpen = false;
         public int currencyLength = 0;
         private static readonly FilePickerFileType fileOptions = new FilePickerFileType("JSON File")
@@ -52,10 +52,10 @@ namespace Tsundoku.Views
                 e.Cancel = true;
             };
 
-            this.WhenAnyValue(x => x.IndigoButton.IsChecked, (member) => member != null && member == true).Subscribe(x => UserSettingsVM.IndigoMember = x);
-            this.WhenAnyValue(x => x.BarnesAndNobleButton.IsChecked, (member) => member != null && member == true).Subscribe(x => UserSettingsVM.BarnesAndNobleMember = x);
-            this.WhenAnyValue(x => x.BooksAMillionButton.IsChecked, (member) => member != null && member == true).Subscribe(x => UserSettingsVM.BooksAMillionMember = x);
-            this.WhenAnyValue(x => x.KinokuniyaUSAButton.IsChecked, (member) => member != null && member == true).Subscribe(x => UserSettingsVM.KinokuniyaUSAMember = x);
+            this.WhenAnyValue(x => x.IndigoButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.IndigoMember = x);
+            this.WhenAnyValue(x => x.BarnesAndNobleButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.BarnesAndNobleMember = x);
+            this.WhenAnyValue(x => x.BooksAMillionButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.BooksAMillionMember = x);
+            this.WhenAnyValue(x => x.KinokuniyaUSAButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.KinokuniyaUSAMember = x);
         }
 
         public void CurrencyChanged(object sender, SelectionChangedEventArgs e)
@@ -63,10 +63,10 @@ namespace Tsundoku.Views
             if ((sender as ComboBox).IsDropDownOpen)
             {
                 string newCurrency = (CurrencySelector.SelectedItem as ComboBoxItem).Content.ToString();
-                currencyLength = CollectionWindow.CollectionViewModel.CurCurrency.Length;
-                CollectionWindow.CollectionViewModel.CurCurrency = newCurrency;
-                MainWindowViewModel.newSeriesWindow.AddNewSeriesVM.CurCurrency = newCurrency;
-                MainWindowViewModel.collectionStatsWindow.CollectionStatsVM.CollectionPrice = $"{newCurrency}{ MainWindowViewModel.collectionStatsWindow.CollectionStatsVM.CollectionPrice[currencyLength..]}";
+                currencyLength = CollectionWindow.ViewModel.CurCurrency.Length;
+                CollectionWindow.ViewModel.CurCurrency = newCurrency;
+                MainWindowViewModel.newSeriesWindow.ViewModel.CurCurrency = newCurrency;
+                MainWindowViewModel.collectionStatsWindow.ViewModel.CollectionPrice = $"{newCurrency}{ MainWindowViewModel.collectionStatsWindow.ViewModel.CollectionPrice[currencyLength..]}";
                 ViewModelBase.MainUser.Currency = newCurrency;
                 LOGGER.Info($"Currency Changed To {newCurrency}");
             }
@@ -178,7 +178,7 @@ namespace Tsundoku.Views
         {
             if (!string.IsNullOrWhiteSpace(UsernameChange.Text))
             {
-                CollectionWindow.CollectionViewModel.UserName = UsernameChange.Text;
+                CollectionWindow.ViewModel.UserName = UsernameChange.Text;
                 LOGGER.Info($"Username Changed To -> {UsernameChange.Text}");
             }
             else
