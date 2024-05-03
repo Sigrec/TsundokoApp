@@ -12,7 +12,7 @@
         FontFamily="Segoe UI"
         MaxWidth="491"
         MinWidth="491"
-        MaxHeight="955"
+        MaxHeight="875"
         WindowStartupLocation="2"
         KeyboardNavigation.TabNavigation="None">
     
@@ -135,33 +135,44 @@
                         <WrapPanel.Styles>
                             <Style Selector="Button">
                                 <Setter Property="Margin" Value="3"/>
+                                <Setter Property="FontSize" Value="20"/>
+                                <Setter Property="ToolTip.Placement" Value="Bottom"/>
+                                <Setter Property="ToolTip.VerticalOffset" Value="5"/>
                             </Style>
                         </WrapPanel.Styles>
                         <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="OpenApplicationFolder" 
-                                Content="Open App Folder"/>
+                                ToolTip.Tip="Open App Folder"
+                                i:Attached.Icon="fa-solid fa-folder-open" />
                         <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="OpenCoversFolder" 
-                                Content="Open Covers Folder"/>
+                                ToolTip.Tip="Open Covers Folder"
+                                i:Attached.Icon="fa-solid fa-image"/>
                         <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="OpenScreenshotsFolder" 
-                                Content="Open Screenshots Folder"/>
+                                ToolTip.Tip="Open Screenshots Folder"
+                                i:Attached.Icon="fa-solid fa-camera-retro"/>
                         <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="OpenThemesFolder" 
-                                Content="Open Themes Folder"/>
+                                ToolTip.Tip="Open Themes Folder"
+                                i:Attached.Icon="fa-solid fa-swatchbook"/>
                         <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="JoinDiscord"
-                                Content="Join Discord"/>
-                        <!-- <Button Theme="{StaticResource UserSettingsButton}"
+                                ToolTip.Tip="JoinDiscord"
+                                i:Attached.Icon="fa-brands fa-discord"/>
+                        <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="ReportBug"
-                                Content="Report Issue/Bug"/> -->
+                                ToolTip.Tip="Report Bug/Issue"
+                                i:Attached.Icon="fa-solid fa-bug"/>
                         <Button Name="ExportToSpreadSheetButton"
                                 Theme="{StaticResource UserSettingsButton}"
                                 Command="{Binding ExportToSpreadSheetAsyncCommand}"
-                                Content="Export to Spreadsheet"/>
+                                ToolTip.Tip="Export to CSV"
+                                i:Attached.Icon="fa-solid fa-file-csv"/>
                          <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="OpenCoolorsSite"
-                                Content="Open Coolors"/>
+                                ToolTip.Tip="Open Coolors Website"
+                                i:Attached.Icon="fa-solid fa-palette"/>
                     </WrapPanel>
                 </StackPanel>
                 <StackPanel Spacing="5">

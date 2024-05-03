@@ -151,6 +151,11 @@ namespace Tsundoku.Views
             MainWindowViewModel.themeSettingsWindow.Show(this);
         }
 
+        private void OpenUserNotesDialog(object sender, RoutedEventArgs args)
+        {
+            MainWindowViewModel.userNotesWindow.Show(this);
+        }
+
         public void SetupAdvancedSearchBar(string delimeter)
         {
             AdvancedSearchBar.ItemsSource = ADVANCED_SEARCH_FILTERS;
@@ -557,6 +562,12 @@ namespace Tsundoku.Views
             {
                 MainWindowViewModel.collectionStatsWindow.Closing += (s, e) => { e.Cancel = false; };
                 MainWindowViewModel.collectionStatsWindow.Close();
+            }
+
+            if (MainWindowViewModel.userNotesWindow != null)
+            {
+                MainWindowViewModel.userNotesWindow.Closing += (s, e) => { e.Cancel = false; };
+                MainWindowViewModel.userNotesWindow.Close();
             }
 
             NLog.LogManager.Shutdown();

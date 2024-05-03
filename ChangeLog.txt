@@ -8,12 +8,23 @@ Legend
 
 TODO:
 ❌ ComboboxItem Styles not applying properly in Theme & AdvancedQuery windows
-❌ Fix padding issue in Series Note w/ Scrollbar (seems like it's not fixable tbh)
-❌ Fix RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
-❌ Fix issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
-❌ Add popup window for add series failure
+❌ Padding issue in Series Note w/ Scrollbar (seems like it's not fixable tbh)
+❌ RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
+❌ Issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 
-v4.2.0.0 - April 30th, 2024
+v5.0.0.0 - May , 2024
+✅ Added user notes button that opens a window to enter notes
+✅ Updated the export to excel to include user Notes
+✅ Clicking export to spreadsheet button now opens the spreadsheet
+✅ Changed settings buttons in settings window from text to icons w/ tooltips
+✅ Changed menu navigation buttons from text to icons w/ tooltips
+✅ Small adjustment to the layout of the stats window
+🔥 Fixed issue where export to CSV spreadsheet would format incorrectly if data contained a ","
+🔥 Fixed issue where scroll bar in TextBox in other windows didn't apply the theme
+⌛ Updated .NET version from 8.0.104 to 8.0.204
+✍️ Increased min width of the collection window to 1000 from 865
+
+v4.2.0. - April 30th, 2024
 ✅ No longer need to put in both cur and max volume count to change series volume counts
 ✅ Added tooltips to cur/max textboxes to indicate which is which
 ✅ Added popup window for add series failure

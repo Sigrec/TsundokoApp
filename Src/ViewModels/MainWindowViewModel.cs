@@ -39,19 +39,11 @@ namespace Tsundoku.ViewModels
         [Reactive] public string AdvancedSearchQueryErrorMessage { get; set; }
 
         public static AddNewSeriesWindow newSeriesWindow;
-        public ReactiveCommand<Unit, Unit> OpenAddNewSeriesWindow { get; set; }
-
         public static SettingsWindow settingsWindow;
-        public ReactiveCommand<Unit, Unit> OpenSettingsWindow { get; set; }
-
         public static CollectionThemeWindow themeSettingsWindow;
-        public ReactiveCommand<Unit, Unit> OpenThemeSettingsWindow { get; set; }
-
         public static PriceAnalysisWindow priceAnalysisWindow;
-        public ReactiveCommand<Unit, Unit> OpenPriceAnalysisWindow { get; set; }
-
         public static CollectionStatsWindow collectionStatsWindow;
-        public ReactiveCommand<Unit, Unit> OpenCollectionStatsWindow { get; set; }
+        public static UserNotesWindow userNotesWindow;
         public ICommand StartAdvancedSearch { get; }
 
         public static readonly HttpClient AddCoverHttpClient = new HttpClient(new SocketsHttpHandler
@@ -74,17 +66,24 @@ namespace Tsundoku.ViewModels
             ConfigureWindows();
             AddCoverHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 
-            this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.CurLanguage = x);
-            this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => LanguageIndex = AVAILABLE_LANGUAGES.IndexOf(x));
+            // this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.CurLanguage = x);
+            // this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => LanguageIndex = AVAILABLE_LANGUAGES.IndexOf(x));
+            this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(LanguageChangedUpdate);
             this.WhenAnyValue(x => x.CurFilter).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => FilterIndex = AVAILABLE_COLLECTION_FILTERS.IndexOf(x));
             this.WhenAnyValue(x => x.SearchText).Throttle(TimeSpan.FromMilliseconds(600)).ObserveOn(RxApp.MainThreadScheduler).Subscribe(SearchCollection);
             this.WhenAnyValue(x => x.SearchText).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => CurSearchText = x);
             this.WhenAnyValue(x => x.CurrentTheme).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.MainTheme = x.ThemeName);
-            this.WhenAnyValue(x => x.CurDisplay).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.Display = x);
+            // this.WhenAnyValue(x => x.CurDisplay).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.Display = x);
             this.WhenAnyValue(x => x.UserName).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.UserName = x);
             this.WhenAnyValue(x => x.UserIcon).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.UserIcon = User.ImageToByteArray(x));
 
             StartAdvancedSearch = ReactiveCommand.Create(() => AdvancedSearchCollection(AdvancedSearchText));
+        }
+
+        private void LanguageChangedUpdate(string lang)
+        {
+            MainUser.CurLanguage = lang;
+            LanguageIndex = AVAILABLE_LANGUAGES.IndexOf(lang);
         }
 
         /// <summary>
@@ -93,12 +92,12 @@ namespace Tsundoku.ViewModels
         private void ConfigureWindows()
         {
             newSeriesWindow = new AddNewSeriesWindow();
-
             settingsWindow = new SettingsWindow();
             themeSettingsWindow = new CollectionThemeWindow();;
             priceAnalysisWindow = new PriceAnalysisWindow();
             priceAnalysisWindow.ViewModel.CurRegion = MainUser.Region;
             collectionStatsWindow = new CollectionStatsWindow();
+            userNotesWindow = new UserNotesWindow();
         }
 
         /// <summary>

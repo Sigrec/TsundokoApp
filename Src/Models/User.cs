@@ -17,10 +17,11 @@ namespace Tsundoku.Models
         public string CollectionPrice { get; set; }
         public Region Region { get; set; }
         public Dictionary<string, bool> Memberships { get; set; }
-        public byte[] UserIcon { get; set; }
+        public string Notes { get; set; }
         public ObservableCollection<TsundokuTheme> SavedThemes { get; set; }
         public List<Series> UserCollection { get; set; }
-        internal static UserModelContext UserJsonModel = new UserModelContext(new JsonSerializerOptions()
+        public byte[] UserIcon { get; set; }
+        [JsonIgnore] internal static UserModelContext UserJsonModel = new UserModelContext(new JsonSerializerOptions()
         { 
             WriteIndented = true,
             ReadCommentHandling = JsonCommentHandling.Disallow,
@@ -43,6 +44,7 @@ namespace Tsundoku.Models
             this.Memberships = Memberships;
             NumVolumesCollected = 0;
             NumVolumesToBeCollected = 0;
+            Notes = string.Empty;
         }
 
         public static byte[] ImageToByteArray(Avalonia.Media.Imaging.Bitmap image)

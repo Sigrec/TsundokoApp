@@ -245,7 +245,6 @@ namespace Tsundoku.Models
                         cost,
 						demographic,
                         await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl)
-                        // string.IsNullOrWhiteSpace(customImageUrl) ? await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl) : await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl)
 					);
 			}
 			else if (isMangaDexId || bookType == Format.Manga) // MangadexQuery

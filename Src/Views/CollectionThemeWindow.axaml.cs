@@ -318,6 +318,7 @@ namespace Tsundoku.Views
             MainWindowViewModel.settingsWindow.ViewModel.CurrentTheme = newTheme;
             MainWindowViewModel.collectionStatsWindow.ViewModel.CurrentTheme = newTheme;
             MainWindowViewModel.priceAnalysisWindow.ViewModel.CurrentTheme = newTheme;
+            MainWindowViewModel.userNotesWindow.ViewModel.CurrentTheme = newTheme;
             ViewModel.CurrentTheme = newTheme;
             MainWindowViewModel.collectionStatsWindow.UpdateChartColors();
         }

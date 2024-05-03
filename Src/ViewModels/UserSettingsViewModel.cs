@@ -4,6 +4,10 @@ using System.Reactive.Linq;
 using Tsundoku.Models;
 using System.Windows.Input;
 using MangaAndLightNovelWebScrape.Websites;
+using System.Text.Json.Nodes;
+using System.Diagnostics.CodeAnalysis;
+using Avalonia.Platform.Storage;
+using System.Diagnostics;
 namespace Tsundoku.ViewModels
 {
     public class UserSettingsViewModel : ViewModelBase
@@ -16,8 +20,6 @@ namespace Tsundoku.ViewModels
         [Reactive] public bool BooksAMillionMember { get; set; } = MainUser.Memberships[BooksAMillion.WEBSITE_TITLE];
         [Reactive] public bool KinokuniyaUSAMember { get; set; } = MainUser.Memberships[KinokuniyaUSA.WEBSITE_TITLE];
         public ICommand ExportToSpreadSheetAsyncCommand { get; }
-        // public const string CurTsundokuVersion = "4.1.2.0";
-        // [Reactive] public static string CurTsundokuVersion { get; set; } = "4.1.2.0";
 
         public UserSettingsViewModel()
         {
@@ -35,18 +37,23 @@ namespace Tsundoku.ViewModels
 
         private static async Task ExportToSpreadSheetAsync()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 string COLLECTION_FILE = @"TsundokuCollection.csv";
                 StringBuilder output = new();
+                output.AppendFormat("\"{0}\"", MainUser.Notes).AppendLine();
                 string[] headers = ["Title", "Staff", "Format", "Status", "Cur Volumes", "Max Volumes", "Demographic", "Cost", "Rating", "Volumes Read", "Notes"];
                 output.AppendLine(string.Join(",", headers));
 
                 foreach (Series curSeries in MainWindowViewModel.UserCollection)
                 {
-                    output.AppendLine(string.Join(",", [ 
-                        $"\"{(curSeries.Titles.ContainsKey(MainUser.CurLanguage) ? curSeries.Titles[MainUser.CurLanguage] : curSeries.Titles["Romaji"])}{(MainUser.CurLanguage == "Romaji" || !curSeries.Titles.ContainsKey(MainUser.CurLanguage) || (curSeries.Titles.ContainsKey(MainUser.CurLanguage) && curSeries.Titles["Romaji"].Equals(curSeries.Titles[MainUser.CurLanguage], StringComparison.OrdinalIgnoreCase)) ? string.Empty : $" ({curSeries.Titles["Romaji"]})")}\"",
-                        $"{(MainUser.CurLanguage == "Romaji" || !curSeries.Staff.ContainsKey(MainUser.CurLanguage) || (curSeries.Staff.ContainsKey(MainUser.CurLanguage) && curSeries.Staff["Romaji"].Equals(curSeries.Staff[MainUser.CurLanguage], StringComparison.OrdinalIgnoreCase)) ? curSeries.Staff["Romaji"] : $"\"{curSeries.Staff[MainUser.CurLanguage]} ({curSeries.Staff["Romaji"]}")})\"", 
+                    string titleLang = curSeries.Titles.ContainsKey(MainUser.CurLanguage) ? MainUser.CurLanguage : "Romaji";
+                    string staffLang = curSeries.Staff.ContainsKey(MainUser.CurLanguage) ? MainUser.CurLanguage : "Romaji";
+
+                    output.AppendLine(string.Join(",", 
+                    [ 
+                        $"\"{curSeries.Titles[titleLang]}{(!titleLang.Equals("Romaji") && !curSeries.Titles[titleLang].Equals(curSeries.Titles["Romaji"], StringComparison.OrdinalIgnoreCase) ? $" ({curSeries.Titles["Romaji"]})\"" : "\"")}",
+                        $"\"{curSeries.Staff[staffLang]}{(!staffLang.Equals("Romaji") && !curSeries.Staff[staffLang].Equals(curSeries.Staff["Romaji"], StringComparison.OrdinalIgnoreCase) ? $" ({curSeries.Staff["Romaji"]})\"" : "\"")}", 
                         curSeries.Format.ToString(), 
                         curSeries.Status.ToString(), 
                         curSeries.CurVolumeCount.ToString(), 
@@ -55,19 +62,49 @@ namespace Tsundoku.ViewModels
                         $"{MainUser.Currency}{curSeries.Cost}", 
                         curSeries.Rating.ToString(), 
                         curSeries.VolumesRead.ToString(), 
-                        curSeries.SeriesNotes ]));
+                        $"\"{curSeries.SeriesNotes}\"" 
+                    ]));
                 }
 
                 try
                 {
-                    File.WriteAllTextAsync(COLLECTION_FILE, output.ToString(), Encoding.UTF8);
+                    await File.WriteAllTextAsync(COLLECTION_FILE, output.ToString(), Encoding.UTF8);
                     LOGGER.Info($"Exported {MainUser.UserName}'s Data To -> TsundokuCollection.csv");
+                    await OpenSiteLink(@"TsundokuCollection.csv");
                 }
                 catch (Exception ex)
                 {
                     LOGGER.Warn($"Could not Export {MainUser.UserName}'s Data To -> TsundokuCollection.csv \n{ex}");
                 }
             });
+        }
+
+        /// <summary>
+        /// Allows user to upload a new Json file to be used as their new data, it additionall creates a backup file of the users last save
+        /// </summary>
+        [RequiresUnreferencedCode("Calls Tsundoku.ViewModels.MainWindowViewModel.VersionUpdate(JsonNode)")]
+        public static void ImportUserData(IReadOnlyList<IStorageFile>? file)
+        {
+            string uploadedFilePath = file[0].Path.LocalPath;
+            try
+            {
+                JsonNode uploadedUserData = JsonNode.Parse(File.ReadAllText(uploadedFilePath));
+                MainWindowViewModel.VersionUpdate(uploadedUserData, true);
+                _ = JsonSerializer.Deserialize(uploadedUserData, typeof(User), User.UserJsonModel) as User;
+            }
+            catch(JsonException)
+            {
+                LOGGER.Info("{} File is not Valid JSON Schema", uploadedFilePath);
+                return;
+            }
+
+            ViewModelBase.isReloading = true;
+            int count = 1;
+            string backupFileName = @$"UserData_Backup{count}.json";
+            while (File.Exists(backupFileName)) { count++; backupFileName = @$"UserData_Backup{count}.json"; }
+
+            File.Replace(uploadedFilePath, MainWindowViewModel.USER_DATA_FILEPATH, backupFileName);
+            LOGGER.Info($"Uploaded New UserData File {uploadedFilePath}");
         }
     }
 }

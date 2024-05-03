@@ -5,8 +5,6 @@ using Avalonia.Controls;
 using System.Diagnostics;
 using ReactiveUI;
 using Avalonia.Platform.Storage;
-using Tsundoku.Models;
-using System.Text.Json.Nodes;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.ReactiveUI;
 
@@ -82,67 +80,38 @@ namespace Tsundoku.Views
             var file = await this.StorageProvider.OpenFilePickerAsync(filePickerOptions);
             if (file.Count > 0)
             {
-                string uploadedFilePath = file[0].Path.LocalPath;
-                try
-                {
-                    JsonNode uploadedUserData = JsonNode.Parse(File.ReadAllText(uploadedFilePath));
-                    MainWindowViewModel.VersionUpdate(uploadedUserData, true);
-                    _ = JsonSerializer.Deserialize(uploadedUserData, typeof(User), User.UserJsonModel) as User;
-                }
-                catch(JsonException)
-                {
-                    LOGGER.Info("{} File is not Valid JSON Schema", uploadedFilePath);
-                    return;
-                }
-
-                ViewModelBase.isReloading = true;
-                int count = 1;
-                string backupFileName = @$"UserData_Backup{count}.json";
-                while (File.Exists(backupFileName)) { count++; backupFileName = @$"UserData_Backup{count}.json"; }
-
-                File.Replace(uploadedFilePath, MainWindowViewModel.USER_DATA_FILEPATH, backupFileName);
-                LOGGER.Info($"Uploaded New UserData File {uploadedFilePath}");
-
+                UserSettingsViewModel.ImportUserData(file);
                 ((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).TryShutdown();
                 Process.Start(@$"{AppDomain.CurrentDomain.BaseDirectory}\Tsundoku.exe");
             }
         }
 
-        private void OpenReleasesPage(object sender, PointerPressedEventArgs args)
+        private async void OpenReleasesPage(object sender, PointerPressedEventArgs args)
         {
-            Task.Run(() =>
-            {
-                ViewModelBase.OpenSiteLink(@"https://github.com/Sigrec/Tsundoku/releases");
-            });
+            await ViewModelBase.OpenSiteLink(@"https://github.com/Sigrec/Tsundoku/releases");
         }
 
-        public void OpenAniListLink(object sender, RoutedEventArgs args)
+        public async void OpenAniListLink(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>
-            {
-                ViewModelBase.OpenSiteLink(@"https://anilist.co/");
-            });
+            await ViewModelBase.OpenSiteLink(@"https://anilist.co/");
         }
 
-        public void OpenMangadexLink(object sender, RoutedEventArgs args)
+        public async void OpenMangadexLink(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>
-            {
-                ViewModelBase.OpenSiteLink(@"https://mangadex.org/");
-            });
+            await ViewModelBase.OpenSiteLink(@"https://mangadex.org/");
         }
         
-        public void OpenApplicationFolder(object sender, RoutedEventArgs args)
+        public async void OpenApplicationFolder(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 Process.Start("explorer.exe", @$"{Path.GetDirectoryName(Path.GetFullPath(@"Covers"))}");
             });
         }
 
-        public void OpenCoversFolder(object sender, RoutedEventArgs args)
+        public async void OpenCoversFolder(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 if (!Directory.Exists(@"Covers"))
                 {
@@ -152,9 +121,9 @@ namespace Tsundoku.Views
             });
         }
 
-        public void OpenScreenshotsFolder(object sender, RoutedEventArgs args)
+        public async void OpenScreenshotsFolder(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>{
+            await Task.Run(() =>{
                 if (!Directory.Exists(@"Screenshots"))
                 {
                     Directory.CreateDirectory(@"Screenshots");
@@ -163,9 +132,9 @@ namespace Tsundoku.Views
             });
         }
 
-        public void OpenThemesFolder(object sender, RoutedEventArgs args)
+        public async void OpenThemesFolder(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>{
+            await Task.Run(() =>{
                 if (!Directory.Exists(@"Themes"))
                 {
                     Directory.CreateDirectory(@"Themes");
@@ -187,32 +156,24 @@ namespace Tsundoku.Views
             }
         }
 
-        public void OpenYoutuberSite(object sender, RoutedEventArgs args)
+        public async void OpenYoutuberSite(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>{
-                ViewModelBase.OpenSiteLink(@$"https://www.youtube.com/@{(sender as Button).Name}");
-            });
+            await ViewModelBase.OpenSiteLink(@$"https://www.youtube.com/@{(sender as Button).Name}");
         }
 
-        public void OpenCoolorsSite(object sender, RoutedEventArgs args)
+        public async void OpenCoolorsSite(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>{
-                ViewModelBase.OpenSiteLink(@"https://coolors.co/generate");
-            });
+            await ViewModelBase.OpenSiteLink(@"https://coolors.co/generate");
         }
 
-        public void JoinDiscord(object sender, RoutedEventArgs args)
+        public async void JoinDiscord(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>{
-                ViewModelBase.OpenSiteLink(@"https://discord.gg/QcZ5jcFPeU");
-            });
+            await ViewModelBase.OpenSiteLink(@"https://discord.gg/QcZ5jcFPeU");
         }
 
-        public void ReportBug(object sender, RoutedEventArgs args)
+        public async void ReportBug(object sender, RoutedEventArgs args)
         {
-            Task.Run(() =>{
-                ViewModelBase.OpenSiteLink(@"https://github.com/Sigrec/TsundokuApp/issues/new");
-            });
+            await ViewModelBase.OpenSiteLink(@"https://github.com/Sigrec/Tsundoku/issues/new/choose");
         }
     }
 }

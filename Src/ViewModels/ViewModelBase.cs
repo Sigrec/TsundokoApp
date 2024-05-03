@@ -20,7 +20,7 @@ namespace Tsundoku.ViewModels
         public static bool updatedVersion = false;
         public static bool newCoverCheck = false;
         public static bool isReloading = false;
-        public const string CUR_TSUNDOKU_VERSION = "4.2.0.0";
+        public const string CUR_TSUNDOKU_VERSION = "5.0.0.0b";
         public const double SCHEMA_VERSION = 4.0;
         public const string USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.66 Safari/537.36";
 
@@ -29,17 +29,20 @@ namespace Tsundoku.ViewModels
             CurFilter = "None";
         }
 
-        public static void OpenSiteLink(string link)
+        public static async Task OpenSiteLink(string link)
         {
-            LOGGER.Debug($"Opening Link {link}");
-            try
+            await Task.Run(() => 
             {
-                Process.Start(new ProcessStartInfo(link) { UseShellExecute = true });
-            }
-            catch (Exception other)
-            {
-                LOGGER.Error(other.Message);
-            }
+                LOGGER.Debug($"Opening Link {link}");
+                try
+                {
+                    Process.Start(new ProcessStartInfo(link) { UseShellExecute = true });
+                }
+                catch (Exception other)
+                {
+                    LOGGER.Error(other.Message);
+                }
+            });
         }
 
     }

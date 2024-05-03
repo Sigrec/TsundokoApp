@@ -1,3 +1,4 @@
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace Tsundoku.ViewModels
