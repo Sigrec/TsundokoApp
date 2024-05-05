@@ -7,6 +7,7 @@
   "Staff": {
     "Romaji": "Aoki Juntaro | Takahara Hirota"
   },
+  "DuplicateIndex": 0,
   "Description": "Specialties x Encouragement of Good and Punishment! Kill the bad guys with your local specialty. Enjoy the \u0022local killing method\u0022!",
   "Format": "Manga",
   "Status": "Finished",
@@ -16,7 +17,7 @@
   "MaxVolumeCount": 5,
   "CurVolumeCount": 0,
   "VolumesRead": 0,
-  "Cost": 0,
+  "Value": 0,
   "Rating": 0,
   "Demographic": "Unknown",
   "IsFavorite": false

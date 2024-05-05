@@ -8,6 +8,7 @@
     "Romaji": "Ttakjeongbeolle | Yeoneo",
     "Korean": "딱정벌레 | 연어"
   },
+  "DuplicateIndex": 0,
   "Description": "",
   "Format": "Manhwa",
   "Status": "Finished",
@@ -17,7 +18,7 @@
   "MaxVolumeCount": 5,
   "CurVolumeCount": 0,
   "VolumesRead": 0,
-  "Cost": 0,
+  "Value": 0,
   "Rating": -1,
   "Demographic": "Unknown",
   "IsFavorite": false

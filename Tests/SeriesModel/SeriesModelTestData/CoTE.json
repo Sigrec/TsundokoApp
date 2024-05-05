@@ -8,6 +8,7 @@
     "Romaji": "Shougo Kinugasa | Shunsaku Tomose",
     "Japanese": "衣笠彰梧 | トモセシュンサク"
   },
+  "DuplicateIndex": 0,
   "Description": "Students of the prestigious Tokyo Metropolitan Advanced Nurturing High School are given remarkable freedom—if they can win, barter, or save enough points to work their way up the ranks! Ayanokoji Kiyotaka has landed at the bottom in the scorned Class D, where he meets Horikita Suzune, who’s determined to rise up the ladder to Class A. Can they beat the system in a school where cutthroat competition is the name of the game?",
   "Format": "Novel",
   "Status": "Finished",
@@ -17,7 +18,7 @@
   "MaxVolumeCount": 14,
   "CurVolumeCount": 0,
   "VolumesRead": 4,
-  "Cost": 5000.65,
+  "Value": 5000.65,
   "Rating": 5.6,
   "Demographic": "Seinen",
   "IsFavorite": false

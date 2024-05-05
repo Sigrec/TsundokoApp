@@ -11,6 +11,7 @@ TODO:
 ❌ Padding issue in Series Note w/ Scrollbar (seems like it's not fixable tbh)
 ❌ RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
 ❌ Issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
+❌ Stat to track whether still collecting or not?
 
 v5.0.0.0 - May , 2024
 ✅ Added user notes button that opens a window to enter notes
@@ -19,10 +20,19 @@ v5.0.0.0 - May , 2024
 ✅ Changed settings buttons in settings window from text to icons w/ tooltips
 ✅ Changed menu navigation buttons from text to icons w/ tooltips
 ✅ Small adjustment to the layout of the stats window
+✅ Changed "Cost" to "Value" for series entries
+✅ Changed icon for volumes collected in stats window + added slight left margin
+✅ Added option to allow duplicate series to be added to the collection
+- ✍️ Duplicate series no longer user ID but an increment number
+- ✅ Hovering over the title now will indicate what duplicate the series is for example if u have two Naruto entries the 2nd one will be "Naruto (2)" 
+🔥 Fixed issue where buttons to open the 2 other panes would not highlight indicating it is open
 🔥 Fixed issue where export to CSV spreadsheet would format incorrectly if data contained a ","
 🔥 Fixed issue where scroll bar in TextBox in other windows didn't apply the theme
 ⌛ Updated .NET version from 8.0.104 to 8.0.204
 ✍️ Increased min width of the collection window to 1000 from 865
+❌ Added new pie chart in stats window for format distribution
+❌ Added publisher info to series cards and is now a required entry when adding a series (default will be set to "Unknown")
+- ❌ Added publisher filter
 
 v4.2.0. - April 30th, 2024
 ✅ No longer need to put in both cur and max volume count to change series volume counts

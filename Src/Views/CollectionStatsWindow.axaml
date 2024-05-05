@@ -40,8 +40,8 @@
 					<controls:ValueStat Text="{CompiledBinding SeriesCount}" Title="Series Count" Icon="fa-solid fa-globe" PointerPressed="CopyTextAsync"/>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-					<controls:ValueStat Text="{CompiledBinding UsersNumVolumesCollected}" Width="240" Title="Volumes Collected" Icon="fa-solid fa-gauge-simple" PointerPressed="CopyTextAsync"/>
-					<controls:ValueStat Width="240" Text="{CompiledBinding UsersNumVolumesToBeCollected}" Title="Volumes To Be Collected" Icon="fa-solid fa-gauge-simple" PointerPressed="CopyTextAsync"/>
+					<controls:ValueStat Text="{CompiledBinding UsersNumVolumesCollected}" Width="240" Title="Volumes Collected" Icon="fa-solid fa-bookmark" PointerPressed="CopyTextAsync"/>
+					<controls:ValueStat Width="240" Text="{CompiledBinding UsersNumVolumesToBeCollected}" Title="Volumes To Be Collected" Icon="fa-regular fa-bookmark" PointerPressed="CopyTextAsync"/>
 				</StackPanel>
 				<controls:ValueStat Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" Text="{CompiledBinding CollectionPrice}" Title="Collection Value" Icon="fa-solid fa-sack-dollar" PointerPressed="CopyTextAsync"/>
 				<TextBlock Text="Distributions" TextDecorations="Underline" FontSize="25" FontWeight="Bold" Classes="menu" Grid.Row="4" Grid.Column="0" Margin="5,0,0,5"/>

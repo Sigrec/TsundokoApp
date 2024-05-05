@@ -13,6 +13,7 @@ namespace Tsundoku.ViewModels
         [Reactive] public string CoverImageUrl { get; set; }
         [Reactive] public string MaxVolumeCount { get; set; }
         [Reactive] public string CurVolumeCount { get; set; }
+        [Reactive] public bool AllowDuplicate { get; set; } = false;
         [Reactive] public string AdditionalLanguagesToolTipText { get; set; }
         [Reactive] public bool IsAddSeriesButtonEnabled { get; set; } = false;
         public static ObservableCollection<ListBoxItem> SelectedAdditionalLanguages { get; set; } = new ObservableCollection<ListBoxItem>();
@@ -59,17 +60,18 @@ namespace Tsundoku.ViewModels
         /// <param name="maxVolCount">The max # of volumes this series currently has</param>
         /// <param name="additionalLanguages">Additional languages to get more info for from Mangadex</param>
         /// <returns>Whether the series can be added to the users collection or not</returns>
-        public static async Task<bool> GetSeriesDataAsync(string title, Format bookType, ushort curVolCount, ushort maxVolCount, ObservableCollection<string> additionalLanguages, string customImageUrl, Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal cost = 0)
+        public static async Task<KeyValuePair<bool, string>> GetSeriesDataAsync(string title, Format bookType, ushort curVolCount, ushort maxVolCount, ObservableCollection<string> additionalLanguages, string customImageUrl, Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal value = 0, bool alllowDuplicate = false)
         {
-            Series? newSeries = await Series.CreateNewSeriesCardAsync(title, bookType, maxVolCount, curVolCount, additionalLanguages, demographic, volumesRead, rating, cost, customImageUrl);
+            string returnMsg = string.Empty;
+            Series? newSeries = await Series.CreateNewSeriesCardAsync(title, bookType, maxVolCount, curVolCount, additionalLanguages, demographic, volumesRead, rating, value, customImageUrl);
             bool duplicateSeriesCheck = true;
             if (newSeries != null)
             {
-                duplicateSeriesCheck = MainWindowViewModel.UserCollection.AsParallel().Any(series => series.Equals(newSeries));
+                duplicateSeriesCheck = !alllowDuplicate ? MainWindowViewModel.UserCollection.AsParallel().Any(series => series.Equals(newSeries)) : false;
 
-                if (!duplicateSeriesCheck)
+                if (alllowDuplicate || !duplicateSeriesCheck)
                 {
-                    LOGGER.Info($"\nAdding New Series -> \"{title}\" | \"{bookType}\" | {curVolCount} | {maxVolCount}\n{newSeries}");
+                    LOGGER.Info($"\nAdding New Series (Is Dupe ?= {duplicateSeriesCheck}) -> \"{title}\" | \"{bookType}\" | {curVolCount} | {maxVolCount}\n{newSeries}");
                     int index = MainWindowViewModel.UserCollection.BinarySearch(newSeries, new SeriesComparer(MainUser.CurLanguage));
                     index = index < 0 ? ~index : index;
                     if (MainWindowViewModel.UserCollection.Count == MainWindowViewModel.SearchedCollection.Count)
@@ -94,13 +96,14 @@ namespace Tsundoku.ViewModels
                 }
                 else
                 {
+                    returnMsg = "Duplicate Series";
                     LOGGER.Info("{} Already Exists Not Adding", newSeries.Titles["Romaji"]);
                 }
             }
-            return duplicateSeriesCheck;
+            return new KeyValuePair<bool, string>(duplicateSeriesCheck, returnMsg);
         }
 
-        public static async Task<Bitmap> SaveCoverAsync(string newPath, string coverLink, string customImageUrl)
+        public static async Task<Bitmap?> SaveCoverAsync(string newPath, string coverLink, string customImageUrl)
         {
             Bitmap newCover;
             byte[] imageByteArray;
@@ -164,7 +167,7 @@ namespace Tsundoku.ViewModels
                 case "Read":
                 case "Unread":
                 case "Rating":
-                case "Cost":
+                case "Value":
                 case "Query":
                 case "None":
                 case "Favorites":

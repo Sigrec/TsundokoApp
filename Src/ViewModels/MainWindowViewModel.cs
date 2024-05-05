@@ -208,8 +208,8 @@ namespace Tsundoku.ViewModels
                         FilteredCollection = UserCollection.OrderByDescending(series => series.Rating);
                         LOGGER.Info($"Sorted Collection by {filter}");
                         break;
-                    case "Cost":
-                        FilteredCollection = UserCollection.OrderByDescending(series => series.Cost);
+                    case "Value":
+                        FilteredCollection = UserCollection.OrderByDescending(series => series.Value);
                         LOGGER.Info($"Sorted Collection by {filter}");
                         break;
                     case "Query":
@@ -332,7 +332,7 @@ namespace Tsundoku.ViewModels
             logicType = logicType.Equals("=") ? "==" : logicType;
             return filterName switch
             {
-                "Rating" or "Cost" => $"series.{filterName} {logicType} {filterValue}M",
+                "Rating" or "Value" => $"series.{filterName} {logicType} {filterValue}M",
                 "Read" => $"series.VolumesRead {logicType} {filterValue}",
                 "CurVolumes" => $"series.CurVolumeCount {logicType} {filterValue}",
                 "MaxVolumes" => $"series.MaxVolumeCount {logicType} {filterValue}",
@@ -448,7 +448,7 @@ namespace Tsundoku.ViewModels
         [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize<TValue>(TValue, JsonSerializerOptions)")]
         public static bool VersionUpdate(JsonNode userData, bool isImport)
         {
-            JsonNode series;
+            JsonObject series;
             JsonNode theme;
             JsonArray collectionJsonArray = userData[nameof(UserCollection)].AsArray();
             JsonArray themeJsonArray = userData["SavedThemes"].AsArray();
@@ -474,7 +474,7 @@ namespace Tsundoku.ViewModels
 
                 for (int x = 0; x < collectionJsonArray.Count; x++)
                 {
-                    series = collectionJsonArray.ElementAt(x);
+                    series = collectionJsonArray.ElementAt(x).AsObject();
                     series["Titles"] = new JsonObject
 					{
 						["Romaji"] = series["Titles"][0].ToString(),
@@ -518,7 +518,7 @@ namespace Tsundoku.ViewModels
             {
                 for (int x = 0; x < collectionJsonArray.Count; x++)
                 {
-                    series = collectionJsonArray.ElementAt(x);
+                    series = collectionJsonArray.ElementAt(x).AsObject();
                     if (double.Parse(series["Score"].ToString()) == 0)
                     {
                         series["Score"] = -1;
@@ -684,6 +684,20 @@ namespace Tsundoku.ViewModels
                 updatedVersion = true;
             }
 
+            if (curVersion < 5.0)
+            {
+                for (int x = 0; x < collectionJsonArray.Count; x++)
+                {
+                    series = collectionJsonArray.ElementAt(x).AsObject();
+                    series.Add("Value", decimal.Parse(series["Cost"].ToString()));
+                    series.Remove("Cost");
+                    
+                }
+                userData["CurDataVersion"] = 5.0;
+                TsundokuLogger.Info(LOGGER, "Updated Users Data to v5.0", !isImport);
+                updatedVersion = true;
+            }
+
             if (!isImport)
             {
                 File.WriteAllText(USER_DATA_FILEPATH, JsonSerializer.Serialize(userData, new JsonSerializerOptions()
@@ -730,7 +744,6 @@ namespace Tsundoku.ViewModels
             {
                 File.SetAttributes(series.Cover, FileAttributes.Normal);
                 File.Delete(series.Cover);
-                series.Dispose();
             }
         }
 
@@ -741,6 +754,7 @@ namespace Tsundoku.ViewModels
             UserCollection.Remove(series);
             collectionStatsWindow.ViewModel.UpdateAllStats(series.CurVolumeCount, (uint)(series.MaxVolumeCount - series.CurVolumeCount));
             LOGGER.Info("Removed {} From Collection", series.Titles["Romaji"]);
+            series.Dispose();
         }
 
         public static void UpdateChartStats()

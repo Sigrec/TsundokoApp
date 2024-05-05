@@ -265,12 +265,12 @@ namespace Tsundoku.ViewModels
 
         public void UpdateCollectionPrice()
         {
-            decimal costVal = decimal.Zero;
+            decimal valueVal = decimal.Zero;
             foreach (Series x in MainWindowViewModel.UserCollection)
             {
-                costVal = decimal.Add(costVal, x.Cost);
+                valueVal = decimal.Add(valueVal, x.Value);
             }
-            CollectionPrice = $"{CurCurrency}{decimal.Round(costVal, 2)}";
+            CollectionPrice = $"{CurCurrency}{decimal.Round(valueVal, 2)}";
         }
 
         public void UpdateCollectionVolumesRead()
@@ -334,7 +334,7 @@ namespace Tsundoku.ViewModels
             foreach (Series x in MainWindowViewModel.UserCollection)
             {
                 testVolumesRead += x.VolumesRead;
-                testCollectionPrice += x.Cost;
+                testCollectionPrice += x.Value;
                 testUsersNumVolumesCollected += x.CurVolumeCount;
                 testUsersNumVolumesToBeCollected += (uint)(x.MaxVolumeCount - x.CurVolumeCount);
 

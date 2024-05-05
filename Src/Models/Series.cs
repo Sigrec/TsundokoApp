@@ -27,6 +27,7 @@ namespace Tsundoku.Models
 		[JsonIgnore] public Bitmap CoverBitMap { get; set; }
 		public Dictionary<string, string> Titles { get; set; }
         public Dictionary<string, string> Staff { get; set; }
+        public uint DuplicateIndex { get; set; }
 		public string Description { get; set; }
 
 		/// <summary>
@@ -53,7 +54,7 @@ namespace Tsundoku.Models
 		public ushort MaxVolumeCount { get; set; }
 		public ushort CurVolumeCount { get; set; }
 		public uint VolumesRead { get; set; }
-		public decimal Cost { get; set; }
+		public decimal Value { get; set; }
 		public decimal Rating { get; set; }
 		public Demographic Demographic { get; set; }
 		public bool IsFavorite { get; set; } = false;
@@ -61,7 +62,7 @@ namespace Tsundoku.Models
         [JsonIgnore] public bool IsEditPaneOpen { get; set; } = false;
 
         [JsonConstructor]
-		public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Cost, Demographic Demographic, Bitmap CoverBitMap)
+		public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Value, Demographic Demographic, Bitmap CoverBitMap, uint DuplicateIndex = 0)
         {
             this.Titles = Titles;
 			this.Staff = Staff;
@@ -74,9 +75,10 @@ namespace Tsundoku.Models
             this.CurVolumeCount = CurVolumeCount;
 			this.Rating = Rating;
             this.VolumesRead = VolumesRead;
-            this.Cost = Cost;
+            this.Value = Value;
 			this.Demographic = Demographic;
 			this.CoverBitMap = CoverBitMap;
+            this.DuplicateIndex = DuplicateIndex;
         }
 
         /// <summary>
@@ -90,12 +92,13 @@ namespace Tsundoku.Models
         /// <param name="MD_Query">MangaDexQuery object for the MangaDex HTTP client</param>
         /// <param name="additionalLanguages">List of additional languages to query for</param>
         /// <returns></returns>
-        public static async Task<Series?> CreateNewSeriesCardAsync(string title, Format bookType, ushort maxVolCount, ushort minVolCount, ObservableCollection<string> additionalLanguages, Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal cost = 0, string customImageUrl = "")
+        public static async Task<Series?> CreateNewSeriesCardAsync(string title, Format bookType, ushort maxVolCount, ushort minVolCount, ObservableCollection<string> additionalLanguages, Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal value = 0, string customImageUrl = "")
         {
 			JsonDocument? seriesDataDoc;
 			int pageNum = 1;
 			bool isAniListID = false, isMangaDexId = false;
             string curMangaDexId = string.Empty;
+            uint dupeIndex = 0;
 			if (int.TryParse(title, out int seriesId))
 			{
                 LOGGER.Debug("Getting AniList ID Data");
@@ -149,7 +152,7 @@ namespace Tsundoku.Models
 				filteredBookType = bookType == Format.Manga ? GetCorrectFormat(countryOfOrigin) : Format.Novel;
 				nativeStaff = GetSeriesStaff(seriesData.GetProperty("staff").GetProperty("edges"), "native", filteredBookType, romajiTitle, new StringBuilder());
 				fullStaff = GetSeriesStaff(seriesData.GetProperty("staff").GetProperty("edges"), "full", filteredBookType, romajiTitle, new StringBuilder());
-				coverPath = CreateCoverFilePath(seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), romajiTitle, filteredBookType, seriesData.GetProperty("id").GetUInt64().ToString());
+				coverPath = CreateCoverFilePath(seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), romajiTitle, filteredBookType, ref dupeIndex);
 
 				// If available on AniList and is not a Japanese series get the Japanese title from Mangadex
 				if (!bookType.Equals("NOVEL") && (countryOfOrigin.Equals("KR") || countryOfOrigin.Equals("CW") || countryOfOrigin.Equals("TW")))
@@ -242,9 +245,10 @@ namespace Tsundoku.Models
 						minVolCount,
 						rating,
                         volumesRead,
-                        cost,
+                        value,
 						demographic,
-                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl)
+                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl),
+                        dupeIndex
 					);
 			}
 			else if (isMangaDexId || bookType == Format.Manga) // MangadexQuery
@@ -325,7 +329,7 @@ namespace Tsundoku.Models
                         return null;
                     }
 					string coverLink = @$"https://uploads.mangadex.org/covers/{curMangaDexId}/{mangadexCover}";
-					coverPath = CreateCoverFilePath(coverLink, romajiTitle, GetCorrectFormat(countryOfOrigin), curMangaDexId);
+					coverPath = CreateCoverFilePath(coverLink, romajiTitle, GetCorrectFormat(countryOfOrigin), ref dupeIndex);
 					demographic = GetSeriesDemographic(attributes.GetProperty("publicationDemographic").GetString());
 
 					if (altTitles.Any())
@@ -424,9 +428,10 @@ namespace Tsundoku.Models
                         minVolCount,
                         rating,
                         volumesRead,
-                        cost,
+                        value,
                         demographic,
-                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, coverLink, string.IsNullOrWhiteSpace(customImageUrl) ? string.Empty : customImageUrl)
+                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, coverLink, string.IsNullOrWhiteSpace(customImageUrl) ? string.Empty : customImageUrl),
+                        dupeIndex
 					);
 				}
 			}
@@ -561,19 +566,34 @@ namespace Tsundoku.Models
 			return staffList.ToString(0, staffList.Length - 3);
 		}
 
-		public static string CreateCoverFilePath(string coverLink, string title, Format bookType, string seriesId)
+		public static string CreateCoverFilePath(string coverLink, string title, Format bookType, ref uint dupeIndex)
 		{
             Directory.CreateDirectory(@"Covers");
             string coverName = ExtensionMethods.RemoveInPlaceCharArray(string.Concat(title.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries))).Replace(",", string.Empty);
             string format = bookType.ToString().ToUpper();
-			string newPath = @$"Covers\{coverName}_{format}.{coverLink[^3..]}";
+            string extension = coverLink[^3..];
+			string newPath = @$"Covers\{coverName}_{format}.{extension}";
 
-            if (File.Exists(@$"Covers\{coverName}_{format}.jpg") || File.Exists(@$"Covers\{coverName}_{format}.png"))
+            if (File.Exists(@$"Covers\{coverName}_{format}.{extension}"))
             {
-                LOGGER.Info($"{coverName}_{format} Already Exists Creating New Path");
-                newPath = @$"Covers\{coverName}_{seriesId}_{format}.{coverLink[^3..]}";
+                uint count = 2;
+                if (File.Exists(@$"Covers\{coverName}_{format}_2.{extension}"))
+                {
+                    newPath = @$"Covers\{coverName}_{format}_{count}.{extension}";
+                    while (File.Exists(newPath))
+                    {
+                        LOGGER.Info($"{coverName}_{format}_{count}.{extension} Already Exists Creating New Path");
+                        count++;
+                        newPath = @$"Covers\{coverName}_{format}_{count}.{extension}";
+                    }
+                }
+                else
+                {
+                    LOGGER.Info($"{coverName}_{format}.{extension} Already Exists Creating New Path");
+                    newPath = @$"Covers\{coverName}_{format}_2.{extension}";
+                }
+                dupeIndex = count;
             }
-
 			return newPath;
 		}
 

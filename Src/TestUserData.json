@@ -83,7 +83,7 @@
       "MaxVolumeCount": 8,
       "CurVolumeCount": 6,
       "VolumesRead": 0,
-      "Cost": 0.00,
+      "Value": 0.00,
       "Rating": -1,
       "Demographic": "Unknown",
       "IsFavorite": false
@@ -107,7 +107,7 @@
       "MaxVolumeCount": 6,
       "CurVolumeCount": 4,
       "VolumesRead": 0,
-      "Cost": 0.00,
+      "Value": 0.00,
       "Rating": -1,
       "Demographic": "Unknown",
       "IsFavorite": false
@@ -131,7 +131,7 @@
       "MaxVolumeCount": 6,
       "CurVolumeCount": 4,
       "VolumesRead": 0,
-      "Cost": 0.00,
+      "Value": 0.00,
       "Rating": -1,
       "Demographic": "Unknown",
       "IsFavorite": false

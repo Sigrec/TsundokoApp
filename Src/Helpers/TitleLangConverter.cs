@@ -10,11 +10,18 @@ namespace Tsundoku.Helpers
         public object? Convert(IList<object?> values, Type type, object? parameter, CultureInfo culture)
         {
             var titles = values[0] as Dictionary<string, string>;
-            if (titles.ContainsKey(values[1] as string))
+            string lang = values[1].ToString();
+            string title = titles.ContainsKey(lang) ? titles[lang] : titles["Romaji"];
+
+            if (values.Count == 3)
             {
-                return titles[values[1] as string];
+                uint dupeIndex = uint.Parse(values[2].ToString());
+                if (dupeIndex != 0)
+                {
+                    title += $" ({dupeIndex})";
+                }
             }
-            return titles["Romaji"];
+            return title;
         }
     }
 }

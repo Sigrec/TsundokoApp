@@ -67,7 +67,7 @@ namespace Tsundoku.Views
             DemographicCombobox.SelectedIndex = 4;
             VolumesRead.Text = string.Empty;
             Rating.Text = string.Empty;
-            Cost.Text = string.Empty;
+            Value.Text = string.Empty;
             CoverImageUrlTextBox.Text = string.Empty;
         }
 
@@ -83,9 +83,9 @@ namespace Tsundoku.Views
             string customImageUrl = CoverImageUrlTextBox.Text;
             _ = uint.TryParse(VolumesRead.Text.Replace("_", ""), out uint volumesRead);
             _ = decimal.TryParse(Rating.Text[..4].Replace("_", "0"), out decimal rating);
-            _ = decimal.TryParse(Cost.Text.Replace("_", "0"), out decimal cost);
+            _ = decimal.TryParse(Value.Text.Replace("_", "0"), out decimal value);
 
-            bool validSeries = await AddNewSeriesViewModel.GetSeriesDataAsync(
+            var validSeries = await AddNewSeriesViewModel.GetSeriesDataAsync(
                 TitleBox.Text.Trim(), 
                 (MangaButton.IsChecked == true) ? Format.Manga : Format.Novel, 
                 CurVolNum, 
@@ -93,10 +93,11 @@ namespace Tsundoku.Views
                 AddNewSeriesViewModel.ConvertSelectedLangList(AddNewSeriesViewModel.SelectedAdditionalLanguages), 
                 !string.IsNullOrWhiteSpace(customImageUrl) ? customImageUrl.Trim() : string.Empty, 
                 Series.GetSeriesDemographic((DemographicCombobox.SelectedItem as ComboBoxItem).Content.ToString()), volumesRead, !Rating.Text[..4].StartsWith("__._") ? rating : -1, 
-                cost
+                value,
+                ViewModel.AllowDuplicate
             );
             
-            if (!validSeries) // Boolean returns whether the series added is a duplicate
+            if (!validSeries.Key) // Boolean returns whether the series added is a duplicate
             {
                 // Update User Stats
                 MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateAllStats(CurVolNum, (uint)(MaxVolNum - CurVolNum));
@@ -106,7 +107,7 @@ namespace Tsundoku.Views
             }
             else
             {
-                await ShowErrorDialog($"Unable to add \"{TitleBox.Text.Trim()}\" to Collection");
+                await ShowErrorDialog($"Unable to add \"{TitleBox.Text.Trim()}\" to Collection{(!string.IsNullOrWhiteSpace(validSeries.Value) ? $", {validSeries.Value}" : string.Empty)}");
             }
             AddSeriesButton.IsEnabled = ViewModel.IsAddSeriesButtonEnabled;
         }

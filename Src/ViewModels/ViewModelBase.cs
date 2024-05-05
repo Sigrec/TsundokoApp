@@ -21,7 +21,7 @@ namespace Tsundoku.ViewModels
         public static bool newCoverCheck = false;
         public static bool isReloading = false;
         public const string CUR_TSUNDOKU_VERSION = "5.0.0.0b";
-        public const double SCHEMA_VERSION = 4.0;
+        public const double SCHEMA_VERSION = 5.0;
         public const string USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.66 Safari/537.36";
 
         public ViewModelBase()

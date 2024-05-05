@@ -8,6 +8,7 @@
     "Romaji": "Nanashi",
     "Japanese": "ナナシ"
   },
+  "DuplicateIndex": 0,
   "Description": "Nagatoro is a freshman in high school who loves teasing and torturing her older male classmate! What’s her motivation and why does Senpai put up with her? Does Nagatoro just want to create misery for Senpai? Or maybe she secretly likes him?",
   "Format": "Manga",
   "Status": "Ongoing",
@@ -17,7 +18,7 @@
   "MaxVolumeCount": 5,
   "CurVolumeCount": 0,
   "VolumesRead": 0,
-  "Cost": 0,
+  "Value": 0,
   "Rating": -1,
   "Demographic": "Unknown",
   "IsFavorite": false

@@ -257,7 +257,7 @@
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Read</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Unread</ComboBoxItem>
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Rating</ComboBoxItem>
-                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Cost</ComboBoxItem>
+                            <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Value</ComboBoxItem>
                         </ComboBox>
                         <TextBox Name="SearchBar" 
                                 Text="{CompiledBinding SearchText, Mode=TwoWay}" 
@@ -626,9 +626,9 @@
                                                             HorizontalAlignment="Center"
                                                             FontSize="15">
                                                         <TextBlock.Text>
-                                                            <MultiBinding StringFormat="Cost {0}{1}">
+                                                            <MultiBinding StringFormat="Value {0}{1}">
                                                                 <Binding Path="#CollectionTheme.DataContext.CurCurrency"/>
-                                                                <Binding Path="Cost"/>
+                                                                <Binding Path="Value"/>
                                                             </MultiBinding>
                                                         </TextBlock.Text>
                                                     </TextBlock>
@@ -832,6 +832,7 @@
                                                             <MultiBinding Converter="{StaticResource ConvertTitle}">
                                                                 <Binding Path="Titles"/>
                                                                 <Binding Path="#CollectionTheme.DataContext.CurLanguage"/>
+                                                                <Binding Path="DuplicateIndex"/>
                                                             </MultiBinding>
                                                             </TextBlock.Text>
                                                         </TextBlock>

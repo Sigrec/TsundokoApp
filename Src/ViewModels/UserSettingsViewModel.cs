@@ -42,7 +42,7 @@ namespace Tsundoku.ViewModels
                 string COLLECTION_FILE = @"TsundokuCollection.csv";
                 StringBuilder output = new();
                 output.AppendFormat("\"{0}\"", MainUser.Notes).AppendLine();
-                string[] headers = ["Title", "Staff", "Format", "Status", "Cur Volumes", "Max Volumes", "Demographic", "Cost", "Rating", "Volumes Read", "Notes"];
+                string[] headers = ["Title", "Staff", "Format", "Status", "Cur Volumes", "Max Volumes", "Demographic", "Value", "Rating", "Volumes Read", "Notes"];
                 output.AppendLine(string.Join(",", headers));
 
                 foreach (Series curSeries in MainWindowViewModel.UserCollection)
@@ -59,7 +59,7 @@ namespace Tsundoku.ViewModels
                         curSeries.CurVolumeCount.ToString(), 
                         curSeries.MaxVolumeCount.ToString(), 
                         curSeries.Demographic.ToString(), 
-                        $"{MainUser.Currency}{curSeries.Cost}", 
+                        $"{MainUser.Currency}{curSeries.Value}", 
                         curSeries.Rating.ToString(), 
                         curSeries.VolumesRead.ToString(), 
                         $"\"{curSeries.SeriesNotes}\"" 

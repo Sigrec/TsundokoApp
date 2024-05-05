@@ -11,6 +11,7 @@ using ReactiveUI;
 using Avalonia.Platform.Storage;
 using Avalonia.Media.Imaging;
 using FileWatcherEx;
+using Avalonia.Media;
 
 namespace Tsundoku.Views
 {
@@ -236,7 +237,7 @@ namespace Tsundoku.Views
         {
             ViewModelBase.newCoverCheck = true;
             Series curSeries = (Series)((Button)sender).DataContext;
-            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(curSeries.Titles["Romaji"], curSeries.Format, curSeries.MaxVolumeCount, curSeries.CurVolumeCount, curSeries.SeriesContainsAdditionalLanagues(), curSeries.Demographic, curSeries.VolumesRead, curSeries.Rating, curSeries.Cost);
+            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(curSeries.Titles["Romaji"], curSeries.Format, curSeries.MaxVolumeCount, curSeries.CurVolumeCount, curSeries.SeriesContainsAdditionalLanagues(), curSeries.Demographic, curSeries.VolumesRead, curSeries.Rating, curSeries.Value);
 
             if (newSeriesData != null)
             {
@@ -336,18 +337,18 @@ namespace Tsundoku.Views
             }
             LOGGER.Debug("Passed Volumes Read Check");
 
-            string costText = ((MaskedTextBox)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(1)).Text;
-            decimal costVal = Convert.ToDecimal(costText.Replace("_", "0"));
-            if (decimal.Compare(costVal, 0) >= 0 && curSeries.Cost != costVal && !costText.Equals("_________.__"))
+            string valueText = ((MaskedTextBox)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(1)).Text;
+            decimal valueVal = Convert.ToDecimal(valueText.Replace("_", "0"));
+            if (decimal.Compare(valueVal, 0) >= 0 && curSeries.Value != valueVal && !valueText.Equals("_________.__"))
             {
-                LOGGER.Info($"Updating Cost for \"{curSeries.Titles["Romaji"]}\" from {curSeries.Cost} to {ViewModel.CurCurrency}{costVal}");
+                LOGGER.Info($"Updating value for \"{curSeries.Titles["Romaji"]}\" from {curSeries.Value} to {ViewModel.CurCurrency}{valueVal}");
 
-                curSeries.Cost = costVal;
-                ((TextBlock)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(0)).Text = $"Cost {ViewModel.CurCurrency}{costVal}";
+                curSeries.Value = valueVal;
+                ((TextBlock)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(0)).Text = $"Value {ViewModel.CurCurrency}{valueVal}";
                 MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionPrice();
                 ((MaskedTextBox)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(1)).Text = "";
             }
-            LOGGER.Debug("Passed Cost Check");
+            LOGGER.Debug("Passed Value Check");
 
             string ratingValText = ((MaskedTextBox)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(1)).Text;
             decimal ratingVal = Convert.ToDecimal(ratingValText[..4].Replace("_", "0"));
@@ -434,6 +435,7 @@ namespace Tsundoku.Views
         private async void RemoveSeries(object sender, RoutedEventArgs args)
         {
             // Close the edit pane before removing
+            ViewModelBase.newCoverCheck = true;
             (sender as Button).FindLogicalAncestorOfType<Grid>(false).IsVisible &= false;
             var result = await Observable.Start(() => 
             {
@@ -444,19 +446,31 @@ namespace Tsundoku.Views
         private void ShowEditPane(object sender, RoutedEventArgs args)
         {
             Series curSeries = (Series)(sender as Button).DataContext;
-            curSeries.IsStatsPaneOpen &= false;
+            Button button = (Button)sender;
+            if (curSeries.IsStatsPaneOpen)
+            {
+                curSeries.IsStatsPaneOpen = false;
+                (button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).GetLogicalChildren().ElementAt(1) as Grid).IsVisible = curSeries.IsStatsPaneOpen;
+                (button.GetLogicalSiblings().ElementAt(2) as Button).Foreground = SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
+            }
             curSeries.IsEditPaneOpen ^= true;
-            ((sender as Button).FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).GetLogicalChildren().ElementAt(1) as Grid).IsVisible = curSeries.IsStatsPaneOpen;
-            ((Button)sender).FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
+            button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
+            button.Foreground = curSeries.IsEditPaneOpen ? SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor) : SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsIconColor);
         }
 
         private void ShowStatsPane(object sender, RoutedEventArgs args)
         {
             Series curSeries = (Series)(sender as Button).DataContext;
-            curSeries.IsEditPaneOpen &= false;
+            Button button = (Button)sender;
+            if (curSeries.IsEditPaneOpen)
+            {
+                curSeries.IsEditPaneOpen = false;
+                button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
+                (button.GetLogicalSiblings().ElementAt(0) as Button).Foreground = SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
+            }
             curSeries.IsStatsPaneOpen ^= true;
-            ((Button)sender).FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
-            ((sender as Button).FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).GetLogicalChildren().ElementAt(1) as Grid).IsVisible = curSeries.IsStatsPaneOpen;
+            (button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).GetLogicalChildren().ElementAt(1) as Grid).IsVisible = curSeries.IsStatsPaneOpen;
+            button.Foreground = curSeries.IsStatsPaneOpen ? SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor) : SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
         }
 
         /// <summary>
