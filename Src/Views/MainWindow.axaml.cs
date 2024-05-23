@@ -237,7 +237,7 @@ namespace Tsundoku.Views
         {
             ViewModelBase.newCoverCheck = true;
             Series curSeries = (Series)((Button)sender).DataContext;
-            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(curSeries.Titles["Romaji"], curSeries.Format, curSeries.MaxVolumeCount, curSeries.CurVolumeCount, curSeries.SeriesContainsAdditionalLanagues(), curSeries.Demographic, curSeries.VolumesRead, curSeries.Rating, curSeries.Value);
+            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(curSeries.Titles["Romaji"], curSeries.Format, curSeries.MaxVolumeCount, curSeries.CurVolumeCount, curSeries.SeriesContainsAdditionalLanagues(), curSeries.Publisher, curSeries.Demographic, curSeries.VolumesRead, curSeries.Rating, curSeries.Value);
 
             if (newSeriesData != null)
             {
@@ -320,7 +320,7 @@ namespace Tsundoku.Views
         {
             Series curSeries = (Series)((Button)sender).DataContext;
             var stackPanels = ((Button)sender).GetLogicalParent<StackPanel>().GetLogicalParent<Grid>().GetLogicalChildren();
-            string volumesRead = (stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(1) as MaskedTextBox).Text.Replace("_", "");
+            string volumesRead = (stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(1) as MaskedTextBox).Text.Trim().Replace("_", "");
             if (!string.IsNullOrWhiteSpace(volumesRead))
             {
                 uint volumesReadVal = Convert.ToUInt32(volumesRead);
@@ -329,7 +329,7 @@ namespace Tsundoku.Views
                     LOGGER.Info($"Updating # of Volumes Read for \"{curSeries.Titles["Romaji"]}\" from {curSeries.VolumesRead} to {volumesReadVal}");
 
                     curSeries.VolumesRead = volumesReadVal;
-                    (stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(0) as TextBlock).Text = $"Read {volumesReadVal} Vol(s)";
+                    (stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(0) as TextBlock).Text = $"{volumesReadVal} Vol(s)";
                     volumesReadVal = 0;
                     MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionVolumesRead();
                     ((MaskedTextBox)stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(1)).Text = "";
@@ -337,21 +337,8 @@ namespace Tsundoku.Views
             }
             LOGGER.Debug("Passed Volumes Read Check");
 
-            string valueText = ((MaskedTextBox)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(1)).Text;
-            decimal valueVal = Convert.ToDecimal(valueText.Replace("_", "0"));
-            if (decimal.Compare(valueVal, 0) >= 0 && curSeries.Value != valueVal && !valueText.Equals("_________.__"))
-            {
-                LOGGER.Info($"Updating value for \"{curSeries.Titles["Romaji"]}\" from {curSeries.Value} to {ViewModel.CurCurrency}{valueVal}");
-
-                curSeries.Value = valueVal;
-                ((TextBlock)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(0)).Text = $"Value {ViewModel.CurCurrency}{valueVal}";
-                MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionPrice();
-                ((MaskedTextBox)stackPanels.ElementAt(2).GetLogicalChildren().ElementAt(1)).Text = "";
-            }
-            LOGGER.Debug("Passed Value Check");
-
             string ratingValText = ((MaskedTextBox)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(1)).Text;
-            decimal ratingVal = Convert.ToDecimal(ratingValText[..4].Replace("_", "0"));
+            decimal ratingVal = Convert.ToDecimal(ratingValText[..4].Trim().Replace("_", "0"));
             if (decimal.Compare(ratingVal, 0) >= 0 && curSeries.Rating != ratingVal && !ratingValText.StartsWith("__._"))
             {
                 if (decimal.Compare(ratingVal, new decimal(10.0)) <= 0)
@@ -374,6 +361,33 @@ namespace Tsundoku.Views
                 }
             }
             LOGGER.Debug("Passed Rating Check");
+
+            var bottomPanel = stackPanels.ElementAt(4).GetLogicalChildren();
+            string valueText = ((MaskedTextBox)bottomPanel.ElementAt(0).GetLogicalChildren().ElementAt(1)).Text;
+            decimal valueVal = Convert.ToDecimal(valueText.Trim().Replace("_", "0"));
+            if (decimal.Compare(valueVal, 0) >= 0 && curSeries.Value != valueVal && !valueText.Equals("_________.__"))
+            {
+                LOGGER.Info($"Updating value for \"{curSeries.Titles["Romaji"]}\" from {ViewModel.CurCurrency}{curSeries.Value} to {ViewModel.CurCurrency}{valueVal}");
+
+                curSeries.Value = valueVal;
+                ((TextBlock)bottomPanel.ElementAt(0).GetLogicalDescendants().ElementAt(0)).Text = $"{ViewModel.CurCurrency}{valueVal}";
+                MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionPrice();
+                ((MaskedTextBox)bottomPanel.ElementAt(0).GetLogicalDescendants().ElementAt(1)).Text = "";
+            }
+            LOGGER.Debug("Passed Value Check");
+
+            TextBox publisherTextBox = (TextBox)bottomPanel.ElementAt(1).GetLogicalChildren().ElementAt(1);
+            string publisherText = string.IsNullOrWhiteSpace(publisherTextBox.Text) ? publisherTextBox.Text : publisherTextBox.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(publisherText) && !publisherText.Equals(curSeries.Publisher))
+            {
+                LOGGER.Info($"Updating Publisher for \"{curSeries.Titles["Romaji"]}\" from \"{curSeries.Publisher}\" to \"{publisherText}\"");
+
+                curSeries.Publisher = publisherText;
+                (((Button)sender).GetLogicalParent<StackPanel>().GetLogicalParent<Grid>().GetLogicalSiblings().ElementAt(2).GetLogicalChildren().ElementAt(0) as TextBlock).Text = publisherText;
+                // TODO - Update publisher stats
+                publisherTextBox.Clear();
+            }
+            LOGGER.Debug("Passed Publisher Check");
         }
 
         /// <summary>
@@ -389,7 +403,7 @@ namespace Tsundoku.Views
                 {
                     g.CopyFromScreen(new System.Drawing.Point((int)this.Bounds.Left, (int)this.Bounds.Top), System.Drawing.Point.Empty, new System.Drawing.Size((int)this.Width, (int)this.Height));
                 }
-                bitmap.Save(@$"Screenshots\{ViewModel.UserName}-Collection-ScreenShot-{ViewModel.CurrentTheme.ThemeName}.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                bitmap.Save(@$"Screenshots\{ViewModel.UserName}-Collection-Screenshot-{ViewModel.CurrentTheme.ThemeName}.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
         }
 
@@ -401,8 +415,8 @@ namespace Tsundoku.Views
             {
                 var textBoxes = ((Button)sender).GetLogicalSiblings();
                 Series curSeries = (Series)((Button)sender).DataContext;
-                string curVolumeString = ((MaskedTextBox)textBoxes.ElementAt(1)).Text.Replace("_", "");
-                string maxVolumeString = ((MaskedTextBox)textBoxes.ElementAt(2)).Text.Replace("_", "");
+                string curVolumeString = ((MaskedTextBox)textBoxes.ElementAt(1)).Text.Trim().Replace("_", "");
+                string maxVolumeString = ((MaskedTextBox)textBoxes.ElementAt(2)).Text.Trim().Replace("_", "");
 
                 ushort curVolumeChange = !string.IsNullOrWhiteSpace(curVolumeString) ? Convert.ToUInt16(curVolumeString) : curSeries.CurVolumeCount;
                 ushort maxVolumeChange = !string.IsNullOrWhiteSpace(maxVolumeString) ? Convert.ToUInt16(maxVolumeString) : curSeries.MaxVolumeCount;
@@ -424,6 +438,8 @@ namespace Tsundoku.Views
                     seriesProgressBar = null; 
                     ((MaskedTextBox)textBoxes.ElementAt(1)).Text = "";
                     ((MaskedTextBox)textBoxes.ElementAt(2)).Text = "";
+
+                    MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateVolumeCountChartValues();
                 }
                 else
                 {
@@ -455,7 +471,7 @@ namespace Tsundoku.Views
             }
             curSeries.IsEditPaneOpen ^= true;
             button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
-            button.Foreground = curSeries.IsEditPaneOpen ? SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor) : SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesEditPaneButtonsIconColor);
+            button.Foreground = curSeries.IsEditPaneOpen ? SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor) : SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
         }
 
         private void ShowStatsPane(object sender, RoutedEventArgs args)
@@ -591,9 +607,9 @@ namespace Tsundoku.Views
         /// <summary>
         /// Opens the AniList or MangaDex website link in the users browser when users clicks on the left side of the series card
         /// </summary>
-        private void OpenSiteLink(object sender, PointerPressedEventArgs args)
+        private async void OpenSiteLink(object sender, PointerPressedEventArgs args)
         {
-            ViewModelBase.OpenSiteLink(((sender as Canvas).DataContext as Series).Link.ToString());
+            await ViewModelBase.OpenSiteLink(((sender as Canvas).DataContext as Series).Link.ToString());
         }
         
         private async void ChangeUserIcon(object sender, PointerPressedEventArgs args)

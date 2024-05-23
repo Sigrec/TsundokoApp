@@ -327,6 +327,20 @@
                                 </Border>
                             </StackPanel>
                             <StackPanel Spacing="5" VerticalAlignment="Center" Margin="7">
+                                <TextBlock Text="Series Publisher" FontSize="12" FontWeight="Bold" Classes="menu"/>
+                                <Border Classes="menu" BorderThickness="2">
+                                    <Border Classes="menu" BorderThickness="2" Margin="2">	
+                                        <Button Name="SeriesCard_Publisher_Button" Background="{CompiledBinding CurrentTheme.SeriesCardPublisherColor, Converter={StaticResource ConvertColor}}" Margin="2" Cursor="Hand" HorizontalAlignment="Left" Height="20" Width="210" CornerRadius="0">
+                                            <Button.Flyout>
+                                                <Flyout Placement="Bottom">
+                                                    <ColorView Name="SeriesCard_Publisher"/>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                    </Border>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Spacing="5" VerticalAlignment="Center" Margin="7">
                                 <TextBlock Text="Series Staff" FontSize="12" FontWeight="Bold" Classes="menu"/>
                                 <Border Classes="menu" BorderThickness="2">
                                     <Border Classes="menu" BorderThickness="2" Margin="2">	

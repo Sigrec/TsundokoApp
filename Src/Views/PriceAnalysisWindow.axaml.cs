@@ -87,6 +87,7 @@ namespace Tsundoku.Views
             try
             {
                 StartScrapeButton.IsEnabled = false;
+                StartScrapeButton.Content = "Analyzing..."; 
                 Scrape.Browser = MangaAndLightNovelWebScrape.Helpers.GetBrowserFromString((BrowserSelector.SelectedItem as ComboBoxItem).Content.ToString());
                 Scrape.Region = MangaAndLightNovelWebScrape.Helpers.GetRegionFromString((RegionSelector.SelectedItem as ComboBoxItem).Content.ToString());
                 Scrape.Filter = MangaAndLightNovelWebScrape.Helpers.GetStockStatusFilterFromString((StockFilterSelector.SelectedItem as ComboBoxItem).Content.ToString());
@@ -103,6 +104,7 @@ namespace Tsundoku.Views
                         Scrape.GenerateWebsiteList(ViewModel.SelectedWebsites.Select(site => site.Content.ToString()).ToList())
                     );
                 StartScrapeButton.IsEnabled = ViewModel.IsAnalyzeButtonEnabled;
+                StartScrapeButton.Content = "Analyze"; 
                 LOGGER.Info($"Scrape Finished");
 
                 ViewModel.AnalyzedList.Clear();
@@ -133,9 +135,9 @@ namespace Tsundoku.Views
             ViewModel.WebsitesSelected = list.Count != 0 && IsWebsiteListValid(list);
         }
 
-        private void OpenSiteLink(object sender, PointerPressedEventArgs args)
+        private async void OpenSiteLinkAsync(object sender, PointerPressedEventArgs args)
         {
-            ViewModelBase.OpenSiteLink(Scrape.GetResultUrls()[(sender as TextBlock).Text]);
+            await ViewModelBase.OpenSiteLink(Scrape.GetResultUrls()[(sender as TextBlock).Text]);
         }
     }
 }

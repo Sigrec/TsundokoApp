@@ -39,7 +39,7 @@ namespace Tsundoku.Views
                 ViewModel.CurThemeIndex = index != -1 ? index : ThemeSettingsViewModel.UserThemesDisplay.IndexOf("Default");
 
                 // Apply colors before applying listeners
-                // ApplyColors();
+                ApplyColors();
                 MenuColorChanges();
                 CollectionColorChanges();
             };
@@ -107,6 +107,7 @@ namespace Tsundoku.Views
             NewTheme.StatusAndBookTypeTextHoverColor = Color.Parse(AccentColor2.Text).ToString();
             NewTheme.SeriesCardBGColor = Color.Parse(MainColor1.Text).ToString();
             NewTheme.SeriesCardTitleColor = Color.Parse(AccentColor1.Text).ToString();
+            NewTheme.SeriesCardPublisherColor = Color.Parse(TextColor1.Text).ToString();
             NewTheme.SeriesCardStaffColor = Color.Parse(TextColor1.Text).ToString();
             NewTheme.SeriesCardDescColor = Color.Parse(TextColor2.Text).ToString();
             NewTheme.SeriesProgressBGColor = Color.Parse(AccentColor2.Text).ToString();
@@ -164,6 +165,7 @@ namespace Tsundoku.Views
             NewTheme.StatusAndBookTypeTextHoverColor = Color.Parse(AccentColor2.Text).ToString();
             NewTheme.SeriesCardBGColor = Color.Parse(MainColor1.Text).ToString();
             NewTheme.SeriesCardTitleColor = Color.Parse(AccentColor1.Text).ToString();
+            NewTheme.SeriesCardPublisherColor = Color.Parse(TextColor1.Text).ToString();
             NewTheme.SeriesCardStaffColor = Color.Parse(TextColor1.Text).ToString();
             NewTheme.SeriesCardDescColor = Color.Parse(TextColor2.Text).ToString();
             NewTheme.SeriesProgressBGColor = Color.Parse(AccentColor2.Text).ToString();
@@ -372,6 +374,7 @@ namespace Tsundoku.Views
             Status_And_BookType_Text_Hover.Color = Color.Parse(ViewModel.CurrentTheme.StatusAndBookTypeTextHoverColor);
             SeriesCard_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardBGColor);
             SeriesCard_Title.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardTitleColor);
+            SeriesCard_Publisher.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardPublisherColor);
             SeriesCard_Staff.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardStaffColor);
             SeriesCard_Desc.Color = Color.Parse(ViewModel.CurrentTheme.SeriesCardDescColor);
             SeriesProgress_BG.Color = Color.Parse(ViewModel.CurrentTheme.SeriesProgressBGColor);
@@ -545,6 +548,13 @@ namespace Tsundoku.Views
             {
                 SeriesCard_Title_Button.Background = new SolidColorBrush(SeriesCard_Title.Color);
                 NewTheme.SeriesCardTitleColor = SeriesCard_Title.Color.ToString();
+                if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
+            };
+
+            SeriesCard_Publisher.ColorChanged += (sender, e) =>
+            {
+                SeriesCard_Publisher_Button.Background = new SolidColorBrush(SeriesCard_Publisher.Color);
+                NewTheme.SeriesCardPublisherColor = SeriesCard_Publisher.Color.ToString();
                 if (!ThemeChanged) { UpdateMainWindowColors(NewTheme); }
             };
 

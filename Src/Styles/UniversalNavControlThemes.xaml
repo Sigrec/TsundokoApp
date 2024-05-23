@@ -18,6 +18,7 @@
 		<Setter Property="FontSize" Value="15" />
 		<Setter Property="FontWeight" Value="Bold"/>
 		<Setter Property="AutoScrollToSelectedItem" Value="True"/>
+        <Setter Property="Cursor" Value="Hand"/>
 		<!-- <Setter Property="PlaceholderForeground" Value="Aqua" /> -->
 		<Setter Property="Background" Value="{CompiledBinding CurrentTheme.MenuButtonBGColor, Converter={StaticResource ConvertColor}}"/>
 		<Setter Property="BorderBrush" Value="{CompiledBinding CurrentTheme.MenuButtonBorderColor, Converter={StaticResource ConvertColor}}"/>
@@ -169,6 +170,7 @@
 		<Setter Property="FontSize" Value="15"/>
 		<Setter Property="BorderThickness" Value="2"/>
 		<Setter Property="RenderTransform" Value="none"/>
+        <Setter Property="Cursor" Value="Hand"/>
 		<Setter Property="Padding" Value="{DynamicResource ButtonPadding}"/>
 		<Setter Property="Transitions">
 			<Transitions>
@@ -230,6 +232,7 @@
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="RenderTransform" Value="none" />
         <Setter Property="Height" Value="37" />
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Transitions">
         <Transitions>
             <TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />
@@ -285,6 +288,7 @@
         <Setter Property="FontSize" Value="15" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Cursor" Value="Hand"/>
 
         <Setter Property="Template">
             <ControlTemplate>

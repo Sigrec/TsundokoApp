@@ -90,9 +90,12 @@ namespace Tsundoku.Views
                 (MangaButton.IsChecked == true) ? Format.Manga : Format.Novel, 
                 CurVolNum, 
                 MaxVolNum, 
-                AddNewSeriesViewModel.ConvertSelectedLangList(AddNewSeriesViewModel.SelectedAdditionalLanguages), 
+                AddNewSeriesViewModel.ConvertSelectedLangList(AddNewSeriesViewModel.SelectedAdditionalLanguages),
                 !string.IsNullOrWhiteSpace(customImageUrl) ? customImageUrl.Trim() : string.Empty, 
-                Series.GetSeriesDemographic((DemographicCombobox.SelectedItem as ComboBoxItem).Content.ToString()), volumesRead, !Rating.Text[..4].StartsWith("__._") ? rating : -1, 
+                PublisherTextBox.Text.Trim(), //Publisher
+                Series.GetSeriesDemographic((DemographicCombobox.SelectedItem as ComboBoxItem).Content.ToString()), 
+                volumesRead, 
+                !Rating.Text[..4].StartsWith("__._") ? rating : -1, 
                 value,
                 ViewModel.AllowDuplicate
             );

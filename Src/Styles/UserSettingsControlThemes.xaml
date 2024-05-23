@@ -14,6 +14,7 @@
 		<Setter Property="RenderTransform" Value="none" />
         <Setter Property="HorizontalAlignment" Value="Center"/>
 		<Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
+        <Setter Property="Cursor" Value="Hand"/>
 		<Setter Property="Transitions">
 			<Transitions>
 				<TransformOperationsTransition Property="RenderTransform" Duration="0:0:.075" />

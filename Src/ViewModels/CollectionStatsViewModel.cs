@@ -28,7 +28,16 @@ namespace Tsundoku.ViewModels
         public ObservableValue CancelledCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Status == Status.Cancelled));
         public ObservableValue HiatusCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Status == Status.Hiatus));
 
+        public ObservableCollection<ISeries> Formats { get; set; } = new ObservableCollection<ISeries>();
+        public ObservableValue MangaCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manga));
+        public ObservableValue ManhwaCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manhwa));
+        public ObservableValue ManhuaCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manhua));
+        public ObservableValue ManfraCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manfra));
+        public ObservableValue ComicCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Comic));
+        public ObservableValue NovelCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Novel));
+
         public ObservableCollection<ISeries> RatingDistribution { get; set; } = new ObservableCollection<ISeries>();
+        private List<double?> RatingArray = new List<double?>(10);
         public ObservableCollection<Axis> RatingXAxes { get; set; } = new ObservableCollection<Axis>();
         public ObservableCollection<Axis> RatingYAxes { get; set; } = new ObservableCollection<Axis>();
         public ObservableValue ZeroRatingCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.Rating > 0 && series.Rating < 1));
@@ -54,6 +63,33 @@ namespace Tsundoku.ViewModels
         public ObservableValue MaxRatingCount9 { get; set; } = new ObservableValue(0);
         public ObservableValue MaxRatingCount10 { get; set; } = new ObservableValue(0);
 
+         public ObservableCollection<ISeries> VolumeCountDistribution { get; set; } = new ObservableCollection<ISeries>();
+         private List<double?> VolumeCountArray = new List<double?>(10);
+         public ObservableCollection<Axis> VolumeCountXAxes { get; set; } = new ObservableCollection<Axis>();
+        public ObservableCollection<Axis> VolumeCountYAxes { get; set; } = new ObservableCollection<Axis>();
+        public ObservableValue ZeroVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 1 && series.MaxVolumeCount < 10));
+        public ObservableValue OneVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 10 && series.MaxVolumeCount < 20));
+        public ObservableValue TwoVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 20 && series.MaxVolumeCount < 30));
+        public ObservableValue ThreeVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 30 && series.MaxVolumeCount < 40));
+        public ObservableValue FourVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 40 && series.MaxVolumeCount < 50));
+        public ObservableValue FiveVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 50 && series.MaxVolumeCount < 60));
+        public ObservableValue SixVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 60 && series.MaxVolumeCount < 70));
+        public ObservableValue SevenVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 70 && series.MaxVolumeCount < 80));
+        public ObservableValue EightVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 80 && series.MaxVolumeCount < 90));
+        public ObservableValue NineVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 90 && series.MaxVolumeCount < 100));
+        public ObservableValue TenVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 100));
+        public ObservableValue MaxVolumeCount { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount1 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount2 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount3 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount4 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount5 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount6 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount7 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount8 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount9 { get; set; } = new ObservableValue(0);
+        public ObservableValue MaxVolumeCount10 { get; set; } = new ObservableValue(0);
+
         [Reactive] public decimal MeanRating { get; set; }
         [Reactive] public uint VolumesRead { get; set; }
         [Reactive] public string CollectionPrice { get; set; }
@@ -68,9 +104,14 @@ namespace Tsundoku.ViewModels
         [Reactive] public decimal ShoujoPercentage { get; set; }
         [Reactive] public decimal JoseiPercentage { get; set; }
         [Reactive] public decimal UnknownPercentage { get; set; }
+        [Reactive] public decimal MangaPercentage { get; set; }
+        [Reactive] public decimal ManhwaPercentage { get; set; }
+        [Reactive] public decimal ManhuaPercentage { get; set; }
+        [Reactive] public decimal ManfraPercentage { get; set; }
+        [Reactive] public decimal ComicPercentage { get; set; }
+        [Reactive] public decimal NovelPercentage { get; set; }
         [Reactive] public uint UsersNumVolumesCollected { get; set; }
         [Reactive] public uint UsersNumVolumesToBeCollected { get; set; }
-        private List<double?> RatingArray = new List<double?>(10);
 
         public CollectionStatsViewModel()
         {
@@ -149,6 +190,37 @@ namespace Tsundoku.ViewModels
                 Name = "Hiatus"
             });
 
+            Formats.Add(new PieSeries<ObservableValue> 
+            { 
+                Values = new ObservableCollection<ObservableValue> { MangaCount },
+                Name = "Manga"
+            });
+            Formats.Add(new PieSeries<ObservableValue>
+            { 
+                Values = new ObservableCollection<ObservableValue> { ManhwaCount },
+                Name = "Manhwa"
+            });
+            Formats.Add(new PieSeries<ObservableValue>
+            { 
+                Values = new ObservableCollection<ObservableValue> { ManhuaCount },
+                Name = "Manhua"
+            });
+            Formats.Add(new PieSeries<ObservableValue>
+            { 
+                Values = new ObservableCollection<ObservableValue> { ManfraCount },
+                Name = "Manfra"
+            });
+            Formats.Add(new PieSeries<ObservableValue>
+            { 
+                Values = new ObservableCollection<ObservableValue> { ComicCount },
+                Name = "Comic"
+            });
+            Formats.Add(new PieSeries<ObservableValue>
+            { 
+                Values = new ObservableCollection<ObservableValue> { NovelCount },
+                Name = "Novel"
+            });
+
             RatingDistribution.Add(new ColumnSeries<ObservableValue> 
             { 
                 IsHoverable = false,
@@ -169,7 +241,6 @@ namespace Tsundoku.ViewModels
                 DataLabelsSize = 15,
                 IgnoresBarPosition = true
             });
-
             RatingXAxes.Add(new Axis
             {
                 LabelsRotation = 0,
@@ -177,8 +248,40 @@ namespace Tsundoku.ViewModels
                 MinStep = 1,
                 ForceStepToMin = true
             });
-
             RatingYAxes.Add(new Axis
+            {
+                Labels = Array.Empty<string>(),
+                MinLimit = 0
+            });
+
+            VolumeCountDistribution.Add(new ColumnSeries<ObservableValue> 
+            { 
+                IsHoverable = false,
+                Values = new ObservableCollection<ObservableValue> 
+                { 
+                    MaxVolumeCount, MaxVolumeCount1, MaxVolumeCount2, MaxVolumeCount3, MaxVolumeCount4, MaxVolumeCount5, MaxVolumeCount6, MaxVolumeCount7, MaxVolumeCount8, MaxVolumeCount9, MaxVolumeCount10
+                },
+                Stroke = null,
+                IgnoresBarPosition = true
+            });
+            VolumeCountDistribution.Add(new ColumnSeries<ObservableValue> 
+            { 
+                IsHoverable = false,
+                Values = new ObservableCollection<ObservableValue>
+                {
+                    ZeroVolumeCount, OneVolumeCount, TwoVolumeCount, ThreeVolumeCount, FourVolumeCount, FiveVolumeCount, SixVolumeCount, SevenVolumeCount, EightVolumeCount, NineVolumeCount, TenVolumeCount
+                },
+                DataLabelsSize = 15,
+                IgnoresBarPosition = true
+            });
+            VolumeCountXAxes.Add(new Axis
+            {
+                LabelsRotation = 0,
+                TextSize = 14,
+                Labels = [ "1s", "10s", "20s", "30s", "40s", "50s", "60s", "70s", "80s", "90s", "100s", ] ,
+                ForceStepToMin = true
+            });
+            VolumeCountYAxes.Add(new Axis
             {
                 Labels = Array.Empty<string>(),
                 MinLimit = 0
@@ -194,6 +297,32 @@ namespace Tsundoku.ViewModels
             FinishedCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Status == Status.Finished);
             CancelledCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Status == Status.Cancelled);
             HiatusCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Status == Status.Hiatus);
+        }
+
+        /// <summary>
+        /// Updates the values in the format pie chart
+        /// </summary>
+        public void UpdateFormatChartValues()
+        {
+            MangaCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manga);
+            ManhwaCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manhwa);
+            ManhuaCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manhua);
+            ManfraCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Manfra);
+            ComicCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Comic);
+            NovelCount.Value = MainWindowViewModel.UserCollection.Count(series => series.Format == Format.Novel);
+        }
+
+        /// <summary>
+        /// Updates the percentages for the demographic pie chart legend
+        /// </summary>
+        public void UpdateFormatChartPercentages()
+        {
+            MangaPercentage = Math.Round(Convert.ToDecimal(MainWindowViewModel.UserCollection.Count != 0 && MangaCount.Value != double.NaN ? MangaCount.Value / MainWindowViewModel.UserCollection.Count * 100 : 0), 2);
+            ManhwaPercentage = Math.Round(Convert.ToDecimal(MainWindowViewModel.UserCollection.Count != 0 && ManhwaCount.Value != double.NaN ? ManhwaCount.Value / MainWindowViewModel.UserCollection.Count * 100 : 0), 2);
+            ManhuaPercentage = Math.Round(Convert.ToDecimal(MainWindowViewModel.UserCollection.Count != 0 && ManhuaCount.Value != double.NaN ? ManhuaCount.Value / MainWindowViewModel.UserCollection.Count * 100 : 0), 2);
+            ManfraPercentage = Math.Round(Convert.ToDecimal(MainWindowViewModel.UserCollection.Count != 0 && ManfraCount.Value != double.NaN ? ManfraCount.Value / MainWindowViewModel.UserCollection.Count * 100 : 0), 2);
+            ComicPercentage = Math.Round(Convert.ToDecimal(MainWindowViewModel.UserCollection.Count != 0 && ComicCount.Value != double.NaN ? ComicCount.Value / MainWindowViewModel.UserCollection.Count * 100 : 0), 2);
+            NovelPercentage = Math.Round(Convert.ToDecimal(MainWindowViewModel.UserCollection.Count != 0 && NovelCount.Value != double.NaN ? NovelCount.Value / MainWindowViewModel.UserCollection.Count * 100 : 0), 2);
         }
 
         /// <summary>
@@ -238,6 +367,49 @@ namespace Tsundoku.ViewModels
             MaxRatingCount8.Value = MaxRatingCount.Value;
             MaxRatingCount9.Value = MaxRatingCount.Value;
             MaxRatingCount10.Value = MaxRatingCount.Value;
+        }
+
+        /// <summary>
+        /// Updates the values in the Volume Count bar/cartersian chart
+        /// </summary>
+        public void UpdateVolumeCountChartValues()
+        {
+            VolumeCountArray.Clear();
+            ZeroVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 1 && series.MaxVolumeCount < 10);
+            OneVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 10 && series.MaxVolumeCount < 20);
+            TwoVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 20 && series.MaxVolumeCount < 30);
+            ThreeVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 30 && series.MaxVolumeCount < 40);
+            FourVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 40 && series.MaxVolumeCount < 50);
+            FiveVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 50 && series.MaxVolumeCount < 60);
+            SixVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 60 && series.MaxVolumeCount < 70);
+            SevenVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 70 && series.MaxVolumeCount < 80);
+            EightVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 80 && series.MaxVolumeCount < 90);
+            NineVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 90 && series.MaxVolumeCount < 100);
+            TenVolumeCount.Value = MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 100);
+
+            VolumeCountArray.Add(ZeroVolumeCount.Value);
+            VolumeCountArray.Add(OneVolumeCount.Value);
+            VolumeCountArray.Add(TwoVolumeCount.Value);
+            VolumeCountArray.Add(ThreeVolumeCount.Value);
+            VolumeCountArray.Add(FourVolumeCount.Value);
+            VolumeCountArray.Add(FiveVolumeCount.Value);
+            VolumeCountArray.Add(SixVolumeCount.Value);
+            VolumeCountArray.Add(SevenVolumeCount.Value);
+            VolumeCountArray.Add(EightVolumeCount.Value);
+            VolumeCountArray.Add(NineVolumeCount.Value);
+            VolumeCountArray.Add(TenVolumeCount.Value);
+
+            MaxVolumeCount.Value = VolumeCountArray.Max();
+            MaxVolumeCount1.Value = MaxVolumeCount.Value;
+            MaxVolumeCount2.Value = MaxVolumeCount.Value;
+            MaxVolumeCount3.Value = MaxVolumeCount.Value;
+            MaxVolumeCount4.Value = MaxVolumeCount.Value;
+            MaxVolumeCount5.Value = MaxVolumeCount.Value;
+            MaxVolumeCount6.Value = MaxVolumeCount.Value;
+            MaxVolumeCount7.Value = MaxVolumeCount.Value;
+            MaxVolumeCount8.Value = MaxVolumeCount.Value;
+            MaxVolumeCount9.Value = MaxVolumeCount.Value;
+            MaxVolumeCount10.Value = MaxVolumeCount.Value;
         }
 
         /// <summary>
@@ -316,8 +488,13 @@ namespace Tsundoku.ViewModels
 
             UpdateDemographicChartValues();
             UpdateDemographicPercentages();
+
+            UpdateFormatChartValues();
+            UpdateFormatChartPercentages();
             
             UpdateRatingChartValues();
+
+            UpdateVolumeCountChartValues();
         }
 
         /// <summary>
@@ -327,7 +504,10 @@ namespace Tsundoku.ViewModels
         {
             UpdateStatusPercentages();
             UpdateDemographicPercentages();
+            UpdateFormatChartPercentages();
+            
             UpdateRatingChartValues();
+            UpdateVolumeCountChartValues();
 
             uint testVolumesRead = 0, testUsersNumVolumesCollected = 0, testUsersNumVolumesToBeCollected = 0;
             decimal testCollectionPrice = 0, testMeanRating = 0, countMeanRating = 0;

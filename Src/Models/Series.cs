@@ -25,6 +25,7 @@ namespace Tsundoku.Models
 
 		[JsonIgnore] private bool disposedValue;
 		[JsonIgnore] public Bitmap CoverBitMap { get; set; }
+        public string Publisher { get; set; }
 		public Dictionary<string, string> Titles { get; set; }
         public Dictionary<string, string> Staff { get; set; }
         public uint DuplicateIndex { get; set; }
@@ -62,8 +63,9 @@ namespace Tsundoku.Models
         [JsonIgnore] public bool IsEditPaneOpen { get; set; } = false;
 
         [JsonConstructor]
-		public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Value, Demographic Demographic, Bitmap CoverBitMap, uint DuplicateIndex = 0)
+		public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Value, Demographic Demographic, Bitmap CoverBitMap, string Publisher = "Unknown", uint DuplicateIndex = 0)
         {
+            this.Publisher = Publisher;
             this.Titles = Titles;
 			this.Staff = Staff;
 			this.Description = Description;
@@ -92,7 +94,7 @@ namespace Tsundoku.Models
         /// <param name="MD_Query">MangaDexQuery object for the MangaDex HTTP client</param>
         /// <param name="additionalLanguages">List of additional languages to query for</param>
         /// <returns></returns>
-        public static async Task<Series?> CreateNewSeriesCardAsync(string title, Format bookType, ushort maxVolCount, ushort minVolCount, ObservableCollection<string> additionalLanguages, Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal value = 0, string customImageUrl = "")
+        public static async Task<Series?> CreateNewSeriesCardAsync(string title, Format bookType, ushort maxVolCount, ushort minVolCount, ObservableCollection<string> additionalLanguages, string publisher = "Unknown", Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal value = 0, string customImageUrl = "")
         {
 			JsonDocument? seriesDataDoc;
 			int pageNum = 1;
@@ -248,6 +250,7 @@ namespace Tsundoku.Models
                         value,
 						demographic,
                         await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl),
+                        publisher,
                         dupeIndex
 					);
 			}
@@ -431,6 +434,7 @@ namespace Tsundoku.Models
                         value,
                         demographic,
                         await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, coverLink, string.IsNullOrWhiteSpace(customImageUrl) ? string.Empty : customImageUrl),
+                        publisher,
                         dupeIndex
 					);
 				}
@@ -632,7 +636,7 @@ namespace Tsundoku.Models
 		{
 			if (!disposedValue)
 			{
-				if (disposing)
+				if (disposing && CoverBitMap != null)
 				{
 					// dispose managed state (managed objects)
 					CoverBitMap.Dispose();

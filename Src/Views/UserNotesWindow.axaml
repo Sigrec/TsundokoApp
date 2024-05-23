@@ -10,7 +10,7 @@
         MinWidth="600"
         MinHeight="400"
         WindowStartupLocation="CenterScreen"
-        SizeToContent="Height"
+        SizeToContent="WidthAndHeight"
         x:DataType="vm:UserNotesWindowViewModel">
 
     <Window.DataContext>
