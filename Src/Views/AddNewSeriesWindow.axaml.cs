@@ -64,6 +64,7 @@ namespace Tsundoku.Views
             TitleBox.Text = string.Empty;
             CurVolCount.Text = string.Empty;
             MaxVolCount.Text = string.Empty;
+            PublisherTextBox.Text = string.Empty;
             DemographicCombobox.SelectedIndex = 4;
             VolumesRead.Text = string.Empty;
             Rating.Text = string.Empty;

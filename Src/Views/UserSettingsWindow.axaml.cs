@@ -51,7 +51,6 @@ namespace Tsundoku.Views
             };
 
             this.WhenAnyValue(x => x.IndigoButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.IndigoMember = x);
-            this.WhenAnyValue(x => x.BarnesAndNobleButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.BarnesAndNobleMember = x);
             this.WhenAnyValue(x => x.BooksAMillionButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.BooksAMillionMember = x);
             this.WhenAnyValue(x => x.KinokuniyaUSAButton.IsChecked, (member) => member != null && member == true).Subscribe(x => ViewModel.KinokuniyaUSAMember = x);
         }

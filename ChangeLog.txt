@@ -13,6 +13,20 @@ TODO:
 ❌ Issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 ❌ Stat to track whether still collecting or not?
 
+v5.1.0.0 - June 23rd, 2024
+⌛ Update Avalonia package to v11.1.0-rc1
+📜 Theme Window
+- ✅ Added option to change staff color and is now independent
+📜 Settings Window
+- ✅ Added MANGA GEEKDOM to Youtubers
+📜 Add Series Window
+- 🔥 Publisher field now clears when a series is added succesfully
+📜 Price Analysis Window
+- ⌛ Updated library to v3.0.1
+- ✅ Removed Barnes & Noble
+- ✅ Added AmazonUSA
+- ✅ Changed default browser from FireFox to Chrome
+
 v5.0.0.0 - May 23rd, 2024
 ✅ Added publisher info to series cards (default will be set to "Unknown")
 ✅ Changed "Cost" to "Value"

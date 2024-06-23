@@ -12,7 +12,7 @@
         FontFamily="Segoe UI"
         MaxWidth="491"
         MinWidth="491"
-        MaxHeight="875"
+        MaxHeight="865"
         WindowStartupLocation="2"
         KeyboardNavigation.TabNavigation="None">
     
@@ -100,10 +100,6 @@
                                 <Setter Property="Margin" Value="3"/>
                             </Style>
                         </WrapPanel.Styles>
-					<ToggleButton Name="BarnesAndNobleButton"
-								  IsChecked="{Binding BarnesAndNobleMember}"
-							      Theme="{StaticResource MenuToggleButton}"
-							      Content="Barnes &#x26; Noble"/>
 					<ToggleButton Name="BooksAMillionButton"
 								  IsChecked="{Binding BooksAMillionMember}"
 							      Theme="{StaticResource MenuToggleButton}"
@@ -202,6 +198,14 @@
                                 Click="OpenYoutuberSite" 
                                 Name="Ararawgi"
                                 Content="Ararawgi"/>
+                        <Button Theme="{StaticResource UserSettingsButton}"
+                                Click="OpenYoutuberSite" 
+                                Name="TheMangaSloth"
+                                Content="TheMangaSloth"/>
+                        <Button Theme="{StaticResource UserSettingsButton}"
+                                Click="OpenYoutuberSite" 
+                                Name="mangageekdom"
+                                Content="MANGA GEEKDOM"/>
                         <Button Theme="{StaticResource UserSettingsButton}"
                                 Click="OpenYoutuberSite" 
                                 Name="meettheweebfamily"

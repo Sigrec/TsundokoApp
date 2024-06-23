@@ -354,7 +354,6 @@ namespace Tsundoku.ViewModels
                             Region.America,
                             new Dictionary<string, bool>
                             {
-                                { BarnesAndNoble.WEBSITE_TITLE , false },
                                 { BooksAMillion.WEBSITE_TITLE, false },
                                 { Indigo.WEBSITE_TITLE, false },
                                 { KinokuniyaUSA.WEBSITE_TITLE , false }
@@ -567,8 +566,8 @@ namespace Tsundoku.ViewModels
             {
                 userData["Memberships"] = new JsonObject
                 {
-                    [BarnesAndNoble.WEBSITE_TITLE] = false,
                     [BooksAMillion.WEBSITE_TITLE] = false,
+                    [Indigo.WEBSITE_TITLE] = false,
                     [KinokuniyaUSA.WEBSITE_TITLE] = false
                 };
 
@@ -686,13 +685,14 @@ namespace Tsundoku.ViewModels
                 updatedVersion = true;
             }
 
-            if (curVersion < 5.1) // Add new theme color
+            if (curVersion < 5.1) // Add new staff theme color, and remove B&N membership
             {
                 for (int x = 0; x < themeJsonArray.Count; x++)
                 {
                     theme = themeJsonArray.ElementAt(x).AsObject();
-                    theme.Add("SeriesCardPublisherColor", theme["SeriesCardStaffColor"].ToString());
+                    if (!theme.ContainsKey("SeriesCardPublisherColor")) theme.Add("SeriesCardPublisherColor", theme["SeriesCardStaffColor"].ToString());
                 }
+                userData["Memberships"].AsObject().Remove("Barnes & Noble");
                 userData["CurDataVersion"] = 5.1;
                 TsundokuLogger.Info(LOGGER, "Updated Users Data to v5.1", !isImport);
                 updatedVersion = true;

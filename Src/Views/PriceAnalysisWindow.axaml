@@ -52,9 +52,9 @@
 							  AutoScrollToSelectedItem="True"
 							  HorizontalAlignment="Left"
 							  Theme="{StaticResource MenuComboBox}">
+                        <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">FireFox</ComboBoxItem>
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Chrome</ComboBoxItem>
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Edge</ComboBoxItem>
-						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">FireFox</ComboBoxItem>
 					</ComboBox>
 				</StackPanel>
 				<StackPanel Grid.Column="0" Grid.Row="1">
@@ -90,7 +90,7 @@
 							 SelectionMode="Multiple,Toggle"
                              SelectionChanged="WebsiteSelectionChanged"
 							 SelectedItems="{CompiledBinding SelectedWebsites}">
-						<ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="Barnes &#x26; Noble" ToolTip.Tip="America"/>
+						<ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="Amazon USA" ToolTip.Tip="America"/>
 						<ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="Books-A-Million" ToolTip.Tip="America"/>
                         <ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="Crunchyroll" ToolTip.Tip="America"/>
                         <ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="Forbidden Planet" ToolTip.Tip="Britain"/>
@@ -104,7 +104,6 @@
                         <ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="SpeedyHen" ToolTip.Tip="Britain"/>
                         <ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="TravellingMan" ToolTip.Tip="Britain"/>
                         <ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="Waterstones" ToolTip.Tip="Britain"/>
-                        <!-- <ListBoxItem Theme="{StaticResource QueryListBoxItem}" Content="Wordery" ToolTip.Tip="Britain | Canada | Europe | Australia"/> -->
                     </ListBox>
 				</StackPanel>
                 <StackPanel Grid.Column="0" Grid.Row="2">

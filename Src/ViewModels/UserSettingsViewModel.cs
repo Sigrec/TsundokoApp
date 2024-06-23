@@ -16,7 +16,6 @@ namespace Tsundoku.ViewModels
         [Reactive] public bool IsChangeUsernameButtonEnabled { get; set; }
         [Reactive] public int CurrencyIndex { get; set; }
         [Reactive] public bool IndigoMember { get; set; } = MainUser.Memberships[Indigo.WEBSITE_TITLE];
-        [Reactive] public bool BarnesAndNobleMember { get; set; } = MainUser.Memberships[BarnesAndNoble.WEBSITE_TITLE];
         [Reactive] public bool BooksAMillionMember { get; set; } = MainUser.Memberships[BooksAMillion.WEBSITE_TITLE];
         [Reactive] public bool KinokuniyaUSAMember { get; set; } = MainUser.Memberships[KinokuniyaUSA.WEBSITE_TITLE];
         public ICommand ExportToSpreadSheetAsyncCommand { get; }
@@ -30,7 +29,6 @@ namespace Tsundoku.ViewModels
             this.WhenAnyValue(x => x.CurCurrency).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => CurrencyIndex = Array.IndexOf(AVAILABLE_CURRENCY, Uri.UnescapeDataString(x)));
             this.WhenAnyValue(x => x.UsernameText, x => !string.IsNullOrWhiteSpace(x)).Subscribe(x => IsChangeUsernameButtonEnabled = x);
             this.WhenAnyValue(x => x.IndigoMember).Subscribe(x => MainUser.Memberships[Indigo.WEBSITE_TITLE] = x);
-            this.WhenAnyValue(x => x.BarnesAndNobleMember).Subscribe(x => MainUser.Memberships[BarnesAndNoble.WEBSITE_TITLE] = x);
             this.WhenAnyValue(x => x.BooksAMillionMember).Subscribe(x => MainUser.Memberships[BooksAMillion.WEBSITE_TITLE] = x);
             this.WhenAnyValue(x => x.KinokuniyaUSAMember).Subscribe(x => MainUser.Memberships[KinokuniyaUSA.WEBSITE_TITLE] = x);
         }

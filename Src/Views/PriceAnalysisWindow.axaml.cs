@@ -59,7 +59,6 @@ namespace Tsundoku.Views
                 {
                     AmazonJapan.WEBSITE_TITLE => AmazonJapan.REGION.HasFlag(region),
                     AmazonUSA.WEBSITE_TITLE => AmazonUSA.REGION.HasFlag(region),
-                    BarnesAndNoble.WEBSITE_TITLE => BarnesAndNoble.REGION.HasFlag(region),
                     BooksAMillion.WEBSITE_TITLE => BooksAMillion.REGION.HasFlag(region),
                     CDJapan.WEBSITE_TITLE => CDJapan.REGION.HasFlag(region),
                     Crunchyroll.WEBSITE_TITLE => Crunchyroll.REGION.HasFlag(region),
@@ -73,7 +72,6 @@ namespace Tsundoku.Views
                     SciFier.WEBSITE_TITLE => SciFier.REGION.HasFlag(region),
                     SpeedyHen.WEBSITE_TITLE => SpeedyHen.REGION.HasFlag(region),
                     Waterstones.WEBSITE_TITLE => Waterstones.REGION.HasFlag(region),
-                    Wordery.WEBSITE_TITLE => Wordery.REGION.HasFlag(region),
                     _ => throw new NotImplementedException(),
                 };
                 if (!isValid) { return false; }
@@ -91,7 +89,6 @@ namespace Tsundoku.Views
                 Scrape.Browser = MangaAndLightNovelWebScrape.Helpers.GetBrowserFromString((BrowserSelector.SelectedItem as ComboBoxItem).Content.ToString());
                 Scrape.Region = MangaAndLightNovelWebScrape.Helpers.GetRegionFromString((RegionSelector.SelectedItem as ComboBoxItem).Content.ToString());
                 Scrape.Filter = MangaAndLightNovelWebScrape.Helpers.GetStockStatusFilterFromString((StockFilterSelector.SelectedItem as ComboBoxItem).Content.ToString());
-                Scrape.IsBarnesAndNobleMember = ViewModelBase.MainUser.Memberships[BarnesAndNoble.WEBSITE_TITLE];
                 Scrape.IsBooksAMillionMember = ViewModelBase.MainUser.Memberships[BooksAMillion.WEBSITE_TITLE];
                 Scrape.IsKinokuniyaUSAMember = ViewModelBase.MainUser.Memberships[KinokuniyaUSA.WEBSITE_TITLE];
                 Scrape.IsIndigoMember = ViewModelBase.MainUser.Memberships[Indigo.WEBSITE_TITLE];
