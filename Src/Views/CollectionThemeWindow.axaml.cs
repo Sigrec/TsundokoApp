@@ -87,6 +87,7 @@ namespace Tsundoku.Views
             // Apply menu colors
             NewTheme.MenuBGColor = Color.Parse(MainColor1.Text).ToString();
             NewTheme.UsernameColor = Color.Parse(TextColor1.Text).ToString();
+            NewTheme.UserIconBorderColor = Color.Parse(AccentColor1.Text).ToString();
             NewTheme.MenuTextColor = Color.Parse(TextColor1.Text).ToString();
             NewTheme.SearchBarBGColor = Color.Parse(AccentColor2.Text).ToString();
             NewTheme.SearchBarBorderColor = Color.Parse(AccentColor1.Text).ToString();
@@ -145,6 +146,7 @@ namespace Tsundoku.Views
             // Apply menu colors
             NewTheme.MenuBGColor = Color.Parse(MainColor1.Text).ToString();
             NewTheme.UsernameColor = Color.Parse(TextColor1.Text).ToString();
+            NewTheme.UserIconBorderColor = Color.Parse(AccentColor1.Text).ToString();
             NewTheme.MenuTextColor = Color.Parse(TextColor1.Text).ToString();
             NewTheme.SearchBarBGColor = Color.Parse(AccentColor2.Text).ToString();
             NewTheme.SearchBarBorderColor = Color.Parse(AccentColor1.Text).ToString();
@@ -356,6 +358,7 @@ namespace Tsundoku.Views
         {
             Menu_BG.Color = Color.Parse(ViewModel.CurrentTheme.MenuBGColor);
             Username.Color = Color.Parse(ViewModel.CurrentTheme.UsernameColor);
+            UserIconBorder.Color = Color.Parse(ViewModel.CurrentTheme.UserIconBorderColor);
             Menu_Text.Color = Color.Parse(ViewModel.CurrentTheme.MenuTextColor);
             SearchBar_BG.Color = Color.Parse(ViewModel.CurrentTheme.SearchBarBGColor);
             SearchBar_Border.Color = Color.Parse(ViewModel.CurrentTheme.SearchBarBorderColor);
@@ -415,6 +418,13 @@ namespace Tsundoku.Views
             {
                 Username_Button.Background = new SolidColorBrush(Username.Color);
                 NewTheme.UsernameColor = Username.Color.ToString();
+                if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
+            };
+
+            UserIconBorder.ColorChanged += (sender, e) =>
+            {
+                UserIconBorder_Button.Background = new SolidColorBrush(UserIconBorder.Color);
+                NewTheme.UserIconBorderColor = UserIconBorder.Color.ToString();
                 if (!ThemeChanged) { UpdateAllWindowColors(NewTheme); }
             };
 

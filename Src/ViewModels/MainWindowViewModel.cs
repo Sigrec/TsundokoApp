@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using Tsundoku.Views;
 using System.Reactive.Linq;
 using ReactiveUI.Fody.Helpers;
-using System.Reactive;
 using Avalonia.Controls;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Media.Imaging;
@@ -17,6 +16,7 @@ using MangaAndLightNovelWebScrape.Websites;
 using Avalonia.Collections;
 using System.Reflection;
 using Src.Helpers;
+using Tsundoku.Helpers;
 
 namespace Tsundoku.ViewModels
 {
@@ -29,6 +29,8 @@ namespace Tsundoku.ViewModels
         public static List<Series> UserCollection { get; set; } = [];
         private static IEnumerable<Series> FilteredCollection { get; set; } = [];
         [Reactive] public string SearchText { get; set; }
+        [Reactive] public string NotificationText { get; set; }
+
         [Reactive] public string AdvancedSearchText { get; set; } = string.Empty;
         [Reactive] public bool LanguageChanged { get; set; } = false;
         [Reactive] public Bitmap? UserIcon { get; set; }
@@ -66,14 +68,11 @@ namespace Tsundoku.ViewModels
             ConfigureWindows();
             AddCoverHttpClient.DefaultRequestHeaders.Add("User-Agent", USER_AGENT);
 
-            // this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.CurLanguage = x);
-            // this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => LanguageIndex = AVAILABLE_LANGUAGES.IndexOf(x));
             this.WhenAnyValue(x => x.CurLanguage).ObserveOn(RxApp.MainThreadScheduler).Subscribe(LanguageChangedUpdate);
-            this.WhenAnyValue(x => x.CurFilter).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => FilterIndex = AVAILABLE_COLLECTION_FILTERS.IndexOf(x));
+            this.WhenAnyValue(x => x.CurFilter).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => FilterIndex = AVAILABLE_COLLECTION_FILTERS.IndexOf(x.GetStringValue()));
             this.WhenAnyValue(x => x.SearchText).Throttle(TimeSpan.FromMilliseconds(600)).ObserveOn(RxApp.MainThreadScheduler).Subscribe(SearchCollection);
             this.WhenAnyValue(x => x.SearchText).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => CurSearchText = x);
             this.WhenAnyValue(x => x.CurrentTheme).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.MainTheme = x.ThemeName);
-            // this.WhenAnyValue(x => x.CurDisplay).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.Display = x);
             this.WhenAnyValue(x => x.UserName).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.UserName = x);
             this.WhenAnyValue(x => x.UserIcon).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.UserIcon = User.ImageToByteArray(x));
 
@@ -115,13 +114,12 @@ namespace Tsundoku.ViewModels
 
         public void UpdateCurFilter(ComboBoxItem filterBoxItem)
         {
-            CurFilter = filterBoxItem.Content.ToString();
-            FilterCollection(CurFilter);
+            FilterCollection(Enum.Parse<TsundokuFilter>(filterBoxItem.Content.ToString()));
         }
 
         public string GetFilter()
         {
-            return CurFilter;
+            return CurFilter.GetStringValue();
         }
 
         public static void UserIsSearching(bool value)
@@ -133,7 +131,7 @@ namespace Tsundoku.ViewModels
         /// Filters the users collection based on the selected preset filter
         /// </summary>
         /// <param name="filter">The filter preset chosen</param>
-        public void FilterCollection(string filter)
+        public void FilterCollection(TsundokuFilter filter)
         {
             if (CanFilter)
             {
@@ -144,65 +142,65 @@ namespace Tsundoku.ViewModels
                 }
                 switch (filter)
                 {
-                    case "Ongoing":
+                    case TsundokuFilter.Ongoing:
                         FilteredCollection = UserCollection.Where(series => series.Status == Status.Ongoing);
                         break;
-                    case "Finished":
+                    case TsundokuFilter.Finished:
                         FilteredCollection = UserCollection.Where(series => series.Status == Status.Finished);
                         break;
-                    case "Hiatus":
+                    case TsundokuFilter.Hiatus:
                         FilteredCollection = UserCollection.Where(series => series.Status == Status.Hiatus);
                         break;
-                    case "Cancelled":
+                    case TsundokuFilter.Cancelled:
                         FilteredCollection = UserCollection.Where(series => series.Status == Status.Cancelled);
                         break;
-                    case "Complete":
+                    case TsundokuFilter.Complete:
                         FilteredCollection = UserCollection.Where(series => series.CurVolumeCount == series.MaxVolumeCount);
                         break;
-                    case "Incomplete":
+                    case TsundokuFilter.Incomplete:
                         FilteredCollection = UserCollection.Where(series => series.CurVolumeCount != series.MaxVolumeCount);
                         break;
-                    case "Favorites":
+                    case TsundokuFilter.Favorites:
                         FilteredCollection = UserCollection.Where(series => series.IsFavorite);
                         break;
-                    case "Manga":
+                    case TsundokuFilter.Manga:
                         FilteredCollection = UserCollection.Where(series => series.Format != Format.Novel);
                         break;
-                    case "Novel":
+                    case TsundokuFilter.Novel:
                         FilteredCollection = UserCollection.Where(series => series.Format == Format.Novel);
                         break;
-                    case "Shounen":
+                    case TsundokuFilter.Shounen:
                         FilteredCollection = UserCollection.Where(series => series.Demographic == Demographic.Shounen);
                         break;
-                    case "Shoujo":
+                    case TsundokuFilter.Shoujo:
                         FilteredCollection = UserCollection.Where(series => series.Demographic == Demographic.Shoujo);
                         break;
-                    case "Seinen":
+                    case TsundokuFilter.Seinen:
                         FilteredCollection = UserCollection.Where(series => series.Demographic == Demographic.Seinen);
                         break;
-                    case "Josei":
+                    case TsundokuFilter.Josei:
                         FilteredCollection = UserCollection.Where(series => series.Demographic == Demographic.Josei);
                         break;
-                    case "Publisher":
+                    case TsundokuFilter.Publisher:
                         FilteredCollection = UserCollection.OrderBy(series => series.Publisher);
                         break;
-                    case "Read":
+                    case TsundokuFilter.Read:
                         FilteredCollection = UserCollection.Where(series => series.VolumesRead != 0);
                         break;
-                    case "Unread":
+                    case TsundokuFilter.Unread:
                         FilteredCollection = UserCollection.Where(series => series.VolumesRead == 0);
                         break;
-                    case "Rating":
+                    case TsundokuFilter.Rating:
                         FilteredCollection = UserCollection.OrderByDescending(series => series.Rating);
                         LOGGER.Info($"Sorted Collection by {filter}");
                         break;
-                    case "Value":
+                    case TsundokuFilter.Value:
                         FilteredCollection = UserCollection.OrderByDescending(series => series.Value);
                         LOGGER.Info($"Sorted Collection by {filter}");
                         break;
-                    case "Query":
+                    case TsundokuFilter.Query:
                         return;
-                    case "None":
+                    case TsundokuFilter.None:
                     default:
                         FilteredCollection = UserCollection;
                         break;
@@ -218,14 +216,14 @@ namespace Tsundoku.ViewModels
         /// Searches the users collection by title and/or staff
         /// </summary>
         /// <param name="searchText">The text to search for</param>
-        private async void SearchCollection(string searchText)
+        public async void SearchCollection(string searchText)
         {
             if (!string.IsNullOrWhiteSpace(searchText))
             {
-                if (!CurFilter.Equals("None"))
+                if (CurFilter != TsundokuFilter.None)
                 {
                     CanFilter = false;
-                    CurFilter = "None";
+                    CurFilter = TsundokuFilter.None;
                 }
 
                 await Task.Run(() => {
@@ -255,7 +253,7 @@ namespace Tsundoku.ViewModels
                     SearchIsBusy = false;
                     SearchText = string.Empty;
                 }
-                if (!CurFilter.Equals("Query"))
+                if (CurFilter != TsundokuFilter.Query)
                 {
                     CanFilter = false;
                 }
@@ -293,9 +291,9 @@ namespace Tsundoku.ViewModels
 
                 if (FilteredCollection.Any())
                 {
-                    if (!CurFilter.Equals("Query"))
+                    if (CurFilter != TsundokuFilter.Query)
                     {
-                        CurFilter = "Query";
+                        CurFilter = TsundokuFilter.Query;
                     }
                     SearchedCollection.Clear();
                     SearchedCollection.AddRange(FilteredCollection);
@@ -383,7 +381,7 @@ namespace Tsundoku.ViewModels
             MainUser.SavedThemes.Add(TsundokuTheme.DEFAULT_THEME);
             MainUser.SavedThemes = new ObservableCollection<TsundokuTheme>(MainUser.SavedThemes.OrderBy(theme => theme.ThemeName));
 
-            LOGGER.Info($"Loading {MainUser.UserName}'s Data");
+            LOGGER.Info($"Loading \"{MainUser.UserName}'s\" Data");
             UserName = MainUser.UserName;
             UserCollection = MainUser.UserCollection;
             CurLanguage = MainUser.CurLanguage;
@@ -695,6 +693,25 @@ namespace Tsundoku.ViewModels
                 userData["Memberships"].AsObject().Remove("Barnes & Noble");
                 userData["CurDataVersion"] = 5.1;
                 TsundokuLogger.Info(LOGGER, "Updated Users Data to v5.1", !isImport);
+                updatedVersion = true;
+            }
+
+            if (curVersion < 5.2) // Add new staff theme color, and remove B&N membership
+            {
+                for (int x = 0; x < themeJsonArray.Count; x++)
+                {
+                    theme = themeJsonArray.ElementAt(x).AsObject();
+                    if (!theme.ContainsKey("UserIconBorderColor"))
+                    {
+                        theme.Add("UserIconBorderColor", theme["DividerColor"].ToString());
+                    }
+                    else if(theme["UserIconBorderColor"] == null)
+                    {
+                        theme["UserIconBorderColor"] = theme["DividerColor"].ToString();
+                    }
+                }
+                userData["CurDataVersion"] = 5.2;
+                TsundokuLogger.Info(LOGGER, "Updated Users Data to v5.2", !isImport);
                 updatedVersion = true;
             }
 

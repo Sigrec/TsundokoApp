@@ -4,6 +4,7 @@ using Avalonia.Media.Imaging;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using System.Collections.Specialized;
+using Tsundoku.Helpers;
 
 namespace Tsundoku.ViewModels
 {
@@ -68,8 +69,8 @@ namespace Tsundoku.ViewModels
             bool duplicateSeriesCheck = true;
             if (newSeries != null)
             {
-                duplicateSeriesCheck = !alllowDuplicate ? MainWindowViewModel.UserCollection.AsParallel().Any(series => series.Equals(newSeries)) : false;
-
+                duplicateSeriesCheck = !alllowDuplicate && MainWindowViewModel.UserCollection.AsParallel().Any(series => series.Equals(newSeries));
+                
                 if (alllowDuplicate || !duplicateSeriesCheck)
                 {
                     LOGGER.Info($"\nAdding New Series (Is Dupe ?= {duplicateSeriesCheck}) -> \"{title}\" | \"{bookType}\" | {curVolCount} | {maxVolCount}\n{newSeries}");
@@ -80,7 +81,10 @@ namespace Tsundoku.ViewModels
                         LOGGER.Debug("No Filter Insert");
                         MainWindowViewModel.SearchedCollection.Insert(index, newSeries);
                     }
-                    else if (DetermineFilter(newSeries, ((Views.MainWindow)((Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow).ViewModel.CurFilter) || (MainWindowViewModel.SearchIsBusy && (newSeries.Titles.Values.AsParallel().Any(title => title.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)) || newSeries.Staff.Values.AsParallel().Any(staff => staff.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)))))
+                    else if (
+                        DetermineFilter(newSeries, (((Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow as Views.MainWindow).ViewModel.CurFilter) 
+                        || 
+                        (MainWindowViewModel.SearchIsBusy && (newSeries.Titles.Values.AsParallel().Any(title => title.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)) || newSeries.Staff.Values.AsParallel().Any(staff => staff.Contains(MainWindowViewModel.CurSearchText, StringComparison.OrdinalIgnoreCase)))))
                     {
                         int searchedIndex = MainWindowViewModel.SearchedCollection.ToList().BinarySearch(newSeries, new SeriesComparer(MainUser.CurLanguage));
                         searchedIndex = searchedIndex < 0 ? ~searchedIndex : searchedIndex;
@@ -137,44 +141,24 @@ namespace Tsundoku.ViewModels
             return new ObservableCollection<string>(SelectedLangs.Select(lang => lang.Content.ToString()).OfType<string>());
         }
 
-        public static bool DetermineFilter(Series newSeries, string filter)
+        public static bool DetermineFilter(Series newSeries, TsundokuFilter filter)
         {
-            switch (filter)
+            return filter switch
             {
-                case "Ongoing":
-                    return newSeries.Status == Status.Ongoing;
-                case "Finished":
-                    return newSeries.Status == Status.Finished;
-                case "Hiatus":
-                    return newSeries.Status == Status.Hiatus;
-                case "Cancelled":
-                    return newSeries.Status == Status.Cancelled;
-                case "Complete":
-                    return newSeries.MaxVolumeCount == newSeries.CurVolumeCount;
-                case "Incomplete":
-                    return newSeries.MaxVolumeCount != newSeries.CurVolumeCount;;
-                case "Manga":
-                    return newSeries.Format != Format.Novel;
-                case "Novel":
-                    return newSeries.Format == Format.Novel;
-                case "Shounen":
-                    return newSeries.Demographic == Demographic.Shounen;
-                case "Shoujo":
-                    return newSeries.Demographic == Demographic.Shoujo;
-                case "Seinen":
-                    return newSeries.Demographic == Demographic.Seinen;
-                case "Josei":
-                    return newSeries.Demographic == Demographic.Josei;
-                case "Read":
-                case "Unread":
-                case "Rating":
-                case "Value":
-                case "Query":
-                case "None":
-                case "Favorites":
-                default:
-                    return false;
-            }
+                TsundokuFilter.Ongoing => newSeries.Status == Status.Ongoing,
+                TsundokuFilter.Finished => newSeries.Status == Status.Finished,
+                TsundokuFilter.Hiatus => newSeries.Status == Status.Hiatus,
+                TsundokuFilter.Cancelled => newSeries.Status == Status.Cancelled,
+                TsundokuFilter.Complete => newSeries.MaxVolumeCount == newSeries.CurVolumeCount,
+                TsundokuFilter.Incomplete => newSeries.MaxVolumeCount != newSeries.CurVolumeCount,
+                TsundokuFilter.Manga => newSeries.Format != Format.Novel,
+                TsundokuFilter.Novel => newSeries.Format == Format.Novel,
+                TsundokuFilter.Shounen => newSeries.Demographic == Demographic.Shounen,
+                TsundokuFilter.Shoujo => newSeries.Demographic == Demographic.Shoujo,
+                TsundokuFilter.Seinen => newSeries.Demographic == Demographic.Seinen,
+                TsundokuFilter.Josei => newSeries.Demographic == Demographic.Josei,
+                _ => false,
+            };
         }
     }
 }

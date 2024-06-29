@@ -9,6 +9,7 @@ namespace Tsundoku.Models
         [Reactive] public string ThemeName { get; set; }
         [Reactive] public string MenuBGColor { get; set; }
         [Reactive] public string UsernameColor { get; set; }
+        [Reactive] public string UserIconBorderColor { get; set; }
         [Reactive] public string MenuTextColor { get; set; }
         [Reactive] public string SearchBarBGColor { get; set; }
         [Reactive] public string SearchBarBorderColor { get; set; }
@@ -53,6 +54,7 @@ namespace Tsundoku.Models
             "Default", //ThemeName
             "#ff20232d",
             "#ffb4bddb",
+            "#ff626460",
             "#ffb4bddb",
             "#ff626460",
             "#ffdfd59e",
@@ -105,10 +107,11 @@ namespace Tsundoku.Models
         }
 
         [JsonConstructor]
-        public TsundokuTheme(string themeName, string menuBGColor, string usernameColor, string menuTextColor, string searchBarBGColor, string searchBarBorderColor, string searchBarTextColor, string dividerColor, string menuButtonBGColor, string menuButtonBGHoverColor, string menuButtonBorderColor, string menuButtonBorderHoverColor, string menuButtonTextAndIconColor, string menuButtonTextAndIconHoverColor, string collectionBGColor, string statusAndBookTypeBGColor, string statusAndBookTypeBGHoverColor, string statusAndBookTypeTextColor, string statusAndBookTypeTextHoverColor, string seriesCardBGColor, string seriesCardTitleColor, string seriesCardPublisherColor, string seriesCardStaffColor, string seriesCardDescColor, string seriesProgressBGColor, string seriesProgressBarColor, string seriesProgressBarBGColor, string seriesProgressBarBorderColor, string seriesProgressTextColor, string seriesProgressButtonsHoverColor, string seriesButtonIconColor, string seriesButtonIconHoverColor, string seriesEditPaneBGColor, string seriesNotesBGColor, string seriesNotesBorderColor, string seriesNotesTextColor, string seriesEditPaneButtonsBGColor, string seriesEditPaneButtonsBGHoverColor, string seriesEditPaneButtonsBorderColor, string seriesEditPaneButtonsBorderHoverColor, string seriesEditPaneButtonsIconColor, string seriesEditPaneButtonsIconHoverColor) : this(themeName)
+        public TsundokuTheme(string themeName, string menuBGColor, string usernameColor, string userIconBorderColor, string menuTextColor, string searchBarBGColor, string searchBarBorderColor, string searchBarTextColor, string dividerColor, string menuButtonBGColor, string menuButtonBGHoverColor, string menuButtonBorderColor, string menuButtonBorderHoverColor, string menuButtonTextAndIconColor, string menuButtonTextAndIconHoverColor, string collectionBGColor, string statusAndBookTypeBGColor, string statusAndBookTypeBGHoverColor, string statusAndBookTypeTextColor, string statusAndBookTypeTextHoverColor, string seriesCardBGColor, string seriesCardTitleColor, string seriesCardPublisherColor, string seriesCardStaffColor, string seriesCardDescColor, string seriesProgressBGColor, string seriesProgressBarColor, string seriesProgressBarBGColor, string seriesProgressBarBorderColor, string seriesProgressTextColor, string seriesProgressButtonsHoverColor, string seriesButtonIconColor, string seriesButtonIconHoverColor, string seriesEditPaneBGColor, string seriesNotesBGColor, string seriesNotesBorderColor, string seriesNotesTextColor, string seriesEditPaneButtonsBGColor, string seriesEditPaneButtonsBGHoverColor, string seriesEditPaneButtonsBorderColor, string seriesEditPaneButtonsBorderHoverColor, string seriesEditPaneButtonsIconColor, string seriesEditPaneButtonsIconHoverColor) : this(themeName)
         {
             MenuBGColor = menuBGColor;
             UsernameColor = usernameColor;
+            UserIconBorderColor = userIconBorderColor;
             MenuTextColor = menuTextColor;
             SearchBarBGColor = searchBarBGColor;
             SearchBarBorderColor = searchBarBorderColor;
@@ -156,6 +159,7 @@ namespace Tsundoku.Models
             hash.Add(ThemeName);
             hash.Add(MenuBGColor);
             hash.Add(UsernameColor);
+            hash.Add(UserIconBorderColor);
             hash.Add(MenuTextColor);
             hash.Add(SearchBarBGColor);
             hash.Add(SearchBarBorderColor);
@@ -205,7 +209,7 @@ namespace Tsundoku.Models
 
         public virtual TsundokuTheme Cloning()
         {
-            return new TsundokuTheme(ThemeName, MenuBGColor, UsernameColor, MenuTextColor,SearchBarBGColor,SearchBarBorderColor,SearchBarTextColor, DividerColor, MenuButtonBGColor, MenuButtonBGHoverColor, MenuButtonBorderColor, MenuButtonBorderHoverColor, MenuButtonTextAndIconColor, MenuButtonTextAndIconHoverColor, CollectionBGColor,StatusAndBookTypeBGColor,StatusAndBookTypeBGHoverColor,StatusAndBookTypeTextColor,StatusAndBookTypeTextHoverColor,SeriesCardBGColor,SeriesCardTitleColor,SeriesCardPublisherColor,SeriesCardStaffColor,SeriesCardDescColor,SeriesProgressBGColor,SeriesProgressBarColor,SeriesProgressBarBGColor,SeriesProgressBarBorderColor,SeriesProgressTextColor,SeriesProgressButtonsHoverColor,SeriesButtonIconColor,SeriesButtonIconHoverColor,SeriesEditPaneBGColor,SeriesNotesBGColor,SeriesNotesBorderColor,SeriesNotesTextColor,SeriesEditPaneButtonsBGColor,SeriesEditPaneButtonsBGHoverColor,SeriesEditPaneButtonsBorderColor,SeriesEditPaneButtonsBorderHoverColor,SeriesEditPaneButtonsIconColor,SeriesEditPaneButtonsIconHoverColor);
+            return new TsundokuTheme(ThemeName, MenuBGColor, UsernameColor, UserIconBorderColor, MenuTextColor,SearchBarBGColor,SearchBarBorderColor,SearchBarTextColor, DividerColor, MenuButtonBGColor, MenuButtonBGHoverColor, MenuButtonBorderColor, MenuButtonBorderHoverColor, MenuButtonTextAndIconColor, MenuButtonTextAndIconHoverColor, CollectionBGColor,StatusAndBookTypeBGColor,StatusAndBookTypeBGHoverColor,StatusAndBookTypeTextColor,StatusAndBookTypeTextHoverColor,SeriesCardBGColor,SeriesCardTitleColor,SeriesCardPublisherColor,SeriesCardStaffColor,SeriesCardDescColor,SeriesProgressBGColor,SeriesProgressBarColor,SeriesProgressBarBGColor,SeriesProgressBarBorderColor,SeriesProgressTextColor,SeriesProgressButtonsHoverColor,SeriesButtonIconColor,SeriesButtonIconHoverColor,SeriesEditPaneBGColor,SeriesNotesBGColor,SeriesNotesBorderColor,SeriesNotesTextColor,SeriesEditPaneButtonsBGColor,SeriesEditPaneButtonsBGHoverColor,SeriesEditPaneButtonsBorderColor,SeriesEditPaneButtonsBorderHoverColor,SeriesEditPaneButtonsIconColor,SeriesEditPaneButtonsIconHoverColor);
         }
 
         object ICloneable.Clone()

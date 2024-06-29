@@ -30,7 +30,14 @@
 		</ResourceDictionary>
 	</Window.Resources>
 
-    <Panel>
+    <Panel Name="TsundokuPanel">
+        <!-- Notification Popup -->
+        <Border Name="NotificationPopup" ZIndex="2" IsVisible="false" BorderThickness="2" CornerRadius="8" ClipToBounds="True" BorderBrush="{CompiledBinding CurrentTheme.MenuButtonBorderColor, Converter={StaticResource ConvertColor}}" BoxShadow="0 0 15 6 #B3000000" Margin="0,20,0,0" Height="50" MaxWidth="500" HorizontalAlignment="Center" VerticalAlignment="Top" Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}">
+            <Grid RowDefinitions="Auto" ColumnDefinitions="Auto, 5, Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
+                    <i:Icon Grid.Row="0" Grid.Column="0" Value="fa-solid fa-bell" FontSize="25" FontWeight="Bold" Foreground="{CompiledBinding CurrentTheme.MenuButtonTextAndIconColor, Converter={StaticResource ConvertColor}}" Classes="menu"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{CompiledBinding NotificationText}" FontSize="20" TextAlignment="Center" FontWeight="Bold" TextWrapping="Wrap" Classes="menu" Foreground="{CompiledBinding CurrentTheme.MenuButtonTextAndIconColor, Converter={StaticResource ConvertColor}}"/>
+            </Grid>
+        </Border>
         <!-- Advanced Search Popup -->
         <Panel Name="AdvancedSearchPopup" ZIndex="1" IsVisible="false" PointerPressed="UnShowAdvancedSearchPopup">
             <Rectangle Fill="Black" Opacity="0.55"/>
@@ -76,7 +83,7 @@
                     Height="150">
                 <Grid Margin="0,15,0,15" ColumnDefinitions="*,Auto,10,*" RowDefinitions="Auto,Auto" HorizontalAlignment="Center" VerticalAlignment="Center" ShowGridLines="false">
                     <StackPanel Margin="0,0,0,1" Orientation="Horizontal" Spacing="0,0,1,1" Grid.Column="1" Grid.Row="0" Height="{CompiledBinding Source={x:Static local:Constants.USER_ICON_HEIGHT}}" HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <Border BorderThickness="2" Classes="menu" CornerRadius="2" ClipToBounds="True" Height="75">
+                        <Border BorderThickness="2" BorderBrush="{CompiledBinding CurrentTheme.UserIconBorderColor, Converter={StaticResource ConvertColor}}" CornerRadius="2" ClipToBounds="True" Height="75">
                             <Image Height="{CompiledBinding Source={x:Static local:Constants.USER_ICON_HEIGHT}}"
                                    Width="{CompiledBinding Source={x:Static local:Constants.USER_ICON_WIDTH}}"
                                    Source="{Binding UserIcon}"

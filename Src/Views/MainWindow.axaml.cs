@@ -12,6 +12,9 @@ using Avalonia.Platform.Storage;
 using Avalonia.Media.Imaging;
 using FileWatcherEx;
 using Avalonia.Media;
+using Tsundoku.Helpers;
+using System.Threading;
+using Avalonia.Controls.Primitives;
 
 namespace Tsundoku.Views
 {
@@ -70,7 +73,7 @@ namespace Tsundoku.Views
             };
             CoverFolderWatcher.Start();
 
-            KeyDown += (s, e) => 
+            KeyDown += async (s, e) => 
             {
                 if (e.Key == Key.F11) 
                 {
@@ -78,6 +81,7 @@ namespace Tsundoku.Views
                     {
                         previousWindowState = WindowState;
                         WindowState = WindowState.FullScreen;
+                        await ToggleNotificationPopup("To Exit Fullscreen Press F11");
                     }
                     else if (WindowState == WindowState.FullScreen)
                     {
@@ -86,31 +90,34 @@ namespace Tsundoku.Views
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.P)
                 {
-                    LOGGER.Info("Saving Screenshot of Collection");
+                    LOGGER.Info($"Saving Screenshot of Collection for ${ViewModel.CurrentTheme.ThemeName} Theme");
                     ScreenCaptureWindows();
+                    await ToggleNotificationPopup($"Saved Screenshot for \"${ViewModel.CurrentTheme.ThemeName}\" Theme");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.S)
                 {
                     ViewModel.SearchText = "";
                     MainWindowViewModel.SaveUsersData();
+                    await ToggleNotificationPopup($"Saved \"${ViewModel.UserName}'s\" Data");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.R)
                 {
                     LOGGER.Info("Reloading Covers");
-                    
                     if (CoverChangedSeriesList.Count != 0)
                     {
                         ReloadCoverBitmaps();
                     }
                     else
                     {
-                        LOGGER.Info("No Covers Changed");
+                        LOGGER.Debug("No Covers Reloaded");
                     }
+                    await ToggleNotificationPopup($"Reloaded Covers");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Shift && e.Key == Key.R)
                 {
                     LOGGER.Info("Reloading Filter/Sort on Collection");
                     ViewModel.FilterCollection(ViewModel.CurFilter);
+                    await ToggleNotificationPopup($"Reloadeded \"${ViewModel.CurFilter}\" Filter/Sort on Collection");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.F)
                 {
@@ -119,12 +126,24 @@ namespace Tsundoku.Views
                         AdvancedSearchBar.MinimumPopulateDelay = TimeSpan.Zero;
                         AdvancedSearchBar.Text = string.Empty;
                         AdvancedSearchBar.MinimumPopulateDelay = AdvancedSearchPopulateDelay;
-                    };
+                    }
+                    else
+                    {
+                        await ToggleNotificationPopup($"To Exit Advanced Search Press CTRL+F");
+                    }
                     AdvancedSearchPopup.IsVisible ^= true;
                 }
             };
 
             Closing += (s, e) => { SaveOnClose(ViewModelBase.isReloading); };
+        }
+
+        private async Task ToggleNotificationPopup(string notiText)
+        {
+            ViewModel.NotificationText = notiText;
+            NotificationPopup.IsVisible = true;
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            NotificationPopup.IsVisible = false;
         }
 
         private void OpenAddSeriesDialog(object sender, RoutedEventArgs args)
@@ -241,6 +260,7 @@ namespace Tsundoku.Views
 
             if (newSeriesData != null)
             {
+                bool titleChanged = false, staffChanged = false, statusChanged = false;
                 LOGGER.Info($"Refreshing/Updating \"{curSeries.Titles["Romaji"]}\" Data");
 
                 int searchIndex = MainWindowViewModel.SearchedCollection.ToList().BinarySearch(curSeries, new SeriesComparer(ViewModelBase.MainUser.CurLanguage));
@@ -258,11 +278,13 @@ namespace Tsundoku.Views
                 {
                     curSeries.Titles = newSeriesData.Titles;
                     MainWindowViewModel.UserCollection[mainIndex].Titles = newSeriesData.Titles;
+                    titleChanged = true;
                 }
                 if (!curSeries.Staff.Equals(newSeriesData.Staff))
                 {
                     curSeries.Staff = newSeriesData.Staff;
                     MainWindowViewModel.UserCollection[mainIndex].Staff = newSeriesData.Staff;
+                    staffChanged = true;
                 }
                 if (!curSeries.Description.Equals(newSeriesData.Description))
                 {
@@ -274,6 +296,24 @@ namespace Tsundoku.Views
                     curSeries.Status = newSeriesData.Status;
                     MainWindowViewModel.UserCollection[mainIndex].Status = newSeriesData.Status;
                     MainWindowViewModel.UpdateChartStats();
+                    statusChanged = true;
+                }
+                
+                // If there is a change and the user is searching or filtering apply the filter
+                if (MainWindowViewModel.SearchIsBusy && (titleChanged || staffChanged))
+                {
+                    if (ViewModel.CurFilter == TsundokuFilter.Query)
+                    {
+                        ViewModel.AdvancedSearchCollection(ViewModel.AdvancedSearchText);
+                    }
+                    else
+                    {
+                        ViewModel.SearchCollection(ViewModel.SearchText);
+                    }
+                }
+                else if ((titleChanged && !ViewModel.CurFilter.Equals("None")) || (statusChanged && (ViewModel.CurFilter.Equals("Ongoing") || ViewModel.CurFilter.Equals("Finished") || ViewModel.CurFilter.Equals("Hiatus") || ViewModel.CurFilter.Equals("Cancelled"))))
+                {
+                    ViewModel.FilterCollection(ViewModel.CurFilter);
                 }
             }
             else
@@ -503,7 +543,7 @@ namespace Tsundoku.Views
                 }
                 // AddNewSeriesWindow.PreviousLanguage = ViewModel.CurLanguage;
                 ViewModel.CurLanguage = (LanguageSelector.SelectedItem as ComboBoxItem).Content.ToString();
-                LOGGER.Info($"Changed Langauge to {ViewModel.CurLanguage}");
+                LOGGER.Info($"Changed Langauge to \"{ViewModel.CurLanguage}\"");
                 MainWindowViewModel.SortCollection();
             }
         }

@@ -13,6 +13,11 @@ TODO:
 ❌ Issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 ❌ Stat to track whether still collecting or not?
 
+v5.2.0.0 - June 29th, 2024
+✅ Added notification popups when taking a screenshot
+✅ Separated the user icon border color from divider to allow for transparent border for user icon
+✅ Refreshing a series' info now correctly re-applies either the search or filter if there is a change that would impact order
+
 v5.1.0.0 - June 23rd, 2024
 ⌛ Update Avalonia package to v11.1.0-rc1
 📜 Theme Window
