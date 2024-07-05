@@ -90,15 +90,19 @@ namespace Tsundoku.Views
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.P)
                 {
-                    LOGGER.Info($"Saving Screenshot of Collection for ${ViewModel.CurrentTheme.ThemeName} Theme");
+                    LOGGER.Info($"Saving Screenshot of Collection for \"{ViewModel.CurrentTheme.ThemeName} Theme\"");
+                    // if (NotificationPopup.IsVisible)
+                    // {
+                    //     await Task.Delay(TimeSpan.FromSeconds(3));
+                    // }
                     ScreenCaptureWindows();
-                    await ToggleNotificationPopup($"Saved Screenshot for \"${ViewModel.CurrentTheme.ThemeName}\" Theme");
+                    await ToggleNotificationPopup($"Saved Screenshot for \"{ViewModel.CurrentTheme.ThemeName}\" Theme");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.S)
                 {
                     ViewModel.SearchText = "";
                     MainWindowViewModel.SaveUsersData();
-                    await ToggleNotificationPopup($"Saved \"${ViewModel.UserName}'s\" Data");
+                    await ToggleNotificationPopup($"Saved \"{ViewModel.UserName}'s\" Data");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.R)
                 {
@@ -117,7 +121,7 @@ namespace Tsundoku.Views
                 {
                     LOGGER.Info("Reloading Filter/Sort on Collection");
                     ViewModel.FilterCollection(ViewModel.CurFilter);
-                    await ToggleNotificationPopup($"Reloadeded \"${ViewModel.CurFilter}\" Filter/Sort on Collection");
+                    await ToggleNotificationPopup($"Reloadeded \"{ViewModel.CurFilter}\" Filter/Sort on Collection");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.F)
                 {
@@ -145,6 +149,8 @@ namespace Tsundoku.Views
             await Task.Delay(TimeSpan.FromSeconds(3));
             NotificationPopup.IsVisible = false;
         }
+
+        private void CloseNotificationPopup(object sender, RoutedEventArgs args) => NotificationPopup.IsVisible = false;
 
         private void OpenAddSeriesDialog(object sender, RoutedEventArgs args)
         {

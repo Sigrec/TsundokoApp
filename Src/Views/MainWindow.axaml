@@ -32,10 +32,32 @@
 
     <Panel Name="TsundokuPanel">
         <!-- Notification Popup -->
-        <Border Name="NotificationPopup" ZIndex="2" IsVisible="false" BorderThickness="2" CornerRadius="8" ClipToBounds="True" BorderBrush="{CompiledBinding CurrentTheme.MenuButtonBorderColor, Converter={StaticResource ConvertColor}}" BoxShadow="0 0 15 6 #B3000000" Margin="0,20,0,0" Height="50" MaxWidth="500" HorizontalAlignment="Center" VerticalAlignment="Top" Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}">
-            <Grid RowDefinitions="Auto" ColumnDefinitions="Auto, 5, Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
+        <Border Name="NotificationPopup" ZIndex="2" IsVisible="false" BorderThickness="2" CornerRadius="8" ClipToBounds="True" BorderBrush="{CompiledBinding CurrentTheme.MenuButtonBorderColor, Converter={StaticResource ConvertColor}}" BoxShadow="0 0 15 6 #B3000000" Margin="0,20,0,0" Height="52" MaxWidth="500" HorizontalAlignment="Center" VerticalAlignment="Top" Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}">
+            <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,5,Auto,2,Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
+                    <Grid.Styles>
+                        <Style Selector="Button">
+                            <Style Selector="^:pointerover /template/ ContentPresenter">
+                                <Setter Property="TextBlock.Foreground" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesProgressButtonsHoverColor, Converter={StaticResource ConvertColor}}"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Style>
+                        </Style>
+                    </Grid.Styles>
                     <i:Icon Grid.Row="0" Grid.Column="0" Value="fa-solid fa-bell" FontSize="25" FontWeight="Bold" Foreground="{CompiledBinding CurrentTheme.MenuButtonTextAndIconColor, Converter={StaticResource ConvertColor}}" Classes="menu"/>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{CompiledBinding NotificationText}" FontSize="20" TextAlignment="Center" FontWeight="Bold" TextWrapping="Wrap" Classes="menu" Foreground="{CompiledBinding CurrentTheme.MenuButtonTextAndIconColor, Converter={StaticResource ConvertColor}}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{CompiledBinding NotificationText}" FontSize="20" TextAlignment="Center" FontWeight="Bold" TextWrapping="Wrap" Classes="menu" Foreground="{CompiledBinding CurrentTheme.MenuButtonTextAndIconColor, Converter={StaticResource ConvertColor}}" VerticalAlignment="Center"/>
+                    <Button Name="CloseNotificationPopupButton"
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            IsDefault="True"
+                            FontSize="25"
+                            Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}"
+                            BorderThickness="0"
+                            HorizontalContentAlignment="Center"
+                            BorderBrush="{CompiledBinding CurrentTheme.SeriesButtonIconColor, Converter={StaticResource ConvertColor}}"
+                            Height="{CompiledBinding Source={x:Static local:Constants.BOTTOM_SECTION_CARD_HEIGHT}}"
+                            CornerRadius="0"
+                            Foreground="{CompiledBinding CurrentTheme.SeriesButtonIconColor, Converter={StaticResource ConvertColor}}"
+                            i:Attached.Icon="fa-solid fa-circle-xmark"
+                            Click="CloseNotificationPopup"/>
             </Grid>
         </Border>
         <!-- Advanced Search Popup -->
@@ -543,6 +565,7 @@
                                                 ShowGridLines="False">
                                                 <Grid.Styles>
                                                     <Style Selector="TextBox">
+                                                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
                                                         <Style Selector="^:pointerover /template/ Border#PART_BorderElement, ^:focus /template/ Border#PART_BorderElement">
                                                             <Setter Property="Background" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBGColor, Converter={StaticResource ConvertColor}}"/>
                                                             <Setter Property="BorderBrush" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBorderColor, Converter={StaticResource ConvertColor}}"/>
@@ -637,6 +660,10 @@
                                                             FontSize="15"/>
                                                     <MaskedTextBox Height="35"
                                                                 Width="105"
+                                                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                                AcceptsReturn="False"
+                                                                TextWrapping="NoWrap"
+                                                                AcceptsTab="False"
                                                                 BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBorderColor, Converter={StaticResource ConvertColor}}"
                                                                 BorderThickness="2"
                                                                 Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBGColor, Converter={StaticResource ConvertColor}}"
@@ -773,6 +800,7 @@
                                                             FontSize="15"/>
                                                     <MaskedTextBox Height="35"
                                                                 Width="105"
+                                                                AcceptsReturn="False"
                                                                 BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBorderColor, Converter={StaticResource ConvertColor}}"
                                                                 BorderThickness="2"
                                                                 Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBGColor, Converter={StaticResource ConvertColor}}"
@@ -801,6 +829,7 @@
                                                         </TextBlock>
                                                         <MaskedTextBox Height="35"
                                                                     Width="145"
+                                                                    AcceptsReturn="False"
                                                                     BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBorderColor, Converter={StaticResource ConvertColor}}"
                                                                     BorderThickness="2"
                                                                     Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesNotesBGColor, Converter={StaticResource ConvertColor}}"

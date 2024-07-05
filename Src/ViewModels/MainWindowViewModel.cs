@@ -114,7 +114,8 @@ namespace Tsundoku.ViewModels
 
         public void UpdateCurFilter(ComboBoxItem filterBoxItem)
         {
-            FilterCollection(Enum.Parse<TsundokuFilter>(filterBoxItem.Content.ToString()));
+            CurFilter = Enum.Parse<TsundokuFilter>(filterBoxItem.Content.ToString());
+            FilterCollection(CurFilter);
         }
 
         public string GetFilter()
@@ -192,11 +193,9 @@ namespace Tsundoku.ViewModels
                         break;
                     case TsundokuFilter.Rating:
                         FilteredCollection = UserCollection.OrderByDescending(series => series.Rating);
-                        LOGGER.Info($"Sorted Collection by {filter}");
                         break;
                     case TsundokuFilter.Value:
                         FilteredCollection = UserCollection.OrderByDescending(series => series.Value);
-                        LOGGER.Info($"Sorted Collection by {filter}");
                         break;
                     case TsundokuFilter.Query:
                         return;
