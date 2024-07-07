@@ -13,6 +13,13 @@ TODO:
 ❌ Issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 ❌ Stat to track whether still collecting or not?
 
+v5.2.2.0 - July 7th, 2024
+✅ Notes window now correctly accepts tabbing
+✅ Removed width restriction on notification popups so text is no longer cut off
+📜 Theme Window
+- ✅ Set theme name character limit to 60 characters
+- ✅ Added error popup window when application is unable to add a theme
+
 v5.2.1.0 - July 5th, 2024
 ✅ Added button to notification popup to close it
 🔥 Fixed issue where some of the notifications didn't have correct text format

@@ -193,13 +193,20 @@ namespace Tsundoku.Views
             AddTheme(NewTheme);    
         }
 
+        private async Task ShowErrorDialog(string info = "Unable to Add Theme")
+        {
+            PopupWindow errorDialog = new PopupWindow();
+            errorDialog.SetWindowText("Error", "fa-solid fa-circle-exclamation", info);
+            await errorDialog.ShowDialog(this);
+        }
+
         /// <summary>
         /// Adds a new theme to the users themes
         /// </summary>
-        private void AddTheme(TsundokuTheme newTheme)
+        private async void AddTheme(TsundokuTheme newTheme)
         {
             NewThemeName.Text = string.IsNullOrWhiteSpace(NewThemeName.Text) ? newTheme.ThemeName.Trim() : NewThemeName.Text.Trim();
-            if (!string.IsNullOrWhiteSpace(NewThemeName.Text) && !NewThemeName.Text.Equals("Default", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(NewThemeName.Text) && !NewThemeName.Text.Equals("Default", StringComparison.OrdinalIgnoreCase) && NewThemeName.Text.Length <= 60)
             {
                 newTheme.ThemeName = NewThemeName.Text;
                 bool duplicateCheck = false;
@@ -240,7 +247,8 @@ namespace Tsundoku.Views
             }
             else
             {
-                LOGGER.Warn($"Empty or Invalid Theme Name {NewThemeName.Text}");
+                await ShowErrorDialog($"Unable to Add Theme \"{NewThemeName.Text}\"");
+                LOGGER.Warn($"Empty, Invalid, or Theme Name > 60 Chars for \"{NewThemeName.Text}\"");
             }
         }
 

@@ -75,14 +75,16 @@
 
     <Border Classes="menu" BorderThickness="3" CornerRadius="0,0,8,8" ClipToBounds="True" Padding="20">
         <TextBox Name="UserNotes"
-                 FontWeight="Bold"
-                 Classes="menu"
-                 FontSize="18"
-                 TextWrapping="Wrap"
-                 Watermark="Notes..."
-                 Text="{CompiledBinding Notes}"
-                 AcceptsReturn="True"
-                 BorderThickness="2">
+                 Grid.Column="0"
+                FontWeight="Bold"
+                Classes="menu"
+                FontSize="18"
+                TextWrapping="Wrap"
+                Watermark="Notes..."
+                Text="{CompiledBinding Notes}"
+                AcceptsReturn="True"
+                AcceptsTab="True"
+                BorderThickness="2">
         </TextBox>
     </Border>
 </Window>

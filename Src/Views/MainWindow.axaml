@@ -32,7 +32,7 @@
 
     <Panel Name="TsundokuPanel">
         <!-- Notification Popup -->
-        <Border Name="NotificationPopup" ZIndex="2" IsVisible="false" BorderThickness="2" CornerRadius="8" ClipToBounds="True" BorderBrush="{CompiledBinding CurrentTheme.MenuButtonBorderColor, Converter={StaticResource ConvertColor}}" BoxShadow="0 0 15 6 #B3000000" Margin="0,20,0,0" Height="52" MaxWidth="500" HorizontalAlignment="Center" VerticalAlignment="Top" Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}">
+        <Border Name="NotificationPopup" ZIndex="2" IsVisible="false" BorderThickness="2" CornerRadius="8" ClipToBounds="True" BorderBrush="{CompiledBinding CurrentTheme.MenuButtonBorderColor, Converter={StaticResource ConvertColor}}" BoxShadow="0 0 15 6 #B3000000" Margin="0,20,0,0" Height="52" HorizontalAlignment="Center" VerticalAlignment="Top" Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}">
             <Grid RowDefinitions="Auto" ColumnDefinitions="Auto,5,Auto,2,Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
                     <Grid.Styles>
                         <Style Selector="Button">
