@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Tsundoku.Helpers
@@ -7,7 +6,7 @@ namespace Tsundoku.Helpers
     public partial class MangadexQuery
     {
         private static readonly HttpClient MangadexClient;
-        [GeneratedRegex(@"- Winner.*$|\n\n\n---[\S\s.]*|\n\n\*\*[\S\s.]*|\[Official.*?\].*|\[Wikipedia.*?\].*|\n\n---\n\*\*Links:\*\*\n\n.*|\n___\n.*|\r\n\s+\r\n.*")] private static partial Regex MangaDexDescRegex();
+        [GeneratedRegex(@"(?:\n\n---\n\*\*Links:\*\*|\n\n\n---|\n\n\*\*|\[(?:Official|Wikipedia).*?\]|\n___\n|\r\n\s+\r\n)[\S\s]*|- Winner.*$")] private static partial Regex MangaDexDescRegex();
 
         static MangadexQuery()
         {

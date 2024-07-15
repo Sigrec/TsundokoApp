@@ -13,6 +13,12 @@ TODO:
 ❌ Issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 ❌ Stat to track whether still collecting or not?
 
+v5.2.3.0 - July 15th, 2024
+🔥 Fixed and added additional coverage for MangaDex desc parsing
+📜 Theme Window
+- 🔥 Fixed issue where sometimes in stats window the bg colors were the same so would overlap
+- ✅ Added dialog popup when exporting & importing themes
+
 v5.2.2.0 - July 7th, 2024
 ✅ Notes window now correctly accepts tabbing
 ✅ Removed width restriction on notification popups so text is no longer cut off

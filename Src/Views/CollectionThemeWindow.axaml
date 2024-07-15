@@ -645,12 +645,12 @@
                                     Content="Export"
                                     Height="35"
                                     Theme="{StaticResource MenuButton}"
-                                    Click="ExportCurrentTheme"/>
+                                    Click="ExportThemeAsync"/>
                             <Button Name="ImportThemeButton"
                                     Content="Import"
                                     Height="35"
                                     Theme="{StaticResource MenuButton}"
-                                    Click="ImportCurrentTheme"/>
+                                    Click="ImportThemeAsync"/>
                             <TextBox Name="NewThemeName"
                                     Width="250"
                                     Height="35"

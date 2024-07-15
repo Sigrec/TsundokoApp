@@ -37,7 +37,7 @@
                     <Grid.Styles>
                         <Style Selector="Button">
                             <Style Selector="^:pointerover /template/ ContentPresenter">
-                                <Setter Property="TextBlock.Foreground" Value="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesProgressButtonsHoverColor, Converter={StaticResource ConvertColor}}"/>
+                                <Setter Property="TextBlock.Foreground" Value="{CompiledBinding CurrentTheme.SeriesProgressButtonsHoverColor, Converter={StaticResource ConvertColor}}"/>
                                 <Setter Property="Background" Value="Transparent"/>
                             </Style>
                         </Style>

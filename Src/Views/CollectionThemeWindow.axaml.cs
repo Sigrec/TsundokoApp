@@ -193,11 +193,11 @@ namespace Tsundoku.Views
             AddTheme(NewTheme);    
         }
 
-        private async Task ShowErrorDialog(string info = "Unable to Add Theme")
+        private async Task ShowDialog(string title, string info = "Unable to Add Theme")
         {
-            PopupWindow errorDialog = new PopupWindow();
-            errorDialog.SetWindowText("Error", "fa-solid fa-circle-exclamation", info);
-            await errorDialog.ShowDialog(this);
+            PopupWindow dialog = new PopupWindow();
+            dialog.SetWindowText(title, "fa-solid fa-circle-exclamation", info);
+            await dialog.ShowDialog(this);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace Tsundoku.Views
             }
             else
             {
-                await ShowErrorDialog($"Unable to Add Theme \"{NewThemeName.Text}\"");
+                await ShowDialog("Error", $"Unable to Add Theme \"{NewThemeName.Text}\"");
                 LOGGER.Warn($"Empty, Invalid, or Theme Name > 60 Chars for \"{NewThemeName.Text}\"");
             }
         }
@@ -265,14 +265,15 @@ namespace Tsundoku.Views
             ViewModelBase.MainUser.SavedThemes = new ObservableCollection<TsundokuTheme>(ViewModelBase.MainUser.SavedThemes.OrderBy(theme => theme.ThemeName));
         }
 
-        private void ExportCurrentTheme(object sender, RoutedEventArgs args)
+        private async void ExportThemeAsync(object sender, RoutedEventArgs args)
         {
             Directory.CreateDirectory(@"Themes");
             File.WriteAllText(@$"Themes\{ViewModel.CurrentTheme.ThemeName.Replace(" ", "_")}.json", JsonSerializer.Serialize(ViewModel.CurrentTheme, typeof(TsundokuTheme), User.UserJsonModel));
+            await ShowDialog("Info", $"Exported \"{ViewModel.CurrentTheme.ThemeName}\" Theme");
             LOGGER.Info("Exported {} Theme", ViewModel.CurrentTheme.ThemeName);
         }
 
-        private async void ImportCurrentTheme(object sender, RoutedEventArgs args)
+        private async void ImportThemeAsync(object sender, RoutedEventArgs args)
         {
             Directory.CreateDirectory(@"Themes");
             var file = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions {
@@ -289,6 +290,7 @@ namespace Tsundoku.Views
                     {
                         TsundokuTheme importedTheme = JsonSerializer.Deserialize(File.ReadAllText(newThemeFile), typeof(TsundokuTheme), User.UserJsonModel) as TsundokuTheme;
                         SaveTheme(importedTheme);
+                        await ShowDialog("Info", $"Imported \"{ViewModel.CurrentTheme.ThemeName}\" Theme");
                         LOGGER.Info("Imported Theme {}", importedTheme.ThemeName);
                     }
                     catch (Exception)

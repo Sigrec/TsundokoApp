@@ -34,7 +34,7 @@
 		<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Theme="{StaticResource ReverseCollectionScroll}"> 
 			<Grid RowDefinitions="Auto,Auto,Auto,Auto,15,Auto,Auto,20,Auto" ColumnDefinitions="Auto" Margin="20,10,20,20">
 				<TextBlock Text="Stats" TextDecorations="Underline" FontSize="25" FontWeight="Bold" Classes="menu" Grid.Row="0" Grid.Column="0" Margin="5,0,0,5"/>
-				<Border Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Background="{CompiledBinding CurrentTheme.SeriesCardBGColor, Converter={StaticResource ConvertColor}}" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" Width="1200" Height="230" BoxShadow="0 0 10 3 #B3000000" HorizontalAlignment="Center">
+				<Border Name="StatsBG" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" Width="1200" Height="230" BoxShadow="0 0 10 3 #B3000000" HorizontalAlignment="Center">
                     <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0,0,0,0" MaxWidth="626" HorizontalAlignment="Center">
                             <controls:ValueStat Text="{CompiledBinding MeanRating}" Title="Mean Score" Icon="fa-solid fa-gauge-simple" PointerPressed="CopyTextAsync"/>
@@ -50,7 +50,7 @@
                 </Border>
                 <!-- Pie Charts -->
                 <TextBlock Text="Distributions" TextDecorations="Underline" FontSize="25" FontWeight="Bold" Classes="menu" Grid.Row="5" Grid.Column="0" Margin="5,0,0,5"/>
-                <Border Grid.Row="6" Grid.Column="0" Background="{CompiledBinding CurrentTheme.SeriesCardBGColor, Converter={StaticResource ConvertColor}}" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" Width="1200" Height="450" BoxShadow="0 0 10 3 #B3000000" HorizontalAlignment="Center">
+                <Border Name="DistBGOne" Grid.Row="6" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" Width="1200" Height="450" BoxShadow="0 0 10 3 #B3000000" HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="30">
                         <Border Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" BoxShadow="0 0 10 3 #B3000000" Width="270" Height="410" HorizontalAlignment="Left">
                             <Border CornerRadius="8" ClipToBounds="True">
@@ -280,7 +280,7 @@
                     </StackPanel>
                 </Border>
                 <!-- Bar Charts -->
-                <Border Grid.Row="8" Grid.Column="0" Background="{CompiledBinding CurrentTheme.SeriesCardBGColor, Converter={StaticResource ConvertColor}}" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" Width="1200" Height="340" BoxShadow="0 0 10 3 #B3000000" HorizontalAlignment="Center">
+                <Border Name="DistBGTwo" Grid.Row="8" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" Width="1200" Height="340" BoxShadow="0 0 10 3 #B3000000" HorizontalAlignment="Center">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Orientation="Horizontal">
                         <Border Background="{CompiledBinding CurrentTheme.CollectionBGColor, Converter={StaticResource ConvertColor}}" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" BoxShadow="0 0 10 3 #B3000000" Width="570" Height="300"  HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Border CornerRadius="8" ClipToBounds="True">

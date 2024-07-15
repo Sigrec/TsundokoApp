@@ -46,7 +46,9 @@ namespace Tsundoku.Tests
         [AvaloniaTest]
         public async Task MangaDexID_HasNativeStaff_Test()
         {
-            Assert.That((await Series.CreateNewSeriesCardAsync("32d76d19-8a05-4db0-9fc2-e0b0648fe9d0", Constants.Format.Manga, 2, 0, [])).ToString(), Is.EqualTo(await File.ReadAllTextAsync(@"\Tsundoku\Tests\SeriesModel\SeriesModelTestData\SoloLeveling.json")));
+            Series series = await Series.CreateNewSeriesCardAsync("32d76d19-8a05-4db0-9fc2-e0b0648fe9d0", Constants.Format.Manga, 2, 0, []);
+            Console.WriteLine(series.ToString());
+            Assert.That(series.ToString(), Is.EqualTo(await File.ReadAllTextAsync(@"\Tsundoku\Tests\SeriesModel\SeriesModelTestData\SoloLeveling.json")));
         }
 
         [AvaloniaTest]
@@ -82,7 +84,15 @@ namespace Tsundoku.Tests
         [Test]
         public async Task GetJapaneseAltTitle_Test()
         {
-            Assert.That(Series.GetAltTitle("ja", (await MangadexQuery.GetSeriesByTitleAsync("나 혼자만 레벨업")).RootElement.GetProperty("data").EnumerateArray().ElementAt(0).GetProperty("attributes").GetProperty("altTitles").EnumerateArray()), Is.EqualTo("俺だけレベルアップな件"));
+            var data = (await MangadexQuery.GetSeriesByIdAsync("32d76d19-8a05-4db0-9fc2-e0b0648fe9d0")).RootElement.GetProperty("data");
+            if (data.ValueKind == JsonValueKind.Array)
+            {
+                Assert.That(Series.GetAltTitle("ja", data.EnumerateArray().ElementAt(0).GetProperty("attributes").GetProperty("altTitles").EnumerateArray()), Is.EqualTo("俺だけレベルアップな件"));
+            }
+            else
+            {
+                Assert.That(Series.GetAltTitle("ja", data.GetProperty("attributes").GetProperty("altTitles").EnumerateArray()), Is.EqualTo("俺だけレベルアップな件"));
+            }
         }
 
         [Test]
