@@ -473,10 +473,18 @@ namespace Tsundoku.ViewModels
             MeanRating = countRating != 0 ? decimal.Round(decimal.Divide(rating, countRating), 1) : 0;
         }
 
-        public void UpdateAllStats(uint additionalCurVols, uint additionalVolToBeCol)
+        public void UpdateAllStats(uint additionalCurVols, uint additionalVolToBeCol, bool isRemoval = false)
         {
-            UsersNumVolumesCollected += additionalCurVols;
-            UsersNumVolumesToBeCollected += additionalVolToBeCol;
+            if (isRemoval)
+            {
+                UsersNumVolumesCollected -= additionalCurVols;
+                UsersNumVolumesToBeCollected -= additionalVolToBeCol;
+            }
+            else
+            {
+                UsersNumVolumesCollected += additionalCurVols;
+                UsersNumVolumesToBeCollected += additionalVolToBeCol;
+            }
             SeriesCount = (uint)MainUser.UserCollection.Count;
             
             UpdateCollectionPrice();

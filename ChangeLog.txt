@@ -12,6 +12,15 @@ TODO:
 ❌ RAM spike when changing theme colors (have to traverse the tree but then colors don't apply properly)
 ❌ Issue where clicking or minimizing would sometimes cause the the main window to scroll up when virtualization is enabled (https://github.com/AvaloniaUI/Avalonia/issues/7593)
 ❌ Stat to track whether still collecting or not?
+❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
+
+v5.2.4.0 - Aug 10th, 2024
+⌛ Update Avalonia to 11.1.999
+✅ Changed series stat layout since 10.0 rating overflows text (remove "Rating" text)
+✅ Panels are now reset when user searches, sorts, or filters their collection
+🔥 Removing a favorite while filtering by favorites now correctly updates the viewed list
+🔥 Fixed issue where opening "Advanced Search" would wait until the popup finishes
+🔥 Fixed issue where volumes collected stats were not updating correctly when deleting a series
 
 v5.2.3.0 - July 15th, 2024
 🔥 Fixed and added additional coverage for MangaDex desc parsing

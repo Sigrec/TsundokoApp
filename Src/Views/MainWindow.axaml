@@ -644,6 +644,7 @@
                                                             BorderThickness="2"
                                                             FontWeight="Bold"
                                                             FontSize="22"
+                                                            Click="ToggleSeriesFavorite"
                                                             VerticalContentAlignment="Center"
                                                             HorizontalContentAlignment="Center"
                                                             VerticalAlignment="Center"

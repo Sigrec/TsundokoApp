@@ -79,6 +79,18 @@ namespace Tsundoku.ViewModels
             StartAdvancedSearch = ReactiveCommand.Create(() => AdvancedSearchCollection(AdvancedSearchText));
         }
 
+        /// <summary>
+        /// Resets the panels edit or stats pane to being closed
+        /// </summary>
+        public static void ResetPanels(IEnumerable<Series> list)
+        {
+            foreach(Series curSeries in list)
+            {
+                if(curSeries.IsEditPaneOpen) curSeries.IsEditPaneOpen = false;
+                else if (curSeries.IsStatsPaneOpen) curSeries.IsStatsPaneOpen = false;
+            }
+        }
+
         private void LanguageChangedUpdate(string lang)
         {
             MainUser.CurLanguage = lang;
@@ -107,6 +119,7 @@ namespace Tsundoku.ViewModels
             SearchedCollection.Clear();
             await Task.Run(() => 
             {
+                ResetPanels(UserCollection);
                 UserCollection.Sort(new SeriesComparer(MainUser.CurLanguage));
             });
             SearchedCollection.AddRange(UserCollection);
@@ -116,11 +129,6 @@ namespace Tsundoku.ViewModels
         {
             CurFilter = Enum.Parse<TsundokuFilter>(filterBoxItem.Content.ToString());
             FilterCollection(CurFilter);
-        }
-
-        public string GetFilter()
-        {
-            return CurFilter.GetStringValue();
         }
 
         public static void UserIsSearching(bool value)
@@ -205,6 +213,7 @@ namespace Tsundoku.ViewModels
                         break;
                 }
                 LOGGER.Info($"Sorted Collection by \"{filter}\"");
+                ResetPanels(FilteredCollection);
                 SearchedCollection.Clear();
                 SearchedCollection.AddRange(FilteredCollection);
                 FilteredCollection = [];
@@ -225,19 +234,28 @@ namespace Tsundoku.ViewModels
                     CurFilter = TsundokuFilter.None;
                 }
 
-                await Task.Run(() => {
+                await Observable.Start(() => {
                     FilteredCollection = UserCollection.Where(x => x.Publisher.Contains(searchText, StringComparison.OrdinalIgnoreCase) || x.Titles.Values.AsParallel().Any(title => title.Contains(searchText, StringComparison.OrdinalIgnoreCase)) || x.Staff.Values.AsParallel().Any(staff => staff.Contains(searchText, StringComparison.OrdinalIgnoreCase))); 
-                });
+                    ResetPanels(FilteredCollection);
+                }, RxApp.TaskpoolScheduler);
 
-                SearchedCollection.Clear();
-                SearchedCollection.AddRange(FilteredCollection);
-                CanFilter = true;
+                await Observable.Start(() => 
+                {
+                    ResetPanels(FilteredCollection);
+                    SearchedCollection.Clear();
+                    SearchedCollection.AddRange(FilteredCollection);
+                    CanFilter = true;
+                }, RxApp.MainThreadScheduler);
             }
             else if (SearchIsBusy)
             {
-                SearchIsBusy = false;
-                SearchedCollection.Clear();
-                SearchedCollection.AddRange(UserCollection);
+                await Observable.Start(() => 
+                {
+                    ResetPanels(FilteredCollection);
+                    SearchIsBusy = false;
+                    SearchedCollection.Clear();
+                    SearchedCollection.AddRange(UserCollection);
+                }, RxApp.MainThreadScheduler);
             }
         }
 
@@ -294,6 +312,7 @@ namespace Tsundoku.ViewModels
                     {
                         CurFilter = TsundokuFilter.Query;
                     }
+                    ResetPanels(FilteredCollection);
                     SearchedCollection.Clear();
                     SearchedCollection.AddRange(FilteredCollection);
                     LOGGER.Info($"Valid Advanced Search Query");
@@ -768,7 +787,7 @@ namespace Tsundoku.ViewModels
             DeleteCover(series);
             SearchedCollection.Remove(series);
             UserCollection.Remove(series);
-            collectionStatsWindow.ViewModel.UpdateAllStats(series.CurVolumeCount, (uint)(series.MaxVolumeCount - series.CurVolumeCount));
+            collectionStatsWindow.ViewModel.UpdateAllStats(series.CurVolumeCount, (uint)(series.MaxVolumeCount - series.CurVolumeCount), true);
             LOGGER.Info("Removed {} From Collection", series.Titles["Romaji"]);
             series.Dispose();
         }

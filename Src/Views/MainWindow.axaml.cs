@@ -91,10 +91,6 @@ namespace Tsundoku.Views
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.P)
                 {
                     LOGGER.Info($"Saving Screenshot of Collection for \"{ViewModel.CurrentTheme.ThemeName} Theme\"");
-                    // if (NotificationPopup.IsVisible)
-                    // {
-                    //     await Task.Delay(TimeSpan.FromSeconds(3));
-                    // }
                     ScreenCaptureWindows();
                     await ToggleNotificationPopup($"Saved Screenshot for \"{ViewModel.CurrentTheme.ThemeName}\" Theme");
                 }
@@ -121,7 +117,7 @@ namespace Tsundoku.Views
                 {
                     LOGGER.Info("Reloading Filter/Sort on Collection");
                     ViewModel.FilterCollection(ViewModel.CurFilter);
-                    await ToggleNotificationPopup($"Reloadeded \"{ViewModel.CurFilter}\" Filter/Sort on Collection");
+                    await ToggleNotificationPopup($"Reloaded \"{ViewModel.CurFilter}\" Filter/Sort on Collection");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.F)
                 {
@@ -130,12 +126,13 @@ namespace Tsundoku.Views
                         AdvancedSearchBar.MinimumPopulateDelay = TimeSpan.Zero;
                         AdvancedSearchBar.Text = string.Empty;
                         AdvancedSearchBar.MinimumPopulateDelay = AdvancedSearchPopulateDelay;
+                        AdvancedSearchPopup.IsVisible ^= true;
                     }
                     else
                     {
+                        AdvancedSearchPopup.IsVisible ^= true;
                         await ToggleNotificationPopup($"To Exit Advanced Search Press CTRL+F");
                     }
-                    AdvancedSearchPopup.IsVisible ^= true;
                 }
             };
 
@@ -148,6 +145,14 @@ namespace Tsundoku.Views
             NotificationPopup.IsVisible = true;
             await Task.Delay(TimeSpan.FromSeconds(3));
             NotificationPopup.IsVisible = false;
+        }
+
+        private void ToggleSeriesFavorite(object sender, RoutedEventArgs args)
+        {
+            if (ViewModel.CurFilter == TsundokuFilter.Favorites && !((Series)((Button)sender).DataContext).IsFavorite)
+            {
+                ViewModel.FilterCollection(TsundokuFilter.Favorites);
+            }
         }
 
         private void CloseNotificationPopup(object sender, RoutedEventArgs args) => NotificationPopup.IsVisible = false;
@@ -182,7 +187,7 @@ namespace Tsundoku.Views
             MainWindowViewModel.userNotesWindow.Show(this);
         }
 
-        public void SetupAdvancedSearchBar(string delimeter)
+        public void SetupAdvancedSearchBar(string delimiter)
         {
             AdvancedSearchBar.ItemsSource = ADVANCED_SEARCH_FILTERS;
             AdvancedSearchBar.FilterMode = AutoCompleteFilterMode.Custom;
@@ -192,7 +197,7 @@ namespace Tsundoku.Views
                 newSearchText.Clear();
                 if (MainWindowViewModel.AdvancedQueryRegex().IsMatch(query))
                 {
-                    newSearchText.Append(query[..query.LastIndexOf(delimeter)]).Append(delimeter);
+                    newSearchText.Append(query[..query.LastIndexOf(delimiter)]).Append(delimiter);
                 }
                 return !item.Equals("Notes==") ? newSearchText.Append(item).ToString() : newSearchText.Append(item).ToString();
             };
@@ -218,7 +223,7 @@ namespace Tsundoku.Views
                     return false;
                 }
  
-                return AdvancedSearchBar.IsVisible && itemString.StartsWith(query[(query.LastIndexOf(delimeter) + delimeter.Length)..], StringComparison.OrdinalIgnoreCase);
+                return AdvancedSearchBar.IsVisible && itemString.StartsWith(query[(query.LastIndexOf(delimiter) + delimiter.Length)..], StringComparison.OrdinalIgnoreCase);
             };
         }
         
@@ -389,10 +394,10 @@ namespace Tsundoku.Views
             {
                 if (decimal.Compare(ratingVal, new decimal(10.0)) <= 0)
                 {
-                    LOGGER.Info($"Updating rating for \"{curSeries.Titles["Romaji"]}\" from \"{curSeries.Rating}/10.0\" to \"{decimal.Round(ratingVal, 1)}/10.0\"");
+                    LOGGER.Info($"Updating rating for \"{curSeries.Titles["Romaji"]}\" {(curSeries.Rating == -1 ? string.Empty : $"from \"{curSeries.Rating}/10.0\"")} to \"{decimal.Round(ratingVal, 1)}/10.0\"");
 
                     curSeries.Rating = ratingVal;
-                    ((TextBlock)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(0)).Text = $"Rating {ratingVal}/10.0";
+                    ((TextBlock)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(0)).Text = $"{ratingVal}/10.0";
                     ((MaskedTextBox)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(1)).Text = "";
                     
                     // Update rating Distribution Chart
