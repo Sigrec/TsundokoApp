@@ -14,7 +14,7 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
-v5.2.5.0 - Sept, 2024
+v5.2.5.0 - Sept 5th, 2024
 🔥 Window icons are correctly set to "pressed" colors when open
 🔥 Fixed issue where app would crash after searching for a series -> deleting the series -> and then deleting the search
 ✅ Theme window now opens "normal" instead of maximized

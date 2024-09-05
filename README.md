@@ -14,7 +14,7 @@ If you lose or delete the UserData.json file you will lose your entire collectio
 1. Download the zip file and extract all files, it should extract a folder named *"Tsundoku*" with a *"Tsundoku.exe*" file in it
 2. 1. Replace the exe in your *"Tsundoku*" folder that has all of your current data with the new one you just downloaded and you are done.
 3. Do not delete or move any files that are inside the *"Tsundoku*" folder, instead just pin the *"Tsundoku.exe*" file to your taskbar and run it.
-4. 
+
 ### How to Download for the 1st Time
 1. Download the zip file and extract all files, it should extract a folder named *"Tsundoku*" with a *"Tsundoku.exe*" file in it
 2. If you are a new user and this is your first time using Tsundoku you can leave it as is and move the *"Tsundoku*" folder to any location in your drive.
