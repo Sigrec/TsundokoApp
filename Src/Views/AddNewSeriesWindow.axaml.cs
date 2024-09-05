@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -12,6 +13,7 @@ namespace Tsundoku.Views
         private ushort MaxVolNum;
         private ushort CurVolNum;
         public bool IsOpen = false;
+        private MainWindow CollectionWindow;
         // public static string PreviousLanguage;
 
         public AddNewSeriesWindow()
@@ -21,12 +23,14 @@ namespace Tsundoku.Views
             Opened += (s, e) =>
             {
                 IsOpen ^= true;
+                CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
             };
 
             Closing += (s, e) =>
             {
                 if (IsOpen)
                 {
+                    MainWindow.ResetMenuButton(CollectionWindow.AddNewSeriesButton);
                     ((AddNewSeriesWindow)s).Hide();
                     IsOpen ^= true;
                     Topmost = false;

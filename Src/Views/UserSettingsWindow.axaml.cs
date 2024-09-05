@@ -22,7 +22,7 @@ namespace Tsundoku.Views
             AllowMultiple = false,
             FileTypeFilter = new List<FilePickerFileType>() { fileOptions }
         };
-        MainWindow CollectionWindow;
+        private MainWindow CollectionWindow;
         
         public SettingsWindow()
         {
@@ -30,8 +30,8 @@ namespace Tsundoku.Views
             DataContext = new UserSettingsViewModel();
             Opened += (s, e) =>
             {
-                CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
                 IsOpen ^= true;
+                CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
 
                 if (Screens.Primary.WorkingArea.Height < 955)
                 {
@@ -43,6 +43,7 @@ namespace Tsundoku.Views
             {
                 if (IsOpen)
                 {
+                    MainWindow.ResetMenuButton(CollectionWindow.SettingsButton);
                     ((SettingsWindow)s).Hide();
                     Topmost = false;
                     IsOpen ^= true;

@@ -8,13 +8,16 @@ using MangaAndLightNovelWebScrape.Websites;
 using MangaAndLightNovelWebScrape.Models;
 using System.Collections;
 using Avalonia.ReactiveUI;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Tsundoku.Views
 {
     public partial class PriceAnalysisWindow : ReactiveWindow<PriceAnalysisViewModel>
     {
         public bool IsOpen = false, Manga;
+        private MainWindow CollectionWindow;
         public readonly MasterScrape Scrape = new MasterScrape(StockStatusFilter.EXCLUDE_NONE_FILTER);
+
 
         public PriceAnalysisWindow()
         {
@@ -23,12 +26,14 @@ namespace Tsundoku.Views
             Opened += (s, e) =>
             {
                 IsOpen ^= true;
+                CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
             };
 
             Closing += (s, e) =>
             {
                 if (IsOpen)
                 {
+                    MainWindow.ResetMenuButton(CollectionWindow.AnalysisButton);
                     ((PriceAnalysisWindow)s).Hide();
                     TitleBox.Text = string.Empty;
                     Topmost = false;

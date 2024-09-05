@@ -14,6 +14,13 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
+v5.2.5.0 - Sept, 2024
+🔥 Window icons are correctly set to "pressed" colors when open
+🔥 Fixed issue where app would crash after searching for a series -> deleting the series -> and then deleting the search
+✅ Theme window now opens "normal" instead of maximized
+✅ Update analysis library to fix issues with various websites (Indigo still does not work)
+✅ Windows now popup to the top if you press the same button again
+
 v5.2.4.0 - Aug 10th, 2024
 ⌛ Update Avalonia to 11.1.999
 ✅ Changed series stat layout since 10.0 rating overflows text (remove "Rating" text)

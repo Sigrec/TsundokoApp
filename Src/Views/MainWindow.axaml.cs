@@ -13,7 +13,6 @@ using Avalonia.Media.Imaging;
 using FileWatcherEx;
 using Avalonia.Media;
 using Tsundoku.Helpers;
-using System.Threading;
 using Avalonia.Controls.Primitives;
 
 namespace Tsundoku.Views
@@ -155,36 +154,89 @@ namespace Tsundoku.Views
             }
         }
 
+        public static void ResetMenuButton(ToggleButton menuButton)
+        {
+            menuButton.IsChecked = false;
+        }
+
         private void CloseNotificationPopup(object sender, RoutedEventArgs args) => NotificationPopup.IsVisible = false;
 
         private void OpenAddSeriesDialog(object sender, RoutedEventArgs args)
         {
-            MainWindowViewModel.newSeriesWindow.Show(this);
+            AddNewSeriesButton.IsChecked = true;
+            if (!MainWindowViewModel.newSeriesWindow.IsOpen)
+            {
+                MainWindowViewModel.newSeriesWindow.Show();
+            }
+            else
+            {
+                MainWindowViewModel.newSeriesWindow.Activate();
+            }
         }
 
         private void OpenSettingsDialog(object sender, RoutedEventArgs args)
         {
-            MainWindowViewModel.settingsWindow.Show(this);
+            SettingsButton.IsChecked = true;
+            if (!MainWindowViewModel.settingsWindow.IsOpen)
+            {
+                MainWindowViewModel.settingsWindow.Show();
+            }
+            else
+            {
+                MainWindowViewModel.settingsWindow.Activate();
+            }
         }
 
         private void OpenCollectionStatsDialog(object sender, RoutedEventArgs args)
         {
-           MainWindowViewModel.collectionStatsWindow.Show(this);
+            StatsButton.IsChecked = true;
+            if (!MainWindowViewModel.collectionStatsWindow.IsOpen)
+            {
+                MainWindowViewModel.collectionStatsWindow.Show();
+            }
+            else
+            {
+                MainWindowViewModel.collectionStatsWindow.Activate();
+            }
         }
 
         private void OpenPriceAnalysisDialog(object sender, RoutedEventArgs args)
         {
-            MainWindowViewModel.priceAnalysisWindow.Show(this);
+            AnalysisButton.IsChecked = true;
+            if (!MainWindowViewModel.priceAnalysisWindow.IsOpen)
+            {
+                MainWindowViewModel.priceAnalysisWindow.Show();
+            }
+            else
+            {
+                MainWindowViewModel.priceAnalysisWindow.Activate();
+            }
         }
 
         private void OpenThemeSettingsDialog(object sender, RoutedEventArgs args)
         {
-            MainWindowViewModel.themeSettingsWindow.Show(this);
+            ThemeButton.IsChecked = true;
+            if (!MainWindowViewModel.themeSettingsWindow.IsOpen)
+            {
+                MainWindowViewModel.themeSettingsWindow.Show();
+            }
+            else
+            {
+                MainWindowViewModel.themeSettingsWindow.Activate();
+            }
         }
 
         private void OpenUserNotesDialog(object sender, RoutedEventArgs args)
         {
-            MainWindowViewModel.userNotesWindow.Show(this);
+            UserNotesButton.IsChecked = true;
+            if (!MainWindowViewModel.userNotesWindow.IsOpen)
+            {
+                MainWindowViewModel.userNotesWindow.Show();
+            }
+            else
+            {
+                MainWindowViewModel.userNotesWindow.Activate();
+            }
         }
 
         public void SetupAdvancedSearchBar(string delimiter)

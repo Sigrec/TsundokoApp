@@ -2,7 +2,7 @@
 ### [Donate](https://www.paypal.com/donate/?business=JAYCVEJGDF4GY&no_recurring=0&item_name=Anyone+amount+helps+and+keeps+the+app+going.&currency_code=USD) | [Join The Discord](https://discord.gg/QcZ5jcFPeU) | [Follow Me on AL](https://anilist.co/user/Preminence/)
 ### [ChangeLog](https://github.com/Sigrec/Tsundoku/blob/main/ChangeLog.txt) (Right Click Exe → Properties → Details to see current File Version)
 ***
->[**Windows Download** (Current Supported Version = v5.2.4.0)](https://github.com/Sigrec/Tsundoku/releases/tag/v5.2.4.0)
+>[**Windows Download** (Current Supported Version = v5.2.5.0)](https://github.com/Sigrec/Tsundoku/releases/tag/v5.2.5.0)
 
 >**Mac Download (Not Supported Yet)**
 If you lose or delete the UserData.json file you will lose your entire collection, so do not delete it, otherwise you  will have to start over again (you can create a backup if needed), the Covers folder is visible incase a user wants to change the image shown for a particular series, just make sure u copy the EXACT name and extension (either jpg or png) from the image file.
@@ -10,11 +10,14 @@ If you lose or delete the UserData.json file you will lose your entire collectio
 ***
 ## Important
 ### P.S. This Application is Something I Do For Fun during my Free Time
-### Usage
+### How to Update
 1. Download the zip file and extract all files, it should extract a folder named *"Tsundoku*" with a *"Tsundoku.exe*" file in it
-2. If you are updating your app read **1.** otherwise if you are a new user read **2.**
-   1. Replace the exe in your other *"Tsundoku*" folder with the new one you just downloaded and you are done
-   2. If you are a new user and this is your first time using Tsundoku you can leave it as is and move the *"Tsundoku*" folder to any location in your drive.
+2. 1. Replace the exe in your *"Tsundoku*" folder that has all of your current data with the new one you just downloaded and you are done.
+3. Do not delete or move any files that are inside the *"Tsundoku*" folder, instead just pin the *"Tsundoku.exe*" file to your taskbar and run it.
+4. 
+### How to Download for the 1st Time
+1. Download the zip file and extract all files, it should extract a folder named *"Tsundoku*" with a *"Tsundoku.exe*" file in it
+2. If you are a new user and this is your first time using Tsundoku you can leave it as is and move the *"Tsundoku*" folder to any location in your drive.
 3. Do not delete or move any files that are inside the *"Tsundoku*" folder, instead just pin the *"Tsundoku.exe*" file to your taskbar and run it.
 
 ### Reporting Bugs/Issues
@@ -23,7 +26,7 @@ To report a issue please go to the issues link [Tsundoku Issues](https://github.
 ### Removing Annoying Windows Defender
 Of course I understand if you do not trust me but I promise there is nothing malicious in the executable. The windows defender should turn off after the first time you run it but in case it does not here is a link to add an exclusion [Windows Security Exclusion](https://support.microsoft.com/en-us/windows/add-an-exclusion-to-windows-security-811816c0-4dfd-af4a-47e4-c301afe13b26)
 ***
-### Here is one of my own custom themes, showcasing what the app looks like when run
+### Here is one of my own custom themes, showcasing what the app looks like when run in Fullscreen (F11)
 ![Tsundoku Example App](https://github.com/Sigrec/TsundokuApp/blob/main/Src/Assets/ThemeExample.jpg)
 ***
 

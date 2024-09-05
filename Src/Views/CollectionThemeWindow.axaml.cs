@@ -48,6 +48,7 @@ namespace Tsundoku.Views
             {
                 if (IsOpen) 
                 { 
+                    MainWindow.ResetMenuButton(CollectionWindow.ThemeButton);
                     ((CollectionThemeWindow)s).Hide();
                     NewThemeName.Text = "";
                     Topmost = false;

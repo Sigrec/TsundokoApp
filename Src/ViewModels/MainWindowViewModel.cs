@@ -234,11 +234,8 @@ namespace Tsundoku.ViewModels
                     CurFilter = TsundokuFilter.None;
                 }
 
-                await Observable.Start(() => {
-                    FilteredCollection = UserCollection.Where(x => x.Publisher.Contains(searchText, StringComparison.OrdinalIgnoreCase) || x.Titles.Values.AsParallel().Any(title => title.Contains(searchText, StringComparison.OrdinalIgnoreCase)) || x.Staff.Values.AsParallel().Any(staff => staff.Contains(searchText, StringComparison.OrdinalIgnoreCase))); 
-                    ResetPanels(FilteredCollection);
-                }, RxApp.TaskpoolScheduler);
-
+                FilteredCollection = UserCollection.Where(x => x.Publisher.Contains(searchText, StringComparison.OrdinalIgnoreCase) || x.Titles.Values.AsParallel().Any(title => title.Contains(searchText, StringComparison.OrdinalIgnoreCase)) || x.Staff.Values.AsParallel().Any(staff => staff.Contains(searchText, StringComparison.OrdinalIgnoreCase))); 
+                
                 await Observable.Start(() => 
                 {
                     ResetPanels(FilteredCollection);

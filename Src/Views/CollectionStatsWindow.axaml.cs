@@ -6,6 +6,7 @@ using Avalonia.ReactiveUI;
 using System.Reactive.Subjects;
 using Avalonia.Media;
 using SkiaSharp;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Tsundoku.Views
 {
@@ -13,6 +14,7 @@ namespace Tsundoku.Views
     {
         public bool IsOpen = false;
         public bool CanUpdate = true; // On First Update
+        private MainWindow CollectionWindow;
         Subject<SolidColorBrush> UnknownRectangleColorSource = new Subject<SolidColorBrush>();
         Subject<SolidColorBrush> ManfraRectangleColorSource = new Subject<SolidColorBrush>();
         Subject<SolidColorBrush> ComicRectangleColorSource = new Subject<SolidColorBrush>();
@@ -24,6 +26,8 @@ namespace Tsundoku.Views
             DataContext = new CollectionStatsViewModel();
             Opened += (s, e) =>
             {
+                CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
+                
                 _ = UnknownRectangle.Bind(Avalonia.Controls.Shapes.Shape.FillProperty, UnknownRectangleColorSource);
                 UnknownRectangleColorSource.OnNext(SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesCardDescColor == ViewModel.CurrentTheme.MenuTextColor ? ViewModel.CurrentTheme.SeriesCardTitleColor : ViewModel.CurrentTheme.SeriesCardDescColor));
 
@@ -56,6 +60,7 @@ namespace Tsundoku.Views
             {
                 if (IsOpen)
                 {
+                    MainWindow.ResetMenuButton(CollectionWindow.StatsButton);
                     ((CollectionStatsWindow)s).Hide();
                     IsOpen ^= true;
                     Topmost = false;
