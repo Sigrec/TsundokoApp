@@ -125,10 +125,13 @@ namespace Tsundoku.ViewModels
             SearchedCollection.AddRange(UserCollection);
         }
 
-        public void UpdateCurFilter(ComboBoxItem filterBoxItem)
+        public void UpdateCurFilter(ComboBoxItem filterBoxItem, bool shouldFilter = true)
         {
             CurFilter = Enum.Parse<TsundokuFilter>(filterBoxItem.Content.ToString());
-            FilterCollection(CurFilter);
+            if (shouldFilter)
+            {
+                FilterCollection(CurFilter);
+            }
         }
 
         public static void UserIsSearching(bool value)

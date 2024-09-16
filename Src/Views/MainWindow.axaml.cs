@@ -170,6 +170,7 @@ namespace Tsundoku.Views
             }
             else
             {
+                MainWindowViewModel.newSeriesWindow.WindowState = WindowState.Normal;
                 MainWindowViewModel.newSeriesWindow.Activate();
             }
         }
@@ -183,6 +184,7 @@ namespace Tsundoku.Views
             }
             else
             {
+                MainWindowViewModel.settingsWindow.WindowState = WindowState.Normal;
                 MainWindowViewModel.settingsWindow.Activate();
             }
         }
@@ -196,6 +198,7 @@ namespace Tsundoku.Views
             }
             else
             {
+                MainWindowViewModel.collectionStatsWindow.WindowState = WindowState.Normal;
                 MainWindowViewModel.collectionStatsWindow.Activate();
             }
         }
@@ -209,6 +212,7 @@ namespace Tsundoku.Views
             }
             else
             {
+                MainWindowViewModel.priceAnalysisWindow.WindowState = WindowState.Normal;
                 MainWindowViewModel.priceAnalysisWindow.Activate();
             }
         }
@@ -216,6 +220,7 @@ namespace Tsundoku.Views
         private void OpenThemeSettingsDialog(object sender, RoutedEventArgs args)
         {
             ThemeButton.IsChecked = true;
+            MainWindowViewModel.themeSettingsWindow.WindowState = WindowState.Normal;
             if (!MainWindowViewModel.themeSettingsWindow.IsOpen)
             {
                 MainWindowViewModel.themeSettingsWindow.Show();
@@ -235,6 +240,7 @@ namespace Tsundoku.Views
             }
             else
             {
+                MainWindowViewModel.userNotesWindow.WindowState = WindowState.Normal;
                 MainWindowViewModel.userNotesWindow.Activate();
             }
         }
@@ -506,7 +512,7 @@ namespace Tsundoku.Views
                 {
                     g.CopyFromScreen(new System.Drawing.Point((int)this.Bounds.Left, (int)this.Bounds.Top), System.Drawing.Point.Empty, new System.Drawing.Size((int)this.Width, (int)this.Height));
                 }
-                bitmap.Save(@$"Screenshots\{ViewModel.UserName}-Collection-Screenshot-{ViewModel.CurrentTheme.ThemeName}.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                bitmap.Save(@$"Screenshots\{ViewModel.UserName}-Collection-Screenshot-{ViewModel.CurrentTheme.ThemeName}-{ViewModel.CurLanguage}{(ViewModel.CurFilter != TsundokuFilter.None && ViewModel.CurFilter != TsundokuFilter.Query ? $"-{ViewModel.CurFilter.GetStringValue()}" : string.Empty)}.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
         }
 
@@ -599,11 +605,17 @@ namespace Tsundoku.Views
         {
             if ((sender as ComboBox).IsDropDownOpen)
             {
-                if (!string.IsNullOrWhiteSpace(ViewModel.SearchText)) // Checks if the user is filtering after a search
+                if (!string.IsNullOrWhiteSpace(ViewModel.SearchText)) // Checks if the user is searching, filtering, or sorting
                 {
                     // ViewModel.SearchIsBusy = false;
                     ViewModel.SearchText = string.Empty;
                 }
+                
+                if (ViewModel.CurFilter != TsundokuFilter.None)
+                {
+                    ViewModel.CurFilter = TsundokuFilter.None;
+                }
+                
                 // AddNewSeriesWindow.PreviousLanguage = ViewModel.CurLanguage;
                 ViewModel.CurLanguage = (LanguageSelector.SelectedItem as ComboBoxItem).Content.ToString();
                 LOGGER.Info($"Changed Langauge to \"{ViewModel.CurLanguage}\"");

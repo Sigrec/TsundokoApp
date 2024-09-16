@@ -14,6 +14,12 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
+v5.2.6.0 - Sept 16th, 2024
+✅ Taking screenshots now includes the current filter/sort if it is not "None" or "Query" in the image name and the language
+🔥 Fixed issue where filter/sort would persist if language if the current collection is filtered or sorted
+🔥 Fixed issue where opening stats after changing series values doesn't open properly
+🔥 Fixed issue where pressing a menu button again to bring it to the top would sometimes not work
+
 v5.2.5.0 - Sept 5th, 2024
 🔥 Window icons are correctly set to "pressed" colors when open
 🔥 Fixed issue where app would crash after searching for a series -> deleting the series -> and then deleting the search
