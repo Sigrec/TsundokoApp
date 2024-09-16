@@ -16,6 +16,7 @@ TODO:
 
 v5.2.6.0 - Sept 16th, 2024
 ✅ Taking screenshots now includes the current filter/sort if it is not "None" or "Query" in the image name and the language
+🔥 Fixed issue where FireFox browser would start instances and not be headless
 🔥 Fixed issue where filter/sort would persist if language if the current collection is filtered or sorted
 🔥 Fixed issue where opening stats after changing series values doesn't open properly
 🔥 Fixed issue where pressing a menu button again to bring it to the top would sometimes not work
