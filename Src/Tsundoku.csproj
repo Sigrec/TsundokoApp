@@ -29,9 +29,6 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <DebugType>embedded</DebugType>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DebugType>embedded</DebugType>
-	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- <RuntimeHostConfigurationOption Value="true" Include="System.Net.SocketsHttpHandler.Http3Support" /> -->
@@ -53,8 +50,9 @@
         <None Remove="Assets\Example.jpg" />
         <None Remove="Assets\Icons\Tsundoku-Logo.ico" />
         <None Remove="Assets\Icons\Tsundoku-Logo.png" />
-        <None Remove="TsundokuLogs.log" />
+        <!-- <None Remove="TsundokuLogs.log" />
         <None Remove="UserData.json" />
+		<None Remove="TestUserData.json" /> -->
         <AvaloniaResource Include="Assets\Icons\Tsundoku-Logo.ico" />
         <EmbeddedResource Include="NLog.config" />
 		<AvaloniaResource Include="Styles/**" />
@@ -68,7 +66,7 @@
     <!--This helps with theme dll-s trimming.
 	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
 	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
-	<TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+	<TrimmableAssembly Include="Avalonia.Themes.Default" />
   </ItemGroup>
 	
   <ItemGroup>

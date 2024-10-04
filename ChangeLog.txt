@@ -14,21 +14,28 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
-v5.2.6.0 - Sept 16th, 2024
+v - 
+✅ Added new window that allows for better editing series info, replacing left bottom button popup pane
+✅ Expanded max series value from 999999999.99 to 999999999999999999.99
+✅ Removed currencies "Rp", "RM", "﷼", "د.إ", "د. ك"
+🔥 Fixed issue where adding a new series -> searching for it -> deleting search, crashes the app
+🔥 Fixed issue where advanced search would sometimes not run
+
+v5.2.6 - Sept 16th, 2024
 ✅ Taking screenshots now includes the current filter/sort if it is not "None" or "Query" in the image name and the language
 🔥 Fixed issue where FireFox browser would start instances and not be headless
 🔥 Fixed issue where filter/sort would persist if language if the current collection is filtered or sorted
 🔥 Fixed issue where opening stats after changing series values doesn't open properly
 🔥 Fixed issue where pressing a menu button again to bring it to the top would sometimes not work
 
-v5.2.5.0 - Sept 5th, 2024
+v5.2.5 - Sept 5th, 2024
 🔥 Window icons are correctly set to "pressed" colors when open
 🔥 Fixed issue where app would crash after searching for a series -> deleting the series -> and then deleting the search
 ✅ Theme window now opens "normal" instead of maximized
 ✅ Update analysis library to fix issues with various websites (Indigo still does not work)
 ✅ Windows now popup to the top if you press the same button again
 
-v5.2.4.0 - Aug 10th, 2024
+v5.2.4 - Aug 10th, 2024
 ⌛ Update Avalonia to 11.1.999
 ✅ Changed series stat layout since 10.0 rating overflows text (remove "Rating" text)
 ✅ Panels are now reset when user searches, sorts, or filters their collection
@@ -36,32 +43,32 @@ v5.2.4.0 - Aug 10th, 2024
 🔥 Fixed issue where opening "Advanced Search" would wait until the popup finishes
 🔥 Fixed issue where volumes collected stats were not updating correctly when deleting a series
 
-v5.2.3.0 - July 15th, 2024
+v5.2.3 - July 15th, 2024
 🔥 Fixed and added additional coverage for MangaDex desc parsing
 📜 Theme Window
 - 🔥 Fixed issue where sometimes in stats window the bg colors were the same so would overlap
 - ✅ Added dialog popup when exporting & importing themes
 
-v5.2.2.0 - July 7th, 2024
+v5.2.2 - July 7th, 2024
 ✅ Notes window now correctly accepts tabbing
 ✅ Removed width restriction on notification popups so text is no longer cut off
 📜 Theme Window
 - ✅ Set theme name character limit to 60 characters
 - ✅ Added error popup window when application is unable to add a theme
 
-v5.2.1.0 - July 5th, 2024
+v5.2.1 - July 5th, 2024
 ✅ Added button to notification popup to close it
 🔥 Fixed issue where some of the notifications didn't have correct text format
 🔥 Fixed issue where clicking on text boxes in Series Stat change pane (+ button) would cause the scroll bar buttons to appear
 🔥 Fixed issue where you could scroll the text boxes in Series Stat change pane (+ button)
 🔥 Fixed issue where filter/sort does not get reset when searching
 
-v5.2.0.0 - June 29th, 2024
+v5.2.0 - June 29th, 2024
 ✅ Added notification popups when taking a screenshot
 ✅ Separated the user icon border color from divider to allow for transparent border for user icon
 ✅ Refreshing a series' info now correctly re-applies either the search or filter if there is a change that would impact order
 
-v5.1.0.0 - June 23rd, 2024
+v5.1.0 - June 23rd, 2024
 ⌛ Update Avalonia package to v11.1.0-rc1
 📜 Theme Window
 - ✅ Added option to change staff color and is now independent
@@ -75,7 +82,7 @@ v5.1.0.0 - June 23rd, 2024
 - ✅ Added AmazonUSA
 - ✅ Changed default browser from FireFox to Chrome
 
-v5.0.0.0 - May 23rd, 2024
+v5.0.0 - May 23rd, 2024
 ✅ Added publisher info to series cards (default will be set to "Unknown")
 ✅ Changed "Cost" to "Value"
 🔥 Fixed issue where scroll bar in TextBox in other windows didn't apply the theme
@@ -129,14 +136,14 @@ v4.1.3.1 - April 27th, 2024
 ⌛ Avalonia Library Update
 🔥 Fix issue where app would crash if adding a series to a new/empty collection
 
-v4.1.3.0 - April 24th, 2024
+v4.1.3 - April 24th, 2024
 ✅ Added refresh button for series to refresh info (example would be when a series is complete and u refresh then then the status will get updated)
 ✅ Added tooltip to series titles for titles that are very long
 ✅ Added tooltip to series staff for series with a lot of staff
 🔥 Theme settings controls now correctly centered at all times
 🔥 Windows are no longer topmost always only on the collection app
 
-v4.1.2.0 - April 23rd, 2024
+v4.1.2 - April 23rd, 2024
 🔥 Fixed incorrect version in settings window
 🔥 Fixed styling & overflow trimming of series title & staff
 🔥 Fixed issue when adding a new series would crash if adding additional langs ("ja-ro" lang code not added to dictionary)
@@ -144,7 +151,7 @@ v4.1.2.0 - April 23rd, 2024
 🔥 Fixed formatting for MangaDex descriptions
 🔥 Correctly pulls romaji title from MangaDex instead of English if it's an Asian comic
 
-v4.1.1.0 - April 12th, 2024
+v4.1.1 - April 12th, 2024
 ✅ Added watermark to series notes textbox
 🔥 Fixed issue where other windows don't open on the same monitor as the main window
 🔥 Fixed series desc scrollbar bg color on hover to not be same color as the card bg
@@ -153,7 +160,7 @@ v4.1.1.0 - April 12th, 2024
 🔥 Fixed issue where changing filter/sort it would sometimes not load all info correctly (Something due to virtualization, disabling fixes problem)
 🔥 Fixed issue where search text would not clear when using advanced search/query
 
-v4.1.0.0 - March 8th
+v4.1.0 - March 8th
 ⌛Updated Avalonia to v11.0.10
 ✅Added new portion to AddSeries window to allow for a custom image from a url instead of default AniList image
 ✅Added indication "[O]" next to titles in "Add Series" window to indicate that it is optional
@@ -164,7 +171,7 @@ v4.1.0.0 - March 8th
 🔥Fixed issue where MangaDex covers were not being downloaded
 🔥Fixed issue where sorting/filtering would keep other pane(s) showing even though it's a dif series
 
-v4.0.0.0 - March 3rd
+v4.0.0 - March 3rd
 ✅ Changed Series Card Edit Button Icon to a Gear
 ✅ Updated Series Card Progress Section Layout
 ✅ Updated Series Card Edit Pane Layout
@@ -172,14 +179,14 @@ v4.0.0.0 - March 3rd
 ✅ Updated Dontation links
 🔥 Fixed issue where changing menu colors and collection bg color wouldn't revert back if not saved after closing theme window
 
-v3.3.0.0 - February 26th
+v3.3.0 - February 26th
 ⌛ Updated Avalonia to v11.0.9
 ✅ Updated styling of "Series Stat" Layout
 ✅ Added new button to change the cover of a series in "Series Stat" pane
 📜 PriceAnalysisWindow
 - ✅ Button no longer clickable when websites don't match region
 
-v3.2.0.0 - February 3rd
+v3.2.0 - February 3rd
 ⌛ Disabled Debug logging (shouldn't have been enabled anyway)
 ⌛ Updated logging messages when changing series data
 ⌛ Updated Libraries
@@ -188,7 +195,7 @@ v3.2.0.0 - February 3rd
 - ✅ Added new Website "MangaMate" for Australia
 - ✅ Added new Website "SpeedyHen" for Britain
 
-v3.1.3.0 - January 31st
+v3.1.3 - January 31st
 ⌛ Updated Libraries
 📜 Scrape
 - 🔥 Fixed issue where website column would not size to the website title correctly when switching
@@ -197,7 +204,7 @@ v3.1.3.0 - January 31st
 - ✅ Added new Website "Wordery" for all regions
 - 🔥 Fixed issue where "Exclude BO" filter would not be applied
 
-v3.1.2.0 - January 15th
+v3.1.2 - January 15th
 ✅ Added "Import" button to settings to allow importation of collection data
 🔥 Fixed issue where theme generation buttons were enabled even though fields were empty
 🔥 Fixed issue where "Unknown" color legend would disappear when closing then re-opening for the first time
@@ -205,17 +212,17 @@ v3.1.2.0 - January 15th
 🔥 Fixed styling of scroll bar in Series Notes
 ✍️ Removed "Sam's Sidequest" youtube link since channel is no longer animanga focused
 
-v3.1.1.0 - January 1st
+v3.1.1 - January 1st
 🔥 Correctly updates all states when deleting a series
 🔥 Fixed bug where collection value currency symbol would disappear after cost of a series changes or is added/deleted
 
-v3.1.0.0 - December 27th
+v3.1.0 - December 27th
 ✅ Added Britain Region & 2 new websites Waterstones (Britain) & MerryManga (America) to scrape
 ✅ Added new stock status filters to scrape & additional stock status Backorder (BO)
 🔥 Updated package for scrape window fixing a lot of bugs 
 🔥 Fixed opacity in stats bar graph
 
-v3.0.0.0 - December 15th
+v3.0.0 - December 15th
 ✅ Added tooltip to icon for better indication that it is clickable
 ✅ Increased username max length to 20
 ✅ Users can now import and export themes
@@ -225,7 +232,7 @@ v3.0.0.0 - December 15th
 🔥 Fixed issue where the Theme Settings window colors were not changing when changed
 ✍️ Will be changing my versioning # scheme to best practices
 
-v2.2.8.0 - December 11th
+v2.2.8 - December 11th
 ✅ Added stats to AddSeries window so users can input everything all at once
 ✅ "Additional Languages" ToolTip (Hover over the title) in AddSeries Window now sorts languages in alphabetical order regardless of selection order
 🔥 Fixed issue where app would crash when clicking "Save Stats" button
@@ -234,7 +241,7 @@ v2.2.8.0 - December 11th
 v2.2.7.1 - December 9th
 🔥 Fixed issue where MangaDex call would fail due to version policy mismatch
 
-v2.2.7.0 - December 8th
+v2.2.7 - December 8th
 ⌛ Updated Avalonia to v11.0.6 (hopefully this resolves some virtualization issues)
 ✅ Added tooltips to ComboBox's in the collection window
 ✅ Added colors to pie chart legend
@@ -244,7 +251,7 @@ v2.2.7.0 - December 8th
 🔥 Updated all cover file names to correct comic format name for the previous fix in v2.2.6.0
 🔥 Fixed issue where scrollbar was not being styled in ComboBox dropdowns in the collection window
 
-v2.2.6.0 - December 1st
+v2.2.6 - December 1st
 ✅ Upgraded to .NET 8.0 & updated other libraries
 ✅ Unicode data is now encoded in the UserData.json file instead of it being in Unicode format
 ✅ Users now no longer need to save every time theme colors are changed, colors are updated live
@@ -257,13 +264,13 @@ v2.2.6.0 - December 1st
 🔥 Fixed missing styling to series note scrollbar
 🔥 Fixed virtualization issue that caused title or staff to be cut off when changing collection (searching, filtering, etc.)
 
-v2.2.5.0 - November 14th
+v2.2.5 - November 14th
 🔥 Fixed issue where cover would not reload if you changed a cover of a series that is not currently in the search
 🔥 Fixed issue where changing "Collection BG" color wouldn't apply to the color in the window
 🔥 Fixed issue where upon first opening theme settings window the colors are not set
 ✅ Replacing covers no longer checks for specific file extension so it can be either jpg or png when changing
 
-v2.2.4.0 - November 3rd
+v2.2.4 - November 3rd
 🔥 Fixed Exporting to Spreadsheet so data is formatted correctly and includes Romaji if it's not currently romaji
 ✅ Version Credits in User Settings window now opens the link to the releases
 ✅ Now checks every time the app is opened whether images have been scaled and saved to fit the format
@@ -275,13 +282,13 @@ v2.2.4.0 - November 3rd
     - ✅ Added tooltip of each websites Region in which the sites work on
     - 🔥 Updated Scrape package to v1.1.3 (https://github.com/Sigrec/MangaAndLightNovelWebScrape/releases/tag/v1.1.3)
 
-v2.2.3.0 - October 22nd
+v2.2.3 - October 22nd
 ✅ Can now click outside of the Advanced Search control to close it
 ✅ Enabled new "Scrape" Window that allows users to scrape multiple websites based on region to get the website that contains the lowest price volume in USD for each volume of a series. Includes filtering out OOS and PO entries as well. Currently only supports websites that have USD. This feature can break at any time since it uses website dom data that I have no control over but if u see an issue just let me know.
     - ✅ Hovering over "Enter Title" & "Websites" above input boxes now shows what is selected
     - ✍️ Other regions are underworks and will be added in later releases
 
-v2.2.2.0 - October 22nd
+v2.2.2 - October 22nd
 🔥 Prevented adding of Digital only series like Colored versions of a series from MangaDex
 🔥 Fixed styling of stats cards
 🔥 Fixed issue where MangaDex querying would not get correct english title
@@ -289,11 +296,11 @@ v2.2.2.0 - October 22nd
 🔥 Fixed issue where deleting a series would cause the series next it to open the edit pane
 ✅ Add button to open folder in which the application sits
 
-v2.2.1.0 - October 20th
+v2.2.1 - October 20th
 🔥 Fixed issue where covers were not reloading and were not saved correctly
 ⌛ Changed log level to Info instead of Debug
 
-v2.2.0.0 - October 19th
+v2.2.0 - October 19th
 🔥 Toggle buttons style fixed when hovering over or pressing if it is already selected in all windows
 🔥 Fixed issue with Advanced Search/Query not working
 🔥 App no longer crashes when adding a series while filtering or searching the collection and there are no series returned
@@ -307,7 +314,7 @@ v2.2.0.0 - October 19th
 ⌛ Added virtualization to collection, improving loading time for the collection (filter, search, startup), theme & language change time, and memory usage
 ⌛ Trimmed file size by another 20kb
 
-v2.1.0.0 - October 9th
+v2.1.0 - October 9th
 ✅ Updated Default theme
 ⌛ Removed default theme from UserData
 📜 Changes to "Stats" Window
@@ -316,7 +323,7 @@ v2.1.0.0 - October 9th
 📜 Changes to "Theme" Window
     - 🔥 Fixed issues with saving/deleting a theme
 
-v2.0.0.0 - October 7th
+v2.0.0 - October 7th
 ✅ Logs now output to TsundokuLogs.log file in folder, and are cleared everytime the application is started to prevent overflow
 ✅ Windows besides "Theme" window now stay on top of main collection window
 ✅ Windows now open full sized if your monitor height is large enough
@@ -365,13 +372,13 @@ v1.9.1.1 - September 3rd
 ⌛ Improved performance of cover reload functionality
 🔥 Fixed minimum height & width of main collection window
 
-v1.9.1.0 - August 29th
+v1.9.1 - August 29th
 ✅ Fields in the AddNewSeries Window now clear after adding a series
 🔥 "AddNewSeries" Button now is disabled properly until conditions are met
 🔥 Theme Generation Buttons now are disabled properly until conditions are met
 🔥 Fixed issue where Currency symbol was not being saved
 
-v1.9.0.0 - August 28th
+v1.9.0 - August 28th
 ⌛ Upgraded Avalonia to 11.0.4
 ✅ Changed currency list, if you need one added send me a message on discord or create a ticket in Git
 🔥 Fixed issue where you could run multiple instances of the application at the same time
@@ -381,7 +388,7 @@ v1.9.0.0 - August 28th
 🔥 Fixed Settings Window max height being to large
 🔥 Fixed theme selection after deleting a theme, now correctly changes
 
-v1.8.0.0 - August 14th
+v1.8.0 - August 14th
 ✅ Changed "Query" to "Add Series" for the button to open the window to add a new series
 ✅ Added option to Reload covers in app (CTRL+R), this allows users to change covers see the changes without having to restart
 🔥 Changed & Fixed Theme Settings Names for UI Changes from previous release
@@ -390,13 +397,13 @@ v1.8.0.0 - August 14th
 🔥 Fixed issue where adding a new series using a title that wasn't exactly the same caused the app to crash
 🔥 Fixed card issue when series title is very long and blocks out everything else (Currently the title just gets cut off at 3 lines, better functionality will be made in the future)
 
-v1.7.1.0 - July 26th
+v1.7.1 - July 26th
 🔥 HotFix for new users where the app doesn't start
 🔥 Fixed Crash where Opening Icon Selector and not selecting causes crash
 ✅ Added https://www.youtube.com/@DanielPeppers to youtubers section
 ✅ Increased ProgressBar Text Size
 
-v1.7.0.0 - July 9th
+v1.7.0 - July 9th
 🔥 Fixed pie chart hovering label being cut off
 🔥 Fixed bug with collection filter sometimes skipping series
 🔥 Fixed most color scheming issues of various controls in all windows
@@ -405,20 +412,20 @@ v1.7.0.0 - July 9th
 ✅ Can now upload a image to use as your icon by clicking
 ✅ Updated Menu Layout
 
-v1.6.3.0 - July 2nd
+v1.6.3 - July 2nd
 🔥 HotFix for users whose current version is less than 1.5, app now starts as expected
 🔥 HotFix can now scroll in stats window and resize up to a set size
 
-v1.6.2.0 - June 24th
+v1.6.2 - June 24th
 🔥 Fixed crash when creating a new theme
 ✅ Avalonia Lib Upgrade + Other Lib Upgrades
 ✅ Upgrade to .NET 7.0 Framework
 ✅ Uses AL Web Link if available & Queried from MangaDex
 
-v1.6.1.0 - June 20th
+v1.6.1 - June 20th
 🔥 HotFix for app being unable to load (crashes) on clean install
 
-v1.6.0.0 - June 4th
+v1.6.0 - June 4th
 ✅ Added 2 new pie charts to the stats window showing distribution for demograhics and status for a series
 ✅ Added bar/cartesian chart to the stats window showing distribution of scores in collection
 ✅ Slight Changes to Menu Layout
@@ -427,7 +434,7 @@ v1.6.0.0 - June 4th
 ✅ Refactoring AniList & MangaDex Requests to increase performance
 ✅ Refactored a bunch of methods to prevent them from running on the UI Thread to increase performance
 
-v1.5.2.0 - May 20th
+v1.5.2 - May 20th
 🔥 Fixed crash for new users (Need to delete current UserData.json file)
 🔥 Fixed issue with MangaDexQuery when querying for Covers
 ✅ Changed "Read X" to "Read X Volumes" in series stats save panel
@@ -435,12 +442,12 @@ v1.5.2.0 - May 20th
 ✅ Can now copy any of the stats to clipboard by clicking on the stats box
 ✅ Realigned Username so it's centered
 
-v1.5.1.0 - April 20th
+v1.5.1 - April 20th
 🔥 Fixed Crash Bug When Adding a Series that is not on MangaDex or AniList or Is not Specific Enough to Determine Correct Series
 ✅ Series Stats TextBoxes now clear After Saving Besides Score
 ✅ Series Volume Count TextBoxes now clear After Saving
 
-v1.5.0.0 - Apr 17th
+v1.5.0 - Apr 17th
 🔥 Fixed Default Theme to Accommodate Layout Changes
 🔥 Fixed crash and bug related to the color pickers in theme settings window
 🔥 Fixed Issue when # of Staff exceeds 25 and the others do not get pulled
@@ -480,7 +487,7 @@ v1.4.1.2 - Jan 25th
 v1.4.1.1 - Jan 22nd
 🔥 HotFix for another description parsing issue
 
-v1.4.1.0 - Jan 22nd
+v1.4.1 - Jan 22nd
 ✅ Added tooltips to menu/nav bar buttons and dropdown
 ✅ Added more controls info to "User Settings" window
 ✅ Added button in "User Settings" Window to open Screenshots Folder
@@ -488,45 +495,45 @@ v1.4.1.0 - Jan 22nd
 ✅ Added a theme generator to Theme Window (Will Add More Theme Types Later)
 ✅ Applied some themeing to dropdown buttons
 
-v1.4.0.0 - Jan 16th
+v1.4.0 - Jan 16th
 ✅ Changed "Complete" Status to "Finished" for series
 ✅ Added join discord button to "User Settings" window
 ✅ Can now filter your collection using the dropdown under the language dropdown
 ✅ Can TavbNavigate in "AddNewSeriesWindow" (Was crashing before if it does crash for you let me know ASAP so I revert if needed)
 ✅ Changes to window state behavior to fix a bug
 
-v1.3.3.0 - Jan 16th
+v1.3.3 - Jan 16th
 🔥 Fixed English & Romaji Sorting to be case insensitive (Refresh your sort)
 🔥 Fixed series description scrolling, no longer scrolls collection if user scrolls to end of description
 ✅ Slightly increased title font size
 
-v1.3.2.0 - Jan 15th
+v1.3.2 - Jan 15th
 ✅ QoL changes to User Settings Windows (Added Controls Section and New Formatting)
 
-v1.3.1.0 - Jan 14th
+v1.3.1 - Jan 14th
 🔥 Fixed triple line break issue with some series description
 
-v1.3.0.0 - Jan 13th
+v1.3.0 - Jan 13th
 🔥 Fixed issue where series where all of the names are identical (Getsuyoubi no Tawawa Example) you could only add 1 of them -> Fix is to use the series AL ID #
 ✅ Made Toggling OFF/Disabling FullScreen keep the previous window size/state before user toggled ON FullScreen
 
-v1.2.3.0 - Jan 7th
+v1.2.3 - Jan 7th
 🔥 Fixed padding in title text on the left
 ✅ Slightly lowered title text font size
 
-v1.2.2.0 - Jan 1st
+v1.2.2 - Jan 1st
 🔥 Fixed Native sorting to use japanese culture
 
 v1.2.1.1 - Dec 31st
 ✅ Added donation button for those who wanna support
 
-v1.2.1.0 - Dec 20th
+v1.2.1 - Dec 20th
 ✅ Added color theme styling to scrollbar
 ✅ Screenshots now go into a "Screenshots" folder
 ✅ Fixed Default theme color scheme
 ✅ Added AniList Support for Taiwanese Manga (Will show up as Manhua since Chinese and Taiwanese use Mandarin)
 
-v1.2.0.0 - Dec 18th
+v1.2.0 - Dec 18th
 🔥 Fixed Menu Dropdown controls (language and display change) background taking from search bar background color
 ✅ StatusAndBookType (left side bottom of a series card) hover colors now work as intended
 
@@ -546,17 +553,17 @@ v1.1.0.2 - Dec 17th
 v1.1.0.1 - Dec 17th
 🔥 Fixed description encoding not converting ampersand (if you see some text like "&rsquo;" then this fixes that you just need to delete and re-add the series)
 
-v1.1.0.0 - Dec 16th
+v1.1.0 - Dec 16th
 ✅ Implented a way to add series that do not exist on AniList for example Radiant (french manga) can now be added [Requests are through github issues -> https://github.com/Sigrec/TsundokuApp/issues]
 ✅ Can now Toggle Fullscreen with "F11"
 ✅ Can now Capture a Screenshot of your Collection with "CTRL+P" (Better to go fullscreen first)
 ✅ Can now Save Collection with "CTRL+S"
 
-v1.0.3.0 - Dec 15th
+v1.0.3 - Dec 15th
 🔥 Fixed issue where 2 series could have the same file extension so they used the same image
 ✅ Made it so incase there is some error and the collection numbers are messed up it re-calculates the numbers based on current series in collection
 
-v1.0.2.0 - Dec 15th
+v1.0.2 - Dec 15th
 🔥 Fixed issue where if you add a series while you are searching it crashes
 🔥 Fixed line break in description so it correctly double line breaks when it is supposed to
 ✅ Theme name now clears when closing the theme editing window

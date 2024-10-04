@@ -468,8 +468,6 @@ namespace Tsundoku.ViewModels
                     countRating++;
                 }
             }
-            LOGGER.Debug(countRating);
-            LOGGER.Debug(rating);
             MeanRating = countRating != 0 ? decimal.Round(decimal.Divide(rating, countRating), 1) : 0;
         }
 

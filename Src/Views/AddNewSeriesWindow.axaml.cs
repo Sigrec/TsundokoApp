@@ -88,7 +88,7 @@ namespace Tsundoku.Views
             string customImageUrl = CoverImageUrlTextBox.Text;
             _ = uint.TryParse(VolumesRead.Text.Replace("_", ""), out uint volumesRead);
             _ = decimal.TryParse(Rating.Text[..4].Replace("_", "0"), out decimal rating);
-            _ = decimal.TryParse(Value.Text.Replace("_", "0"), out decimal value);
+            _ = decimal.TryParse(Value.Text.Replace("_", "0"), out decimal seriesValue);
 
             var validSeries = await AddNewSeriesViewModel.GetSeriesDataAsync(
                 TitleBox.Text.Trim(), 
@@ -101,7 +101,7 @@ namespace Tsundoku.Views
                 Series.GetSeriesDemographic((DemographicCombobox.SelectedItem as ComboBoxItem).Content.ToString()), 
                 volumesRead, 
                 !Rating.Text[..4].StartsWith("__._") ? rating : -1, 
-                value,
+                seriesValue,
                 ViewModel.AllowDuplicate
             );
             

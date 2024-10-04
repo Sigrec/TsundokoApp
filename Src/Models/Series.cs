@@ -59,8 +59,8 @@ namespace Tsundoku.Models
 		public decimal Rating { get; set; }
 		public Demographic Demographic { get; set; }
 		public bool IsFavorite { get; set; } = false;
-        [JsonIgnore] public bool IsStatsPaneOpen { get; set; } = false;
         [JsonIgnore] public bool IsEditPaneOpen { get; set; } = false;
+        [JsonIgnore] public bool IsEditWindowOpen { get; set; } = false;
 
         [JsonConstructor]
 		public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Value, Demographic Demographic, Bitmap CoverBitMap, string Publisher = "Unknown", uint DuplicateIndex = 0)
@@ -249,7 +249,7 @@ namespace Tsundoku.Models
                         volumesRead,
                         value,
 						demographic,
-                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl),
+                        await Common.GenerateAvaloniaBitmap(coverPath, seriesData.GetProperty("coverImage").GetProperty("extraLarge").GetString(), customImageUrl),
                         publisher,
                         dupeIndex
 					);
@@ -433,7 +433,7 @@ namespace Tsundoku.Models
                         volumesRead,
                         value,
                         demographic,
-                        await ViewModels.AddNewSeriesViewModel.SaveCoverAsync(coverPath, coverLink, string.IsNullOrWhiteSpace(customImageUrl) ? string.Empty : customImageUrl),
+                        await Common.GenerateAvaloniaBitmap(coverPath, coverLink, string.IsNullOrWhiteSpace(customImageUrl) ? string.Empty : customImageUrl),
                         publisher,
                         dupeIndex
 					);

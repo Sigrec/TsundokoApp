@@ -22,7 +22,5 @@ namespace Tsundoku.Helpers
         [StringValue("Value")] Value,
         [StringValue("Query")] Query,
         [StringValue("None")] None,
-
-
     }
 }

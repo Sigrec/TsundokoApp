@@ -78,11 +78,11 @@
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="₼"/>
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="₾"/>
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="₻"/>
-						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="Rp"/>
+						<!-- <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="Rp"/>
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="RM"/>
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="﷼"/>
 						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="د.إ"/>
-						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="د. ك"/>
+						<ComboBoxItem Theme="{StaticResource MenuComboBoxItem}" Content="د. ك"/> -->
 						<ComboBox.Resources>
 							<ResourceDictionary>
 								<ResourceDictionary.MergedDictionaries>

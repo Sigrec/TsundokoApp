@@ -46,7 +46,9 @@ namespace Tsundoku.ViewModels
         public static PriceAnalysisWindow priceAnalysisWindow;
         public static CollectionStatsWindow collectionStatsWindow;
         public static UserNotesWindow userNotesWindow;
+
         public ICommand StartAdvancedSearch { get; }
+        public Interaction<EditSeriesInfoViewModel, MainWindowViewModel?> EditSeriesInfoDialog { get; }
 
         public static readonly HttpClient AddCoverHttpClient = new HttpClient(new SocketsHttpHandler
         {
@@ -77,6 +79,8 @@ namespace Tsundoku.ViewModels
             this.WhenAnyValue(x => x.UserIcon).ObserveOn(RxApp.MainThreadScheduler).Subscribe(x => MainUser.UserIcon = User.ImageToByteArray(x));
 
             StartAdvancedSearch = ReactiveCommand.Create(() => AdvancedSearchCollection(AdvancedSearchText));
+            
+            EditSeriesInfoDialog = new Interaction<EditSeriesInfoViewModel, MainWindowViewModel?>();
         }
 
         /// <summary>
@@ -87,7 +91,6 @@ namespace Tsundoku.ViewModels
             foreach(Series curSeries in list)
             {
                 if(curSeries.IsEditPaneOpen) curSeries.IsEditPaneOpen = false;
-                else if (curSeries.IsStatsPaneOpen) curSeries.IsStatsPaneOpen = false;
             }
         }
 
@@ -227,7 +230,7 @@ namespace Tsundoku.ViewModels
         /// Searches the users collection by title and/or staff
         /// </summary>
         /// <param name="searchText">The text to search for</param>
-        public async void SearchCollection(string searchText)
+        public void SearchCollection(string searchText)
         {
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -239,28 +242,22 @@ namespace Tsundoku.ViewModels
 
                 FilteredCollection = UserCollection.Where(x => x.Publisher.Contains(searchText, StringComparison.OrdinalIgnoreCase) || x.Titles.Values.AsParallel().Any(title => title.Contains(searchText, StringComparison.OrdinalIgnoreCase)) || x.Staff.Values.AsParallel().Any(staff => staff.Contains(searchText, StringComparison.OrdinalIgnoreCase))); 
                 
-                await Observable.Start(() => 
-                {
-                    ResetPanels(FilteredCollection);
-                    SearchedCollection.Clear();
-                    SearchedCollection.AddRange(FilteredCollection);
-                    CanFilter = true;
-                }, RxApp.MainThreadScheduler);
+                ResetPanels(FilteredCollection);
+                SearchedCollection.Clear();
+                SearchedCollection.AddRange(FilteredCollection);
+                CanFilter = true;
             }
             else if (SearchIsBusy)
             {
-                await Observable.Start(() => 
-                {
-                    ResetPanels(FilteredCollection);
-                    SearchIsBusy = false;
-                    SearchedCollection.Clear();
-                    SearchedCollection.AddRange(UserCollection);
-                }, RxApp.MainThreadScheduler);
+                ResetPanels(FilteredCollection);
+                SearchedCollection.Clear();
+                SearchedCollection.AddRange(FilteredCollection);
+                CanFilter = true;
             }
         }
 
         // Basic Test Query Demographic==Seinen Format==Manga Series==Complete Favorite==True
-        public async void AdvancedSearchCollection(string AdvancedSearchQuery)
+        public async Task AdvancedSearchCollection(string AdvancedSearchQuery)
         {
             if (!string.IsNullOrWhiteSpace(AdvancedSearchQuery) && AdvancedQueryRegex().IsMatch(AdvancedSearchQuery))
             {
@@ -766,6 +763,11 @@ namespace Tsundoku.ViewModels
             newCover.Save(series.Cover, 100);
 
             // Update Current Viewed Collection
+            UpdateCover(series, newCover);
+        }
+
+        public static void UpdateCover(Series series, Bitmap newCover)
+        {
             series.CoverBitMap = newCover;
             int index = SearchedCollection.IndexOf(series);
             SearchedCollection.Remove(series);
@@ -796,6 +798,104 @@ namespace Tsundoku.ViewModels
         {
             collectionStatsWindow.ViewModel.UpdateStatusChartValues();
             collectionStatsWindow.ViewModel.UpdateStatusPercentages();
+        }
+
+        public static void UpdateSeriesCard(Series series)
+        {
+            for(int x = 0; x < SearchedCollection.Count; x++)
+            {
+                if (SearchedCollection[x].Titles["Romaji"].Equals(series.Titles["Romaji"]))
+                {
+                    SearchedCollection.RemoveAt(x);
+                    SearchedCollection.Insert(x, series);
+                    break;
+                }
+            }
+
+            int curIndex = UserCollection.FindIndex(curSeries => curSeries.Titles["Romaji"].Equals(series.Titles["Romaji"]));
+            UserCollection.RemoveAt(curIndex);
+            UserCollection.Insert(curIndex, series);
+        }
+
+        public async Task RefreshSeries(Series series)
+        {
+            newCoverCheck = true;
+            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(series.Titles["Romaji"], series.Format, series.MaxVolumeCount, series.CurVolumeCount, series.SeriesContainsAdditionalLanagues(), series.Publisher, series.Demographic, series.VolumesRead, series.Rating, series.Value);
+
+            if (newSeriesData != null)
+            {
+                bool titleChanged = false, staffChanged = false, statusChanged = false;
+                LOGGER.Info($"Refreshing \"{series.Titles["Romaji"]}\" Data");
+
+                int searchIndex = SearchedCollection.ToList().BinarySearch(series, new SeriesComparer(MainUser.CurLanguage));
+                searchIndex = searchIndex < 0 ? ~searchIndex : searchIndex;
+                if (searchIndex > -1)
+                {
+                    SearchedCollection.RemoveAt(searchIndex);
+                    SearchedCollection.Insert(searchIndex, series);
+                }
+
+                int mainIndex = UserCollection.BinarySearch(series, new SeriesComparer(MainUser.CurLanguage));
+                mainIndex = mainIndex < 0 ? ~mainIndex : mainIndex;
+
+                if (!series.Titles.Equals(newSeriesData.Titles))
+                {
+                    series.Titles = newSeriesData.Titles;
+                    UserCollection[mainIndex].Titles = newSeriesData.Titles;
+                    titleChanged = true;
+                }
+                if (!series.Staff.Equals(newSeriesData.Staff))
+                {
+                    series.Staff = newSeriesData.Staff;
+                    UserCollection[mainIndex].Staff = newSeriesData.Staff;
+                    staffChanged = true;
+                }
+                if (!series.Description.Equals(newSeriesData.Description))
+                {
+                    series.Description = newSeriesData.Description;
+                    UserCollection[mainIndex].Description = newSeriesData.Description;
+                }
+                if (series.Status != newSeriesData.Status)
+                {
+                    series.Status = newSeriesData.Status;
+                    UserCollection[mainIndex].Status = newSeriesData.Status;
+                    UpdateChartStats();
+                    statusChanged = true;
+                }
+                
+                // If there is a change and the user is searching or filtering apply the filter
+                if (titleChanged || staffChanged)
+                {
+                    await RefreshCollection();
+                }
+                else if ((titleChanged && !CurFilter.Equals("None")) || (statusChanged && (CurFilter.Equals("Ongoing") || CurFilter.Equals("Finished") || CurFilter.Equals("Hiatus") || CurFilter.Equals("Cancelled"))))
+                {
+                    FilterCollection(CurFilter);
+                }
+            }
+            else
+            {
+                LOGGER.Warn($"Refresh Returned Null Series Data for \"{series.Titles["Romaji"]}\"");
+            }
+        }
+
+        public async Task RefreshCollection()
+        {
+            if (!SearchIsBusy)
+            {
+                if (CurFilter == TsundokuFilter.Query)
+                {
+                    await AdvancedSearchCollection(AdvancedSearchText);
+                }
+                else if (CurFilter != TsundokuFilter.None)
+                {
+                    FilterCollection(CurFilter);
+                }
+                else if (!string.IsNullOrWhiteSpace(SearchText))
+                {
+                    SearchCollection(SearchText);
+                }
+            }
         }
     }
 }

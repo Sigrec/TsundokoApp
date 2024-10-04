@@ -62,7 +62,7 @@ namespace Tsundoku.ViewModels
         /// <param name="maxVolCount">The max # of volumes this series currently has</param>
         /// <param name="additionalLanguages">Additional languages to get more info for from Mangadex</param>
         /// <returns>Whether the series can be added to the users collection or not</returns>
-        public static async Task<KeyValuePair<bool, string>> GetSeriesDataAsync(string title, Format bookType, ushort curVolCount, ushort maxVolCount, ObservableCollection<string> additionalLanguages, string customImageUrl, string publisher = "Unknown", Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal value = 0, bool alllowDuplicate = false)
+        public static async Task<KeyValuePair<bool, string>> GetSeriesDataAsync(string title, Format bookType, ushort curVolCount, ushort maxVolCount, ObservableCollection<string> additionalLanguages, string customImageUrl = "", string publisher = "Unknown", Demographic demographic = Demographic.Unknown, uint volumesRead = 0, decimal rating = -1, decimal value = 0, bool alllowDuplicate = false)
         {
             string returnMsg = string.Empty;
             Series? newSeries = await Series.CreateNewSeriesCardAsync(title, bookType, maxVolCount, curVolCount, additionalLanguages, publisher, demographic, volumesRead, rating, value, customImageUrl);
@@ -106,34 +106,6 @@ namespace Tsundoku.ViewModels
                 }
             }
             return new KeyValuePair<bool, string>(duplicateSeriesCheck, returnMsg);
-        }
-
-        public static async Task<Bitmap?> SaveCoverAsync(string newPath, string coverLink, string customImageUrl)
-        {
-            Bitmap newCover;
-            byte[] imageByteArray;
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(customImageUrl) && (customImageUrl.EndsWith("jpg") || customImageUrl.EndsWith("png")) && Uri.TryCreate(customImageUrl, UriKind.RelativeOrAbsolute, out Uri uri))
-                {
-                    imageByteArray = await MainWindowViewModel.AddCoverHttpClient.GetByteArrayAsync(uri);
-                }
-                else
-                {
-                    imageByteArray = await MainWindowViewModel.AddCoverHttpClient.GetByteArrayAsync(coverLink);
-                }
-                Stream imageStream = new MemoryStream(imageByteArray);
-                newCover = new Bitmap(imageStream).CreateScaledBitmap(new PixelSize(LEFT_SIDE_CARD_WIDTH, IMAGE_HEIGHT), BitmapInterpolationMode.HighQuality);
-                newCover.Save(newPath, 100);
-                imageStream.Flush();
-                imageStream.Close();
-                return newCover;
-            }
-            catch (Exception ex)
-            {
-                LOGGER.Error("{} \n {}", ex.Message, ex.StackTrace);
-            }
-            return null;
         }
 
         public static ObservableCollection<string> ConvertSelectedLangList(ObservableCollection<ListBoxItem> SelectedLangs)

@@ -20,7 +20,7 @@ namespace Tsundoku.Models
         public const ushort MENU_LENGTH = 400;
 		public static readonly string[] VALID_STAFF_ROLES = ["Story & Art", "Story", "Art", "Original Creator", "Character Design", "Cover Illustration", "Illustration", "Mechanical Design", "Original Story", "Original Character Design", "Original Story"];
 		public static readonly string[] AVAILABLE_LANGUAGES = ["Romaji", "English", "Japanese", "Arabic", "Azerbaijan", "Bengali", "Bulgarian", "Burmese", "Catalan", "Chinese", "Croatian", "Czech", "Danish", "Dutch", "Esperanto", "Estonian", "Filipino", "Finnish", "French", "German", "Greek", "Hebrew", "Hindi", "Hungarian", "Indonesian", "Italian", "Kazakh", "Korean", "Latin", "Lithuanian", "Malay", "Mongolian", "Nepali", "Norwegian", "Persian", "Polish", "Portuguese", "Romanian", "Russian", "Serbian", "Slovak", "Spanish", "Swedish", "Tamil", "Thai", "Turkish", "Ukrainian", "Vietnamese"];
-		public static readonly string[] AVAILABLE_CURRENCY = ["$", "€", "£", "¥", "₣", "₹", "₱", "₩", "₽", "₺", "₫", "฿", "₸", "₼", "₾", "₻", "Rp", "RM", "﷼", "د.إ", "د. ك"];
+		public static readonly string[] AVAILABLE_CURRENCY = ["$", "€", "£", "¥", "₣", "₹", "₱", "₩", "₽", "₺", "₫", "฿", "₸", "₼", "₾", "₻"]; // "Rp", "RM", "﷼", "د.إ", "د. ك"
 		public static readonly string[] AVAILABLE_COLLECTION_FILTERS = ["None", "Query", "Favorites", "Complete", "Incomplete", "Ongoing", "Finished", "Hiatus", "Cancelled", "Shounen", "Shoujo", "Seinen", "Josei", "Manga", "Novel", "Publisher", "Read", "Unread", "Rating", "Value"];
 
         public enum Site

@@ -33,6 +33,8 @@ namespace Tsundoku.Views
         public MainWindow()
         {
             InitializeComponent();
+            this.WhenActivated(action => 
+                action(ViewModel!.EditSeriesInfoDialog.RegisterHandler(DoShowEditSeriesInfoDialogAsync)));
 
             SetupAdvancedSearchBar(" & ");
 
@@ -136,6 +138,15 @@ namespace Tsundoku.Views
             };
 
             Closing += (s, e) => { SaveOnClose(ViewModelBase.isReloading); };
+        }
+
+        private async Task DoShowEditSeriesInfoDialogAsync(IInteractionContext<EditSeriesInfoViewModel, MainWindowViewModel?> interaction)
+        {
+            var dialog = new EditSeriesInfoWindow();
+            dialog.DataContext = interaction.Input;
+
+            var result = await dialog.ShowDialog<MainWindowViewModel?>(this);
+            interaction.SetOutput(result);
         }
 
         private async Task ToggleNotificationPopup(string notiText)
@@ -321,184 +332,6 @@ namespace Tsundoku.Views
             CoverChangedSeriesList.Clear();
         }
 
-        private async void RefreshSeries(object sender, RoutedEventArgs args)
-        {
-            ViewModelBase.newCoverCheck = true;
-            Series curSeries = (Series)((Button)sender).DataContext;
-            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(curSeries.Titles["Romaji"], curSeries.Format, curSeries.MaxVolumeCount, curSeries.CurVolumeCount, curSeries.SeriesContainsAdditionalLanagues(), curSeries.Publisher, curSeries.Demographic, curSeries.VolumesRead, curSeries.Rating, curSeries.Value);
-
-            if (newSeriesData != null)
-            {
-                bool titleChanged = false, staffChanged = false, statusChanged = false;
-                LOGGER.Info($"Refreshing/Updating \"{curSeries.Titles["Romaji"]}\" Data");
-
-                int searchIndex = MainWindowViewModel.SearchedCollection.ToList().BinarySearch(curSeries, new SeriesComparer(ViewModelBase.MainUser.CurLanguage));
-                searchIndex = searchIndex < 0 ? ~searchIndex : searchIndex;
-                if (searchIndex > -1)
-                {
-                    MainWindowViewModel.SearchedCollection.RemoveAt(searchIndex);
-                    MainWindowViewModel.SearchedCollection.Insert(searchIndex, curSeries);
-                }
-
-                int mainIndex = MainWindowViewModel.UserCollection.BinarySearch(curSeries, new SeriesComparer(ViewModelBase.MainUser.CurLanguage));
-                mainIndex = mainIndex < 0 ? ~mainIndex : mainIndex;
-
-                if (!curSeries.Titles.Equals(newSeriesData.Titles))
-                {
-                    curSeries.Titles = newSeriesData.Titles;
-                    MainWindowViewModel.UserCollection[mainIndex].Titles = newSeriesData.Titles;
-                    titleChanged = true;
-                }
-                if (!curSeries.Staff.Equals(newSeriesData.Staff))
-                {
-                    curSeries.Staff = newSeriesData.Staff;
-                    MainWindowViewModel.UserCollection[mainIndex].Staff = newSeriesData.Staff;
-                    staffChanged = true;
-                }
-                if (!curSeries.Description.Equals(newSeriesData.Description))
-                {
-                    curSeries.Description = newSeriesData.Description;
-                    MainWindowViewModel.UserCollection[mainIndex].Description = newSeriesData.Description;
-                }
-                if (curSeries.Status != newSeriesData.Status)
-                {
-                    curSeries.Status = newSeriesData.Status;
-                    MainWindowViewModel.UserCollection[mainIndex].Status = newSeriesData.Status;
-                    MainWindowViewModel.UpdateChartStats();
-                    statusChanged = true;
-                }
-                
-                // If there is a change and the user is searching or filtering apply the filter
-                if (MainWindowViewModel.SearchIsBusy && (titleChanged || staffChanged))
-                {
-                    if (ViewModel.CurFilter == TsundokuFilter.Query)
-                    {
-                        ViewModel.AdvancedSearchCollection(ViewModel.AdvancedSearchText);
-                    }
-                    else
-                    {
-                        ViewModel.SearchCollection(ViewModel.SearchText);
-                    }
-                }
-                else if ((titleChanged && !ViewModel.CurFilter.Equals("None")) || (statusChanged && (ViewModel.CurFilter.Equals("Ongoing") || ViewModel.CurFilter.Equals("Finished") || ViewModel.CurFilter.Equals("Hiatus") || ViewModel.CurFilter.Equals("Cancelled"))))
-                {
-                    ViewModel.FilterCollection(ViewModel.CurFilter);
-                }
-            }
-            else
-            {
-                LOGGER.Error($"Refresh Returned Null Series Data for \"{curSeries.Titles["Romaji"]}\"");
-            }
-        }
-
-        private async void ChangeSeriesCover(object sender, RoutedEventArgs args)
-        {
-            ViewModelBase.newCoverCheck = true;
-            var file = await this.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions {
-            AllowMultiple = false,
-            FileTypeFilter = new List<FilePickerFileType>() { new FilePickerFileType("Images") { Patterns = ["*.png", "*.jpg"] } }
-            });
-            if (file.Count > 0)
-            {
-                for (int x = 0; x < MainWindowViewModel.UserCollection.Count; x++)
-                {
-                    if (MainWindowViewModel.UserCollection[x] == (Series)((Button)sender).DataContext)
-                    {
-                        Series curSeries = MainWindowViewModel.UserCollection[x];
-
-                        string filePath = file[0].Path.LocalPath;
-                        string fileExtension = filePath[^3..];
-                        if (!curSeries.Cover.EndsWith(fileExtension))
-                        {
-                            MainWindowViewModel.DeleteCover(curSeries);
-                            curSeries.Cover = curSeries.Cover.Remove(curSeries.Cover.Length - 3, 3) + fileExtension;
-                        };
-
-                        MainWindowViewModel.ChangeCover(curSeries, filePath);
-                        (sender as Button).FindLogicalAncestorOfType<Grid>(false).IsVisible = false;
-                        break;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Saves the stats for the series when the button is clicked
-        /// </summary>
-        private void SaveStats(object sender, RoutedEventArgs args)
-        {
-            Series curSeries = (Series)((Button)sender).DataContext;
-            var stackPanels = ((Button)sender).GetLogicalParent<StackPanel>().GetLogicalParent<Grid>().GetLogicalChildren();
-            string volumesRead = (stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(1) as MaskedTextBox).Text.Trim().Replace("_", "");
-            if (!string.IsNullOrWhiteSpace(volumesRead))
-            {
-                uint volumesReadVal = Convert.ToUInt32(volumesRead);
-                if (curSeries.VolumesRead != volumesReadVal)
-                {
-                    LOGGER.Info($"Updating # of Volumes Read for \"{curSeries.Titles["Romaji"]}\" from {curSeries.VolumesRead} to {volumesReadVal}");
-
-                    curSeries.VolumesRead = volumesReadVal;
-                    (stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(0) as TextBlock).Text = $"{volumesReadVal} Vol(s)";
-                    volumesReadVal = 0;
-                    MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionVolumesRead();
-                    ((MaskedTextBox)stackPanels.ElementAt(1).GetLogicalChildren().ElementAt(1)).Text = "";
-                }
-            }
-            LOGGER.Debug("Passed Volumes Read Check");
-
-            string ratingValText = ((MaskedTextBox)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(1)).Text;
-            decimal ratingVal = Convert.ToDecimal(ratingValText[..4].Trim().Replace("_", "0"));
-            if (decimal.Compare(ratingVal, 0) >= 0 && curSeries.Rating != ratingVal && !ratingValText.StartsWith("__._"))
-            {
-                if (decimal.Compare(ratingVal, new decimal(10.0)) <= 0)
-                {
-                    LOGGER.Info($"Updating rating for \"{curSeries.Titles["Romaji"]}\" {(curSeries.Rating == -1 ? string.Empty : $"from \"{curSeries.Rating}/10.0\"")} to \"{decimal.Round(ratingVal, 1)}/10.0\"");
-
-                    curSeries.Rating = ratingVal;
-                    ((TextBlock)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(0)).Text = $"{ratingVal}/10.0";
-                    ((MaskedTextBox)stackPanels.ElementAt(3).GetLogicalChildren().ElementAt(1)).Text = "";
-                    
-                    // Update rating Distribution Chart
-                    MainWindowViewModel.UserCollection.First(series => series == curSeries).Rating = ratingVal;
-                    MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateRatingChartValues();
-
-                    MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionRating();
-                }
-                else
-                {
-                    LOGGER.Warn($"Rating Value {ratingVal} is larger than 10.0");
-                }
-            }
-            LOGGER.Debug("Passed Rating Check");
-
-            var bottomPanel = stackPanels.ElementAt(4).GetLogicalChildren();
-            string valueText = ((MaskedTextBox)bottomPanel.ElementAt(0).GetLogicalChildren().ElementAt(1)).Text;
-            decimal valueVal = Convert.ToDecimal(valueText.Trim().Replace("_", "0"));
-            if (decimal.Compare(valueVal, 0) >= 0 && curSeries.Value != valueVal && !valueText.Equals("_________.__"))
-            {
-                LOGGER.Info($"Updating value for \"{curSeries.Titles["Romaji"]}\" from {ViewModel.CurCurrency}{curSeries.Value} to {ViewModel.CurCurrency}{valueVal}");
-
-                curSeries.Value = valueVal;
-                ((TextBlock)bottomPanel.ElementAt(0).GetLogicalDescendants().ElementAt(0)).Text = $"{ViewModel.CurCurrency}{valueVal}";
-                MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionPrice();
-                ((MaskedTextBox)bottomPanel.ElementAt(0).GetLogicalDescendants().ElementAt(1)).Text = "";
-            }
-            LOGGER.Debug("Passed Value Check");
-
-            TextBox publisherTextBox = (TextBox)bottomPanel.ElementAt(1).GetLogicalChildren().ElementAt(1);
-            string publisherText = string.IsNullOrWhiteSpace(publisherTextBox.Text) ? publisherTextBox.Text : publisherTextBox.Text.Trim();
-            if (!string.IsNullOrWhiteSpace(publisherText) && !publisherText.Equals(curSeries.Publisher))
-            {
-                LOGGER.Info($"Updating Publisher for \"{curSeries.Titles["Romaji"]}\" from \"{curSeries.Publisher}\" to \"{publisherText}\"");
-
-                curSeries.Publisher = publisherText;
-                (((Button)sender).GetLogicalParent<StackPanel>().GetLogicalParent<Grid>().GetLogicalSiblings().ElementAt(2).GetLogicalChildren().ElementAt(0) as TextBlock).Text = publisherText;
-                // TODO - Update publisher stats
-                publisherTextBox.Clear();
-            }
-            LOGGER.Debug("Passed Publisher Check");
-        }
-
         /// <summary>
         /// Takes a screenshot of the current collection window
         /// </summary>
@@ -572,30 +405,15 @@ namespace Tsundoku.Views
         {
             Series curSeries = (Series)(sender as Button).DataContext;
             Button button = (Button)sender;
-            if (curSeries.IsStatsPaneOpen)
-            {
-                curSeries.IsStatsPaneOpen = false;
-                (button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).GetLogicalChildren().ElementAt(1) as Grid).IsVisible = curSeries.IsStatsPaneOpen;
-                (button.GetLogicalSiblings().ElementAt(2) as Button).Foreground = SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
-            }
+  
             curSeries.IsEditPaneOpen ^= true;
             button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
             button.Foreground = curSeries.IsEditPaneOpen ? SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor) : SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
         }
 
-        private void ShowStatsPane(object sender, RoutedEventArgs args)
+        private async void OpenEditSeriesInfoWindow(object sender, RoutedEventArgs args)
         {
-            Series curSeries = (Series)(sender as Button).DataContext;
-            Button button = (Button)sender;
-            if (curSeries.IsEditPaneOpen)
-            {
-                curSeries.IsEditPaneOpen = false;
-                button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
-                (button.GetLogicalSiblings().ElementAt(0) as Button).Foreground = SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
-            }
-            curSeries.IsStatsPaneOpen ^= true;
-            (button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).GetLogicalChildren().ElementAt(1) as Grid).IsVisible = curSeries.IsStatsPaneOpen;
-            button.Foreground = curSeries.IsStatsPaneOpen ? SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor) : SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
+            _ = await ViewModel!.EditSeriesInfoDialog.Handle(new EditSeriesInfoViewModel((Series)(sender as Button).DataContext, (Button)sender));
         }
 
         /// <summary>
@@ -631,26 +449,6 @@ namespace Tsundoku.Views
             if ((sender as ComboBox).IsDropDownOpen)
             {
                 ViewModel.UpdateCurFilter(CollectionFilterSelector.SelectedItem as ComboBoxItem);
-            }
-        }
-
-        /// <summary>
-        /// Changes the chosen demographic for a particular series
-        /// </summary>
-        private void DemographicChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if ((sender as ComboBox).IsDropDownOpen)
-            {
-                Series curSeries = (Series)((ComboBox)sender).DataContext;
-                Demographic demographic = Series.GetSeriesDemographic((sender as ComboBox).SelectedItem.ToString());
-                
-                // Update Demographic Chart Values
-                curSeries.Demographic = demographic;
-                MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateDemographicChartValues();
-                MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateDemographicPercentages();
-                
-                curSeries.Demographic = demographic;
-                LOGGER.Info($"Changed Demographic for \"{curSeries.Titles["Romaji"]}\" to {demographic}");
             }
         }
 
