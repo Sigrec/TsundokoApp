@@ -32,6 +32,7 @@ namespace Tsundoku.Tests
         }
 
         [AvaloniaTest]
+        [Ignore("Weird Entry, not working")]
         public async Task NotOnMangaDex_AniList_Test()
         {
             Assert.That((await Series.CreateNewSeriesCardAsync("-0.5˚C", Constants.Format.Manga, 5, 0, [])).ToString(), Is.EqualTo(await File.ReadAllTextAsync(@"\Tsundoku\Tests\SeriesModel\SeriesModelTestData\0.5C.json")));

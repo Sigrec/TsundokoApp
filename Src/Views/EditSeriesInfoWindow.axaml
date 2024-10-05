@@ -10,19 +10,147 @@
         Classes="menu"
         FontFamily="Segoe UI"
         WindowStartupLocation="CenterScreen"
-        SizeToContent="WidthAndHeight"
+        MaxWidth="596"
+        MinWidth="596"
+        MaxHeight="544"
+        MinHeight="544"
         CanResize="false">
 
     <Border Classes="menu" BorderThickness="3" CornerRadius="0,0,8,8" ClipToBounds="True">
         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Theme="{StaticResource ReverseCollectionScroll}"> 
             <Grid
-                RowDefinitions="Auto,Auto,7,Auto,7,Auto,Auto,7,Auto"
+                RowDefinitions="Auto,20,Auto,Auto,20,Auto,Auto,2,Auto,7,Auto"
                 ColumnDefinitions="*,15,*"
-                Margin="20,10,20,20"
+                Margin="20,20,20,20"
                 ShowGridLines="false">
+                <StackPanel
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="0"
+                    Width="540"
+                    Spacing="7"
+                    Orientation="Horizontal"
+                    Height="200">
+                    <TextBox
+                        Name="SeriesNotesTextBox"
+                        Width="476"
+                        Height="200"
+                        HorizontalAlignment="Left"
+                        Text="{CompiledBinding Series.SeriesNotes, Mode=TwoWay}"
+                        AcceptsReturn="True" 
+                        TextWrapping="Wrap"
+                        BorderThickness="2"
+                        Watermark="Notes..."
+                        ScrollViewer.IsScrollChainingEnabled="false"
+                        FontWeight="Bold"
+                        Classes="menu"/>
+                    <StackPanel
+                        Spacing="10"
+                        Height="200"
+                        Width="55"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                        <Button
+                            Name="DeleteSeriesButton"
+                            BorderThickness="2"
+                            i:Attached.Icon="fa-trash-can"
+                            Cursor="Hand"
+                            FontSize="28" 
+                            Height="45"
+                            Padding="0,0,1,0"
+                            Theme="{StaticResource MenuButton}"
+                            Click="RemoveSeriesAsync"/>
+                        <MaskedTextBox
+                            Name="CurVolumeMaskedTextBox"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Padding="1,0,0,0"
+                            BorderThickness="2"
+                            FontWeight="Bold"
+                            FontSize="18"
+                            MinWidth="55"
+                            MinHeight="40"
+                            TextAlignment="Center"
+                            MaxLength="3"
+                            ToolTip.Tip="Cur"
+                            Classes="menu"
+                            Mask="###"/>
+                        <MaskedTextBox 
+                            Name="MaxVolumeMaskedTextBox"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Padding="1,0,0,0"
+                            BorderThickness="2"
+                            FontWeight="Bold"
+                            FontSize="18"
+                            MinWidth="55"
+                            MinHeight="40"
+                            TextAlignment="Center"
+                            MaxLength="3"
+                            ToolTip.Tip="Max"
+                            Classes="menu"
+                            Mask="###"/>
+                        <Button
+                            Name="ChangeSeriesVolumeCountButton"
+                            BorderThickness="2" 
+                            i:Attached.Icon="fa-repeat"
+                            Cursor="Hand"
+                            FontSize="28" 
+                            Height="45"
+                            Padding="0,0,1,0"
+                            Theme="{StaticResource MenuButton}"
+                            Click="ChangeSeriesVolumeCountsAsync"/>
+                    </StackPanel>
+                </StackPanel>
+                <Line Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="1" StartPoint="0,10" EndPoint="550,10" VerticalAlignment="Center" HorizontalAlignment="Center" Stroke="{CompiledBinding CurrentTheme.DividerColor, Converter={StaticResource ConvertColor}}" StrokeThickness="3"/>
+                <TextBlock
+                    Name="CoverImageTextBlock"
+                    Text="Cover Image"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Classes="menu"
+                    TextDecorations="Underline"
+                    Margin="2,0,0,3"
+                    HorizontalAlignment="Left"
+                    ToolTip.Tip="{CompiledBinding CoverImageUrl}"/>
+                <StackPanel Orientation="Horizontal" Spacing="5" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
+                    <TextBox 
+                        Name="CoverImageUrlTextBox"
+                        FontSize="18"
+                        Width="450"
+                        FontWeight="Bold"
+                        Height="38"
+                        Text="{CompiledBinding CoverImageUrl}"
+                        Classes="menu"
+                        BorderThickness="2"
+                        ToolTip.Tip="Optional"
+                        Watermark="Image Url (Hover Title to see Full Text)"/>
+                    <Button 
+                        Name="ChangeCoverLinkButton"
+                        FontSize="20"
+                        Theme="{StaticResource MenuButton}"
+                        ToolTip.Tip="Change Cover From Link"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Click="ChangeCoverFromLinkAsync"
+                        i:Attached.Icon="fa-solid fa-circle-down"/>
+                    <Button 
+                        Name="ChangeCoverFileButton"
+                        i:Attached.Icon="fa-solid fa-image"
+                        FontSize="20"
+                        Click="ChangeSeriesCoverFromFileAsync"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        ToolTip.Tip="Change Cover From File"
+                        Theme="{StaticResource MenuButton}"/>
+                </StackPanel>
+                <Line Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="4" StartPoint="0,10" EndPoint="550,10" VerticalAlignment="Center" HorizontalAlignment="Center" Stroke="{CompiledBinding CurrentTheme.DividerColor, Converter={StaticResource ConvertColor}}" StrokeThickness="3"/>
                 <TextBlock
                     Name="PublisherTextBlock"
-                    Grid.Row="0"
+                    Grid.Row="5"
                     Grid.Column="0"
                     Classes="menu"
                     FontWeight="Bold"
@@ -34,7 +162,7 @@
                     FontSize="20"/>
                 <TextBox
                     Name="PublisherTextBox"
-                    Grid.Row="1"
+                    Grid.Row="6"
                     Grid.Column="0"
                     Height="38"
                     Width="262"
@@ -48,7 +176,7 @@
                     HorizontalContentAlignment="Center"/>
                 <TextBlock
                     Name="ValueTextBlock"
-                    Grid.Row="0"
+                    Grid.Row="5"
                     Grid.Column="2"
                     Classes="menu"
                     FontWeight="Bold"
@@ -65,7 +193,7 @@
                 </TextBlock>
                 <MaskedTextBox
                     Name="ValueMaskedTextBox"
-                    Grid.Row="1"
+                    Grid.Row="6"
                     Grid.Column="2"
                     Height="38"
                     Width="262"
@@ -82,7 +210,7 @@
                     Grid.ColumnDefinitions="*,15,*,15,*"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
-                    Grid.Row="3">
+                    Grid.Row="8">
                     <TextBlock
                         Grid.Row="0"
                         Grid.Column="0"
@@ -114,7 +242,7 @@
                         Grid.Column="2"
                         Text="Demographic"
                         TextDecorations="Underline"
-                        Foreground="{Binding CurrentTheme.SeriesCardTitleColor, Converter={StaticResource ConvertColor}}"
+						Classes="menu"
                         FontWeight="Bold"
                         HorizontalAlignment="Center"
                         Margin="0,0,0,3"
@@ -145,7 +273,7 @@
                         Grid.Row="0"
                         Grid.Column="4"
                         Name="VolumesReadTextBlock"
-                        Text="{Binding Series.VolumesRead, StringFormat='{}{0} Vol(s)'}"
+                        Text="{Binding Series.VolumesRead, StringFormat='{}{0} Vol(s) Read'}"
                         FontWeight="Bold"
                         ToolTip.Tip="Volumes Read"
                         HorizontalAlignment="Center"
@@ -171,54 +299,10 @@
                         Classes="menu"
                         Mask="000"/>
                 </Grid>
-                <TextBlock
-                    Name="CoverImageTextBlock"
-                    Text="Cover Image"
-                    Grid.Row="5"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Classes="menu"
-                    TextDecorations="Underline"
-                    Margin="2,0,0,3"
-                    HorizontalAlignment="Left"
-                    ToolTip.Tip="{CompiledBinding CoverImageUrl}"/>
-                <StackPanel Orientation="Horizontal" Spacing="5" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
-                    <TextBox 
-                        Name="CoverImageUrlTextBox"
-                        FontSize="18"
-                        Width="450"
-                        FontWeight="Bold"
-                        Height="38"
-                        Text="{CompiledBinding CoverImageUrl}"
-                        Classes="menu"
-                        BorderThickness="2"
-                        ToolTip.Tip="Optional"
-                        Watermark="Image Url (Hover Title to see Full Text)"/>
-                    <Button 
-                        Name="ChangeCoverLinkButton"
-                        FontSize="20"
-                        Theme="{StaticResource MenuButton}"
-                        ToolTip.Tip="Change Cover From Link"
-                        VerticalContentAlignment="Center"
-                        HorizontalContentAlignment="Center"
-                        Click="ChangeCoverFromLink"
-                        i:Attached.Icon="fa-solid fa-circle-down"/>
-                    <Button 
-                        Name="ChangeCoverFileButton"
-                        i:Attached.Icon="fa-solid fa-image"
-                        FontSize="20"
-                        Click="ChangeSeriesCoverFromFile"
-                        VerticalContentAlignment="Center"
-                        HorizontalContentAlignment="Center"
-                        ToolTip.Tip="Change Cover From File"
-                        Theme="{StaticResource MenuButton}"/>
-                </StackPanel>
                 <StackPanel
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
-                    Grid.Row="8"
+                    Grid.Row="10"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -229,11 +313,11 @@
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
                         ToolTip.Tip="Refresth Series Info"
-                        Click="RefreshSeries"
+                        Click="RefreshSeriesAsync"
                         Theme="{StaticResource MenuButton}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" Spacing="3">
-                                <i:Icon Value="fa-solid fa-arrows-rotate" FontSize="20" Animation="Spin" />
+                                <i:Icon Value="fa-solid fa-arrow-rotate-right" FontSize="20" Animation="Spin" />
                                 <TextBlock Text="Refresh"/>
                             </StackPanel>
                         </Button.Content>
@@ -258,7 +342,7 @@
                         FontSize="17"
                         VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center"
-                        Click="ToggleSeriesFavorite"
+                        Click="ToggleSeriesFavoriteAsync"
                         Theme="{StaticResource MenuToggleButton}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" Spacing="3">

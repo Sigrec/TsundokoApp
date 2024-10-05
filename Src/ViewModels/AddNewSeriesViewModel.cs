@@ -97,6 +97,7 @@ namespace Tsundoku.ViewModels
                             MainWindowViewModel.SearchedCollection.Insert(searchedIndex, newSeries);
                         }
                     }
+                    LOGGER.Debug("{} | {}", newSeries.VolumesRead, newSeries.Value);
                     MainWindowViewModel.UserCollection.Insert(index, newSeries);
                 }
                 else

@@ -98,7 +98,7 @@ namespace Tsundoku.Views
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.S)
                 {
                     ViewModel.SearchText = "";
-                    MainWindowViewModel.SaveUsersData();
+                    ViewModelBase.MainUser.SaveUserData();
                     await ToggleNotificationPopup($"Saved \"{ViewModel.UserName}'s\" Data");
                 }
                 else if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.R)
@@ -351,66 +351,6 @@ namespace Tsundoku.Views
 
         private void SearchCollection(object sender, KeyEventArgs args) => MainWindowViewModel.UserIsSearching(true);
 
-        private async void ChangeSeriesVolumeCounts(object sender, RoutedEventArgs args)
-        {
-            var result = await Observable.Start(() => 
-            {
-                var textBoxes = ((Button)sender).GetLogicalSiblings();
-                Series curSeries = (Series)((Button)sender).DataContext;
-                string curVolumeString = ((MaskedTextBox)textBoxes.ElementAt(1)).Text.Trim().Replace("_", "");
-                string maxVolumeString = ((MaskedTextBox)textBoxes.ElementAt(2)).Text.Trim().Replace("_", "");
-
-                ushort curVolumeChange = !string.IsNullOrWhiteSpace(curVolumeString) ? Convert.ToUInt16(curVolumeString) : curSeries.CurVolumeCount;
-                ushort maxVolumeChange = !string.IsNullOrWhiteSpace(maxVolumeString) ? Convert.ToUInt16(maxVolumeString) : curSeries.MaxVolumeCount;
-                if (maxVolumeChange >= curVolumeChange)
-                {
-                    MainWindowViewModel.collectionStatsWindow.ViewModel.UsersNumVolumesCollected = MainWindowViewModel.collectionStatsWindow.ViewModel.UsersNumVolumesCollected - curSeries.CurVolumeCount + curVolumeChange;
-                    MainWindowViewModel.collectionStatsWindow.ViewModel.UsersNumVolumesToBeCollected = MainWindowViewModel.collectionStatsWindow.ViewModel.UsersNumVolumesToBeCollected - (uint)(curSeries.MaxVolumeCount - curSeries.CurVolumeCount) + (uint)(maxVolumeChange - curVolumeChange);
-                    LOGGER.Info($"Changed Series Volume Values For \"{curSeries.Titles["Romaji"]}\" From {curSeries.CurVolumeCount}/{curSeries.MaxVolumeCount} -> {curVolumeChange}/{maxVolumeChange}");
-                    curSeries.CurVolumeCount = curVolumeChange;
-                    curSeries.MaxVolumeCount = maxVolumeChange;
-
-                    var parentControl = (sender as Button).FindLogicalAncestorOfType<Grid>(false).GetLogicalSiblings().ElementAt(3);
-                    ((TextBlock)parentControl.FindLogicalDescendantOfType<StackPanel>(false).GetLogicalChildren().ElementAt(1)).Text = curSeries.CurVolumeCount + "/" + curSeries.MaxVolumeCount;
-                    
-                    ProgressBar seriesProgressBar = parentControl.FindLogicalDescendantOfType<ProgressBar>(false);
-                    seriesProgressBar.Maximum = maxVolumeChange;
-                    seriesProgressBar.Value = curVolumeChange;
-                    parentControl = null;
-                    seriesProgressBar = null; 
-                    ((MaskedTextBox)textBoxes.ElementAt(1)).Text = "";
-                    ((MaskedTextBox)textBoxes.ElementAt(2)).Text = "";
-
-                    MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateVolumeCountChartValues();
-                }
-                else
-                {
-                    LOGGER.Warn($"{curVolumeChange} Is Not Less Than or Equal To {maxVolumeChange}");
-                }
-            }, RxApp.MainThreadScheduler);
-        }
-
-        private async void RemoveSeries(object sender, RoutedEventArgs args)
-        {
-            // Close the edit pane before removing
-            ViewModelBase.newCoverCheck = true;
-            (sender as Button).FindLogicalAncestorOfType<Grid>(false).IsVisible &= false;
-            var result = await Observable.Start(() => 
-            {
-                MainWindowViewModel.DeleteSeries((Series)((Button)sender).DataContext);
-            }, RxApp.MainThreadScheduler);
-        }
-
-        private void ShowEditPane(object sender, RoutedEventArgs args)
-        {
-            Series curSeries = (Series)(sender as Button).DataContext;
-            Button button = (Button)sender;
-  
-            curSeries.IsEditPaneOpen ^= true;
-            button.FindLogicalAncestorOfType<Grid>(false).FindLogicalAncestorOfType<Grid>(false).FindLogicalDescendantOfType<Grid>(false).IsVisible = curSeries.IsEditPaneOpen;
-            button.Foreground = curSeries.IsEditPaneOpen ? SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor) : SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconColor);
-        }
-
         private async void OpenEditSeriesInfoWindow(object sender, RoutedEventArgs args)
         {
             _ = await ViewModel!.EditSeriesInfoDialog.Handle(new EditSeriesInfoViewModel((Series)(sender as Button).DataContext, (Button)sender));
@@ -452,28 +392,11 @@ namespace Tsundoku.Views
             }
         }
 
-        // private void DisplayChanged(object sender, SelectionChangedEventArgs e)
-        // {
-        //     if ((sender as ComboBox).IsDropDownOpen)
-        //     {
-        //         string display = (sender as ComboBox).SelectedItem as string;
-        //         if (display.Equals("Card"))
-        //         {
-        //             ViewModel.CurDisplay = "Card";
-        //         }
-        //         else if (display.Equals("Mini-Card"))
-        //         {
-        //             ViewModel.CurDisplay = "Mini-Card";
-        //         }
-        //         LOGGER.Info($"Changed Display To {ViewModel.CurDisplay}");
-        //     }
-        // }
-
         public void SaveOnClose(bool isReloading)
         {
             LOGGER.Info("Closing Tsundoku");
             ViewModel.SearchText = "";
-            if (!isReloading) { MainWindowViewModel.SaveUsersData(); }
+            if (!isReloading) { ViewModelBase.MainUser.SaveUserData(); }
             Helpers.DiscordRP.Deinitialize();
             CoverFolderWatcher.Dispose();
 

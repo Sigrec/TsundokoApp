@@ -92,7 +92,7 @@
 					 SelectedItems="{CompiledBinding SelectedAdditionalLanguages}"
 					 SelectionMode="Multiple,Toggle"
 					 Grid.Row="1"
-                     Height="435" 
+                     Height="510" 
                      Width="206"
 					 Grid.RowSpan="19"
 					 Grid.Column="4"
@@ -148,7 +148,7 @@
 			<TextBox Name="TitleBox"
 					 FontSize="18"
 					 Grid.Row="1"
-					 Width="388"
+					 Width="518.5"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
 					 FontWeight="Bold"
@@ -162,7 +162,7 @@
 			<TextBox Name="PublisherTextBox"
 					 FontSize="18"
 					 Grid.Row="4"
-					 Width="388"
+					 Width="518"
 					 Grid.Column="0"
 					 Grid.ColumnSpan="3"
 					 FontWeight="Bold"
@@ -174,7 +174,7 @@
                      MaxLength="24"/>
 			<TextBlock Text="Cur Volumes" Grid.Row="6" Grid.Column="0" FontSize="20" FontWeight="Bold" Classes="menu" Margin="2,0,0,1"/>
 			<MaskedTextBox Name="CurVolCount"
-						   Width="182"
+						   Width="247"
 						   Classes="menu"
 						   Grid.Row="7"
 						   Grid.Column="0"
@@ -186,7 +186,7 @@
 						   MaxLength="3"/>
 			<TextBlock Text="Max Volumes" Grid.Row="6" Grid.Column="2" FontSize="20" FontWeight="Bold" Classes="menu" Margin="2,0,0,1"/>
 			<MaskedTextBox Name="MaxVolCount"
-						   Width="182"
+						   Width="247"
 						   Grid.Row="7"
 						   Grid.Column="2"
 						   Classes="menu"
@@ -194,6 +194,7 @@
 						   FontWeight="Bold"
 						   FontSize="18"
 						   Mask="000"
+                           HorizontalContentAlignment="Center"
 						   MaxLength="3"/>
 			<TextBlock HorizontalAlignment="Left"
 					   Text="Select Book Type"
@@ -203,14 +204,14 @@
 					   FontWeight="Bold"
 					   Margin="2,0,0,3"
 					   Classes="menu"/>
-			<StackPanel Orientation="Horizontal" Width="180" Grid.Row="10" Grid.Column="0" Spacing="5" Margin="0,0,10,0">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="180" Grid.Row="10" Grid.Column="0" Spacing="5" Margin="0,0,10,0">
 				<ToggleButton Name="MangaButton"
-						 	  Width="87.5"
+						 	  Width="121"
 							  Checked="IsMangaButtonClicked"
 							  Theme="{StaticResource MenuToggleButton}"
 							  Content="Manga"/>
 				<ToggleButton Name="NovelButton"
-							  Width="87.5"
+							  Width="121"
 							  Checked="IsNovelButtonClicked"
 							  Theme="{StaticResource MenuToggleButton}"
 							  Content="Novel"/>
@@ -226,7 +227,7 @@
                       Theme="{StaticResource MenuComboBox}"
                       SelectedIndex="4"
                       ToolTip.Tip="Optional"
-                      Width="182"
+                      Width="247"
                       Height="37"
                       Grid.Row="10"
 					  Grid.Column="2">
@@ -246,7 +247,7 @@
             <MaskedTextBox Name="VolumesRead"
                            HorizontalAlignment="Left"
                            ToolTip.Tip="Optional"
-						   Width="182"
+						   Width="247"
 						   Grid.Row="13"
 						   Grid.Column="0"
 						   Classes="menu"
@@ -254,6 +255,7 @@
 						   FontWeight="Bold"
 						   FontSize="18"
 						   Mask="000"
+                           HorizontalContentAlignment="Center"
 						   MaxLength="3"/>
             <TextBlock Text="Rating"
                        FontWeight="Bold"
@@ -263,7 +265,7 @@
                        Margin="2,0,0,3"
                        Classes="menu"/>
             <MaskedTextBox Name="Rating"
-						   Width="182"
+						   Width="247"
 						   Grid.Row="13"
 						   Grid.Column="2"
                            ToolTip.Tip="Optional"
@@ -271,26 +273,27 @@
 						   BorderThickness="2"
 						   FontWeight="Bold"
 						   FontSize="18"
+                           HorizontalContentAlignment="Center"
                            Mask="90.0/1\0.\0"/>
-            <TextBlock Text="{CompiledBinding CurCurrency, StringFormat='Value ({0})'}"
+            <TextBlock Text="Value"
 					   Grid.Row="15"
 					   Grid.Column="0"
 					   FontSize="20"
 					   FontWeight="Bold"
 					   Margin="2,0,0,3"
 					   Classes="menu"/>
-            <MaskedTextBox Name="Value"
+            <MaskedTextBox Name="ValueMaskedTextBox"
                            HorizontalAlignment="Left"
                            ToolTip.Tip="Optional"
                            PromptChar=" "
-						   Width="182"
+						   Width="247"
 						   Grid.Row="16"
 						   Grid.Column="0"
 						   Classes="menu"
 						   BorderThickness="2"
+                           HorizontalContentAlignment="Center"
 						   FontWeight="Bold"
-						   FontSize="18"
-                           Mask="000000000.00"/>
+						   FontSize="18"/>
 			<TextBlock Text="Add Series"
 					   Grid.Row="15"
 					   Grid.Column="2"
@@ -302,7 +305,7 @@
 					Content="Add New Series"
 					Click="OnAddSeriesButtonClicked"
 					Theme="{StaticResource MenuButton}"
-					Width="182"
+					Width="247"
 					Height="37"
 					IsEnabled="{CompiledBinding IsAddSeriesButtonEnabled}"
 					FontSize="18"
@@ -310,10 +313,10 @@
 					Grid.Column="2">
 			</Button>
             <TextBlock Text="Cover Image" Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="3" FontSize="20" FontWeight="Bold" Classes="menu" Margin="2,0,0,3" ToolTip.Tip="{CompiledBinding CoverImageUrl}"/>
-			<StackPanel Orientation="Horizontal" Spacing="5" Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="5">
+			<StackPanel Orientation="Horizontal" Spacing="5" Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="4">
                 <TextBox Name="CoverImageUrlTextBox"
 					 FontSize="18"
-                     Width="565"
+                     Width="474"
 					 FontWeight="Bold"
                      Height="37"
 					 Text="{CompiledBinding CoverImageUrl}"

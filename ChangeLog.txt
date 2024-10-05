@@ -14,10 +14,12 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
-v - 
-✅ Added new window that allows for better editing series info, replacing left bottom button popup pane
-✅ Expanded max series value from 999999999.99 to 999999999999999999.99
+v5.2.7.0 - Oct 4th, 2024
+✅ Added new window that allows for better editing series info, replacing left & right bottom button popup panes
 ✅ Removed currencies "Rp", "RM", "﷼", "د.إ", "د. ك"
+✅ Increased max series value from 999999999.99 to 999999999999999999.99
+📜 Add Series Window
+- ✅ Refactored the layout to accommodate larger series value number now accepted
 🔥 Fixed issue where adding a new series -> searching for it -> deleting search, crashes the app
 🔥 Fixed issue where advanced search would sometimes not run
 

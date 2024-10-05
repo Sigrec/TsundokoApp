@@ -80,14 +80,14 @@ namespace Tsundoku.ViewModels
         /// <summary>
         /// Allows user to upload a new Json file to be used as their new data, it additionall creates a backup file of the users last save
         /// </summary>
-        [RequiresUnreferencedCode("Calls Tsundoku.ViewModels.MainWindowViewModel.VersionUpdate(JsonNode)")]
+        [RequiresUnreferencedCode("Calls UpdateVersion(JsonNode)")]
         public static void ImportUserData(IReadOnlyList<IStorageFile>? file)
         {
             string uploadedFilePath = file[0].Path.LocalPath;
             try
             {
                 JsonNode uploadedUserData = JsonNode.Parse(File.ReadAllText(uploadedFilePath));
-                MainWindowViewModel.VersionUpdate(uploadedUserData, true);
+                MainUser.UpdateVersion(uploadedUserData, true);
                 _ = JsonSerializer.Deserialize(uploadedUserData, typeof(User), User.UserJsonModel) as User;
             }
             catch(JsonException)

@@ -471,8 +471,17 @@ namespace Tsundoku.ViewModels
             MeanRating = countRating != 0 ? decimal.Round(decimal.Divide(rating, countRating), 1) : 0;
         }
 
-        public void UpdateAllStats(uint additionalCurVols, uint additionalVolToBeCol, bool isRemoval = false)
+        public void UpdateVolumeCounts(Series series, uint newCurVols, uint newMaxVols)
         {
+            LOGGER.Debug($"Old UsersNumVolumesCollected = {UsersNumVolumesCollected} | Old UsersNumVolumesToBeCollected = {UsersNumVolumesToBeCollected}");
+            UsersNumVolumesCollected = UsersNumVolumesCollected - series.CurVolumeCount + newCurVols;
+            UsersNumVolumesToBeCollected = UsersNumVolumesToBeCollected - (uint)(series.MaxVolumeCount - series.CurVolumeCount) + (newMaxVols - newCurVols);
+            LOGGER.Debug($"New UsersNumVolumesCollected = {UsersNumVolumesCollected} | New UsersNumVolumesToBeCollected = {UsersNumVolumesToBeCollected}");
+        }
+
+        public void UpdateVolumeCounts(uint additionalCurVols, uint additionalVolToBeCol, bool isRemoval = false)
+        {
+            LOGGER.Debug($"Old UsersNumVolumesCollected = {UsersNumVolumesCollected} | Old UsersNumVolumesToBeCollected = {UsersNumVolumesToBeCollected}");
             if (isRemoval)
             {
                 UsersNumVolumesCollected -= additionalCurVols;
@@ -483,7 +492,18 @@ namespace Tsundoku.ViewModels
                 UsersNumVolumesCollected += additionalCurVols;
                 UsersNumVolumesToBeCollected += additionalVolToBeCol;
             }
+            LOGGER.Debug($"New UsersNumVolumesCollected = {UsersNumVolumesCollected} | New UsersNumVolumesToBeCollected = {UsersNumVolumesToBeCollected}");
+        }
+
+        public void UpdateSeriesCount()
+        {
             SeriesCount = (uint)MainUser.UserCollection.Count;
+        }
+
+        public void UpdateAllStats(uint additionalCurVols, uint additionalVolToBeCol, bool isRemoval = false)
+        {
+            UpdateVolumeCounts(additionalCurVols, additionalVolToBeCol, isRemoval);
+            UpdateSeriesCount();
             
             UpdateCollectionPrice();
             UpdateCollectionVolumesRead();

@@ -119,5 +119,9 @@
 			<Setter Property="Background" Value="{CompiledBinding CurrentTheme.SearchBarBGColor, Converter={StaticResource ConvertColor}}"/>
 			<Setter Property="BorderBrush" Value="{CompiledBinding CurrentTheme.SearchBarBorderColor, Converter={StaticResource ConvertColor}}"/>
 		</Style>
+
+        <Style Selector="^ /template/ ScrollViewer#PART_ScrollViewer">
+			<Setter Property="Theme" Value="{StaticResource ReverseCollectionScroll}"/>
+		</Style>
 	</Style>
 </Styles>

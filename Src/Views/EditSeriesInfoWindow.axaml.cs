@@ -1,11 +1,12 @@
+using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
-using Avalonia.Logging;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using ReactiveUI;
 using Tsundoku.Helpers;
 using Tsundoku.Models;
 using Tsundoku.ViewModels;
@@ -32,7 +33,7 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
         };
     }
 
-    private async void ChangeCoverFromLink(object sender, RoutedEventArgs args)
+    private async void ChangeCoverFromLinkAsync(object sender, RoutedEventArgs args)
     {
         string customImageUrl = CoverImageUrlTextBox.Text.Trim();
         Bitmap newCover = await Common.GenerateAvaloniaBitmap(@$"{Series.Cover.Replace("\\\\", "\\")}", string.Empty, customImageUrl);
@@ -71,7 +72,7 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
         }
     }
 
-    private async void ToggleSeriesFavorite(object sender, RoutedEventArgs args)
+    private async void ToggleSeriesFavoriteAsync(object sender, RoutedEventArgs args)
     {
         await ((MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow).ViewModel.RefreshCollection();
     }
@@ -148,7 +149,7 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
         }
     }
 
-    private async void ChangeSeriesCoverFromFile(object sender, RoutedEventArgs args)
+    private async void ChangeSeriesCoverFromFileAsync(object sender, RoutedEventArgs args)
     {
         ViewModelBase.newCoverCheck = true;
         var file = await this.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions {
@@ -178,8 +179,56 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
         }
     }
 
-    private async void RefreshSeries(object sender, RoutedEventArgs args)
+    private async void RefreshSeriesAsync(object sender, RoutedEventArgs args)
     {
         await ((MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow).ViewModel.RefreshSeries(Series);
+    }
+
+    private async void RemoveSeriesAsync(object sender, RoutedEventArgs args)
+    {
+        ViewModelBase.newCoverCheck = true;
+        _ = await Observable.Start(() => 
+        {
+            MainWindowViewModel.DeleteSeries(Series);
+        }, RxApp.MainThreadScheduler);
+        this.Close();
+    }
+
+    private async void ChangeSeriesVolumeCountsAsync(object sender, RoutedEventArgs args)
+    {
+        _ = await Observable.Start(() => 
+        {
+            string curVolumeString = CurVolumeMaskedTextBox.Text.Replace("_", string.Empty);
+            string maxVolumeString = MaxVolumeMaskedTextBox.Text.Replace("_", string.Empty);
+            if (!string.IsNullOrWhiteSpace(curVolumeString) && !string.IsNullOrWhiteSpace(maxVolumeString))
+            {
+                if (ushort.TryParse(curVolumeString, out ushort newCurVols) && ushort.TryParse(maxVolumeString, out ushort newMaxVols))
+                {
+                    if (newMaxVols >= newCurVols)
+                    {
+                        LOGGER.Info($"Changing Series Volume Counts For \"{Series.Titles["Romaji"]}\" From {Series.CurVolumeCount}/{Series.MaxVolumeCount} -> {newCurVols}/{newMaxVols}");
+                        
+                        MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateVolumeCounts(Series, newCurVols, newMaxVols);
+
+                        Series.CurVolumeCount = newCurVols;
+                        Series.MaxVolumeCount = newMaxVols;
+                        MainWindowViewModel.UpdateSeriesCard(Series);
+
+                        MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateVolumeCountChartValues();
+                        
+                        CurVolumeMaskedTextBox.Clear();
+                        MaxVolumeMaskedTextBox.Clear();
+                    }
+                    else
+                    {
+                        LOGGER.Warn($"{newCurVols} Is Not Less Than or Equal To {newMaxVols}");
+                    }
+                }
+                else
+                {
+                    LOGGER.Warn($"\"{curVolumeString}\" and \"{maxVolumeString}\" are not Valid ushort Inputs");
+                }
+            }
+        }, RxApp.MainThreadScheduler);
     }
 }

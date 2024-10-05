@@ -261,7 +261,7 @@ namespace Tsundoku.Views
         private void SaveTheme(TsundokuTheme newTheme)
         {
             AddTheme(newTheme);
-            MainWindowViewModel.SaveUsersData();
+            ViewModelBase.MainUser.SaveUserData();
             ViewModelBase.MainUser.SavedThemes.Add(TsundokuTheme.DEFAULT_THEME);
             ViewModelBase.MainUser.SavedThemes = new ObservableCollection<TsundokuTheme>(ViewModelBase.MainUser.SavedThemes.OrderBy(theme => theme.ThemeName));
         }

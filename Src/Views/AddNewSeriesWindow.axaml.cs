@@ -19,11 +19,11 @@ namespace Tsundoku.Views
         public AddNewSeriesWindow()
         {
             InitializeComponent();
-            // PreviousLanguage = ViewModel.CurLanguage;
             Opened += (s, e) =>
             {
                 IsOpen ^= true;
                 CollectionWindow = (MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow;
+                ValueMaskedTextBox.Mask = $"\\{ViewModel!.CurCurrency}000000000000000000.00";
             };
 
             Closing += (s, e) =>
@@ -72,7 +72,7 @@ namespace Tsundoku.Views
             DemographicCombobox.SelectedIndex = 4;
             VolumesRead.Text = string.Empty;
             Rating.Text = string.Empty;
-            Value.Text = string.Empty;
+            ValueMaskedTextBox.Text = string.Empty;
             CoverImageUrlTextBox.Text = string.Empty;
         }
 
@@ -88,8 +88,7 @@ namespace Tsundoku.Views
             string customImageUrl = CoverImageUrlTextBox.Text;
             _ = uint.TryParse(VolumesRead.Text.Replace("_", ""), out uint volumesRead);
             _ = decimal.TryParse(Rating.Text[..4].Replace("_", "0"), out decimal rating);
-            _ = decimal.TryParse(Value.Text.Replace("_", "0"), out decimal seriesValue);
-
+            _ = decimal.TryParse(ValueMaskedTextBox.Text[1..].Replace("_", "0"), out decimal seriesValue);
             var validSeries = await AddNewSeriesViewModel.GetSeriesDataAsync(
                 TitleBox.Text.Trim(), 
                 (MangaButton.IsChecked == true) ? Format.Manga : Format.Novel, 

@@ -4,7 +4,7 @@ using NLog.Config;
 
 namespace Src.Helpers
 {
-    public class TsundokuLogger
+    public static class TsundokuLogger
     {
         public static readonly Logger LOGGER;
         static TsundokuLogger()
@@ -15,12 +15,11 @@ namespace Src.Helpers
 			{
 				xml = reader.ReadToEnd();
 			}
-
 			LogManager.Configuration = XmlLoggingConfiguration.CreateFromXmlString(xml);
             LOGGER = LogManager.GetLogger("TsundokuLogs");
 		}
 
-        public static void Info(Logger newLogger, string text, bool canPrint)
+        public static void Info(this Logger newLogger, string text, bool canPrint)
         {
             if (canPrint) { newLogger.Info(text); }
         }
