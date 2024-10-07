@@ -14,6 +14,11 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
+v5.2.8.0 - Oct 7th, 2024
+🔥 Fixed volumes read title text
+🔥 Fixed series card edit button size
+🔥 Fixed in-app version
+
 v5.2.7.0 - Oct 4th, 2024
 ✅ Added new window that allows for better editing series info, replacing left & right bottom button popup panes
 ✅ Removed currencies "Rp", "RM", "﷼", "د.إ", "د. ك"

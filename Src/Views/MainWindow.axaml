@@ -315,7 +315,7 @@
                 </Grid>
             </Border>
 
-            <!-- TODO Issue w/ virtualization where refreshing covers causes height to bug -->
+            <!-- TODO Issue w/ virtualization where refreshing covers causes desc to bug -->
             <!-- Collection -->
             <ScrollViewer Name="CollectionTheme" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" DockPanel.Dock="Bottom" Theme="{StaticResource CollectionScroll}"> 
                 <ItemsControl Name="CollectionItems" Margin="20,50,20,50" ItemsSource="{CompiledBinding SearchedCollection}" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -634,7 +634,8 @@
                                                 </Grid>
                                                 <Button Grid.Column="1"
                                                         Background="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesProgressBGColor, Converter={StaticResource ConvertColor}}"
-                                                        FontSize="27"
+                                                        FontSize="30"
+                                                        Margin="0,0,3,0"
                                                         BorderThickness="0"
                                                         HorizontalAlignment="Left"
                                                         HorizontalContentAlignment="Center"

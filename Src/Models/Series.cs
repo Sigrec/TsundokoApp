@@ -50,7 +50,7 @@ namespace Tsundoku.Models
         /// Link to the AniList or MangaDex page for this series
         /// </summary>
         /// <value>String</value>
-		public Uri Link { get; }
+		public Uri Link { get; set; }
 		public string SeriesNotes { get; set; }
 		public ushort MaxVolumeCount { get; set; }
 		public ushort CurVolumeCount { get; set; }
@@ -60,7 +60,6 @@ namespace Tsundoku.Models
 		public Demographic Demographic { get; set; }
 		public bool IsFavorite { get; set; } = false;
         [JsonIgnore] public bool IsEditPaneOpen { get; set; } = false;
-        [JsonIgnore] public bool IsEditWindowOpen { get; set; } = false;
 
         [JsonConstructor]
 		public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Value, Demographic Demographic, Bitmap CoverBitMap, string Publisher = "Unknown", uint DuplicateIndex = 0)
@@ -634,17 +633,20 @@ namespace Tsundoku.Models
 
         protected virtual void Dispose(bool disposing)
 		{
-			if (!disposedValue)
+			if (!this.disposedValue)
 			{
-				if (disposing && CoverBitMap != null)
+				if (disposing)
 				{
 					// dispose managed state (managed objects)
-					CoverBitMap.Dispose();
+                    if (this.CoverBitMap != null)
+                    {
+                        this.CoverBitMap.Dispose();
+                    }
 				}
 
 				// free unmanaged resources (unmanaged objects) and override finalizer
 				// set large fields to null
-				disposedValue = true;
+				this.disposedValue = true;
 			}
 		}
 

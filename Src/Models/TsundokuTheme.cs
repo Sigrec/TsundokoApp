@@ -224,7 +224,6 @@ namespace Tsundoku.Models
 				if (disposing)
 				{
 					// dispose managed state (managed objects)
-					
 				}
 
 				// free unmanaged resources (unmanaged objects) and override finalizer

@@ -43,6 +43,7 @@
                         Watermark="Notes..."
                         ScrollViewer.IsScrollChainingEnabled="false"
                         FontWeight="Bold"
+                        FontSize="16"
                         Classes="menu"/>
                     <StackPanel
                         Spacing="10"
@@ -273,7 +274,6 @@
                         Grid.Row="0"
                         Grid.Column="4"
                         Name="VolumesReadTextBlock"
-                        Text="{Binding Series.VolumesRead, StringFormat='{}{0} Vol(s) Read'}"
                         FontWeight="Bold"
                         ToolTip.Tip="Volumes Read"
                         HorizontalAlignment="Center"

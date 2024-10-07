@@ -25,6 +25,7 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
             ViewModel!.Button.Foreground = SolidColorBrush.Parse(ViewModel.CurrentTheme.SeriesButtonIconHoverColor);
             this.Title = $"{Series.Titles["Romaji"]} Info";
             ValueMaskedTextBox.Mask = $"\\{ViewModel!.CurCurrency}000000000000000000.00";
+            VolumesReadTextBlock.Text = $"{Series.VolumesRead} Vol{(Series.VolumesRead > 1 ? "s" : string.Empty)} Read";
         };
 
         Closed += (s, e) =>
@@ -89,7 +90,7 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
             if (isValidVolumesReadInput && Series.VolumesRead != newVolumesRead)
             {
                 Series.VolumesRead = newVolumesRead;
-                VolumesReadTextBlock.Text = $"{newVolumesRead} Vol(s)";
+                VolumesReadTextBlock.Text = $"{newVolumesRead} Vol{(Series.VolumesRead > 1 ? "s" : string.Empty)} Read";
                 VolumesReadMaskedTextBox.Clear();
 
                 MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionVolumesRead();
