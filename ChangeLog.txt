@@ -14,7 +14,7 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
-v5.2.9.0 - Oct 9th, 2024
+v6.0.0.0 - Oct 9th, 2024
 ✅ Added "Genre" series data
 ✅ Added "Genre" collection filters
 🔥 Fixed issue where Refresh would sometimes not pull data from the correct source
