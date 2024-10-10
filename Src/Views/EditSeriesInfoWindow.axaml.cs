@@ -26,6 +26,8 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
             this.Title = $"{Series.Titles["Romaji"]} Info";
             ValueMaskedTextBox.Mask = $"\\{ViewModel!.CurCurrency}000000000000000000.00";
             VolumesReadTextBlock.Text = $"{Series.VolumesRead} Vol{(Series.VolumesRead > 1 ? "s" : string.Empty)} Read";
+            UpdateSelectedGenres();
+            LOGGER.Debug("{} | {}", this.Height, this.Width);
         };
 
         Closed += (s, e) =>
@@ -148,6 +150,21 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
             LOGGER.Info($"Updated Publisher for \"{Series.Titles["Romaji"]}\" from \"{Series.Publisher}\" to \"{publisherText}\"");
 
         }
+
+        HashSet<Genre> curGenres = EditSeriesInfoViewModel.GetCurrentGenresSelected();
+        if ((Series.Genres == null && curGenres.Count > 0) || !curGenres.SetEquals(Series.Genres))
+        {
+            LOGGER.Info($"Updating Genres for \"{Series.Titles["Romaji"]}\" from [{string.Join(", ", Series.Genres)}] to [{string.Join(", ", curGenres)}]");
+            if (Series.Genres != null)
+            {
+                MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateGenreChart(curGenres.Except(Series.Genres), Series.Genres.Except(curGenres)); 
+            }
+            else
+            {
+                MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateGenreChart(curGenres, []); 
+            }
+            Series.Genres = curGenres;
+        }
     }
 
     private async void ChangeSeriesCoverFromFileAsync(object sender, RoutedEventArgs args)
@@ -183,6 +200,10 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
     private async void RefreshSeriesAsync(object sender, RoutedEventArgs args)
     {
         await ((MainWindow)((IClassicDesktopStyleApplicationLifetime)Application.Current.ApplicationLifetime).MainWindow).ViewModel.RefreshSeries(Series);
+        GenreSelector.SelectedItems.Clear();
+        UpdateSelectedGenres();
+        MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateGenreChart();
+        
     }
 
     private async void RemoveSeriesAsync(object sender, RoutedEventArgs args)
@@ -231,5 +252,74 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
                 }
             }
         }, RxApp.MainThreadScheduler);
+    }
+
+    public void UpdateSelectedGenres()
+    {
+        if (Series.Genres != null)
+        {
+            foreach (Genre genre in Series.Genres)
+            {
+                switch (genre)
+                {
+                    case Genre.Action:
+                        GenreSelector.SelectedItems.Add(ActionListBoxItem);
+                        break;
+                    case Genre.Adventure:
+                        GenreSelector.SelectedItems.Add(AdventureListBoxItem);
+                        break;
+                    case Genre.Comedy:
+                        GenreSelector.SelectedItems.Add(ComedyListBoxItem);
+                        break;
+                    case Genre.Drama:
+                        GenreSelector.SelectedItems.Add(DramaListBoxItem);
+                        break;
+                    case Genre.Ecchi:
+                        GenreSelector.SelectedItems.Add(EcchiListBoxItem);
+                        break;
+                    case Genre.Fantasy:
+                        GenreSelector.SelectedItems.Add(FantasyListBoxItem);
+                        break;
+                    case Genre.Horror:
+                        GenreSelector.SelectedItems.Add(HorrorListBoxItem);
+                        break;
+                    case Genre.MahouShoujo:
+                        GenreSelector.SelectedItems.Add(MahouShoujoListBoxItem);
+                        break;
+                    case Genre.Mecha:
+                        GenreSelector.SelectedItems.Add(MechaListBoxItem);
+                        break;
+                    case Genre.Music:
+                        GenreSelector.SelectedItems.Add(MusicListBoxItem);
+                        break;
+                    case Genre.Mystery:
+                        GenreSelector.SelectedItems.Add(MysteryListBoxItem);
+                        break;
+                    case Genre.Psychological:
+                        GenreSelector.SelectedItems.Add(PsychologicalListBoxItem);
+                        break;
+                    case Genre.Romance:
+                        GenreSelector.SelectedItems.Add(RomanceListBoxItem);
+                        break;
+                    case Genre.SciFi:
+                        GenreSelector.SelectedItems.Add(SciFiListBoxItem);
+                        break;
+                    case Genre.SliceOfLife:
+                        GenreSelector.SelectedItems.Add(SliceOfLifeListBoxItem);
+                        break;
+                    case Genre.Sports:
+                        GenreSelector.SelectedItems.Add(SportsListBoxItem);
+                        break;
+                    case Genre.Supernatural:
+                        GenreSelector.SelectedItems.Add(SupernaturalListBoxItem);
+                        break;
+                    case Genre.Thriller:
+                        GenreSelector.SelectedItems.Add(ThrillerListBoxItem);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }

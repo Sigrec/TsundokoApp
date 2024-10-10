@@ -1,14 +1,15 @@
 ﻿using System.Text.RegularExpressions;
 using System.Web;
+using Tsundoku.Models;
 
 namespace Tsundoku.Helpers
 {
-    public partial class MangadexQuery
+    public partial class MangaDex
     {
         private static readonly HttpClient MangadexClient;
         [GeneratedRegex(@"(?:\n\n---\n\*\*Links:\*\*|\n\n\n---|\n\n\*\*|\[(?:Official|Wikipedia).*?\]|\n___\n|\r\n\s+\r\n)[\S\s]*|- Winner.*$")] private static partial Regex MangaDexDescRegex();
 
-        static MangadexQuery()
+        static MangaDex()
         {
             MangadexClient = new HttpClient(new SocketsHttpHandler
             {
@@ -132,6 +133,32 @@ namespace Tsundoku.Helpers
 				return data.GetProperty("attributes").GetProperty("altTitles").EnumerateArray();
 			}
 		}
+
+        public static HashSet<Genre> ParseGenreData(string romajiTitle, JsonElement tags)
+        {
+            if (tags.ValueKind != JsonValueKind.Null)
+            {
+                HashSet<Genre> newGenres = [];
+                foreach (JsonElement tagElement in tags.EnumerateArray())
+                {
+                    JsonElement attribute = tagElement.GetProperty("attributes");
+                    if (attribute.GetProperty("group").GetString().Equals("genre"))
+                    {
+                        Genre genre = GenreExtensions.GetGenreFromString(attribute.GetProperty("name").GetProperty("en").GetString());
+                        if (genre != Genre.None)
+                        {
+                            newGenres.Add(genre);
+                        }
+                    }
+                }
+                return newGenres;
+            }
+            else
+            {
+                LOGGER.Debug($"No genre(s) returned for \"{romajiTitle}\" from AniList");
+                return [];
+            }
+        }
 
         /// <summary>
         /// Parses MangaDex series descriptions to remove all of the fluff

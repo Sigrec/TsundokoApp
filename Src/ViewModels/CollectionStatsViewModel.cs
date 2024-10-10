@@ -1,15 +1,18 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using LiveChartsCore;
 using ReactiveUI;
-using System;
 using System.Reactive.Linq;
 using ReactiveUI.Fody.Helpers;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using Tsundoku.Models;
-using System.Collections.Generic;
-using Avalonia.Logging;
+using LiveChartsCore.Measure;
+using LiveChartsCore.ConditionalDraw;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
+using LiveChartsCore.SkiaSharpView.Extensions;
+using Tsundoku.Helpers;
+using Avalonia.Media;
 
 namespace Tsundoku.ViewModels
 {
@@ -63,9 +66,9 @@ namespace Tsundoku.ViewModels
         public ObservableValue MaxRatingCount9 { get; set; } = new ObservableValue(0);
         public ObservableValue MaxRatingCount10 { get; set; } = new ObservableValue(0);
 
-         public ObservableCollection<ISeries> VolumeCountDistribution { get; set; } = new ObservableCollection<ISeries>();
-         private List<double?> VolumeCountArray = new List<double?>(10);
-         public ObservableCollection<Axis> VolumeCountXAxes { get; set; } = new ObservableCollection<Axis>();
+        public ObservableCollection<ISeries> VolumeCountDistribution { get; set; } = new ObservableCollection<ISeries>();
+        private List<double?> VolumeCountArray = new List<double?>(10);
+        public ObservableCollection<Axis> VolumeCountXAxes { get; set; } = new ObservableCollection<Axis>();
         public ObservableCollection<Axis> VolumeCountYAxes { get; set; } = new ObservableCollection<Axis>();
         public ObservableValue ZeroVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 1 && series.MaxVolumeCount < 10));
         public ObservableValue OneVolumeCount { get; set; } = new ObservableValue(MainWindowViewModel.UserCollection.Count(series => series.MaxVolumeCount >= 10 && series.MaxVolumeCount < 20));
@@ -89,6 +92,11 @@ namespace Tsundoku.ViewModels
         public ObservableValue MaxVolumeCount8 { get; set; } = new ObservableValue(0);
         public ObservableValue MaxVolumeCount9 { get; set; } = new ObservableValue(0);
         public ObservableValue MaxVolumeCount10 { get; set; } = new ObservableValue(0);
+
+        public ObservableCollection<ISeries<KeyValuePair<string, int>>> GenreDistribution { get; set; } = [];
+        private Dictionary<string, int> GenreData { get; set; } = [];
+        public Axis[] GenreXAxes { get; set; }
+        public Axis[] GenreYAxes  { get; set; }
 
         [Reactive] public decimal MeanRating { get; set; }
         [Reactive] public uint VolumesRead { get; set; }
@@ -286,6 +294,101 @@ namespace Tsundoku.ViewModels
                 Labels = Array.Empty<string>(),
                 MinLimit = 0
             });
+
+            // Genre chart setup
+            foreach(Series series in MainWindowViewModel.UserCollection)
+            {
+                if (series.Genres != null)
+                {
+                    foreach (Genre genre in series.Genres)
+                    {
+                        string curGenre = genre.GetStringValue();
+                        if (!GenreData.TryAdd(curGenre, 1))
+                        {
+                            GenreData[curGenre] += 1;
+                        }
+                    }
+                }
+            }
+            GenreData = GenreData.OrderBy(x => x.Value).ToDictionary();
+
+            GenreDistribution.Add(
+                new RowSeries<KeyValuePair<string, int>>
+                {
+                    Values = GenreData.ToArray(),
+                    IsHoverable = false,
+                    Mapping = (dataPoint, index) => new(index, dataPoint.Value)
+                }
+            );
+
+            GenreXAxes = [ 
+                new Axis 
+                { 
+                    SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)),
+                    MinLimit = 0,
+                    MinStep = 1,
+                    ForceStepToMin = false,
+                } 
+            ];
+
+            GenreYAxes = [ 
+                new Axis 
+                {
+                    Labels = [.. GenreData.Keys],
+                    ShowSeparatorLines = false,
+                    ForceStepToMin = true
+                } 
+            ];
+        }
+
+        public void UpdateGenreChart(IEnumerable<Genre> addedGenres, IEnumerable<Genre> removedGenres)
+        {
+            foreach (Genre genre in addedGenres)
+            {
+                string curGenre = genre.GetStringValue();
+                if (!GenreData.TryAdd(curGenre, 1))
+                {
+                    GenreData[curGenre] += 1;
+                }
+            }
+
+            foreach (Genre genre in removedGenres)
+            {
+                string curGenre = genre.GetStringValue();
+                if (GenreData[curGenre] > 1)
+                {
+                    GenreData[curGenre] -= 1;
+                }
+                else
+                {
+                    GenreData.Remove(curGenre);
+                }
+            }
+            GenreData = GenreData.OrderBy(x => x.Value).ToDictionary();
+            GenreDistribution[0].Values = GenreData.ToArray();
+            GenreYAxes[0].Labels = [.. GenreData.Keys];
+        }
+
+        public void UpdateGenreChart()
+        {
+            GenreData.Clear();
+            foreach(Series series in MainWindowViewModel.UserCollection)
+            {
+                if (series.Genres != null)
+                {
+                    foreach (Genre genre in series.Genres)
+                    {
+                        string curGenre = genre.GetStringValue();
+                        if (!GenreData.TryAdd(curGenre, 1))
+                        {
+                            GenreData[curGenre] += 1;
+                        }
+                    }
+                }
+            }
+            GenreData = GenreData.OrderBy(x => x.Value).ToDictionary();
+            GenreDistribution[0].Values = GenreData.ToArray();
+            GenreYAxes[0].Labels = [.. GenreData.Keys];
         }
 
         /// <summary>
@@ -521,6 +624,8 @@ namespace Tsundoku.ViewModels
             UpdateRatingChartValues();
 
             UpdateVolumeCountChartValues();
+
+            UpdateGenreChart();
         }
 
         /// <summary>

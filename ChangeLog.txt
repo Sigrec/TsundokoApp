@@ -14,6 +14,21 @@ TODO:
 ❌ Stat to track whether still collecting or not?
 ❌ Fixed issue where sorting/searching/filtering collection would crash the app if user tries to change window state (minimize or maximize)
 
+v5.2.9.0 - Oct 9th, 2024
+✅ Added "Genre" series data
+✅ Added "Genre" collection filters
+🔥 Fixed issue where Refresh would sometimes not pull data from the correct source
+🔥 Fixed issue where getting a series by title on MangaDex as a backup to AniList would fail
+🔥 Fixed advanced filter notes filter not accepting double quotes
+🔥 Spreadsheet export no longer prints the rating "-1" when user hasn't rated a series yet
+📜 Edit Series Window
+- ✅ Added genres ListBox to select genres for a series, need to click save at the bottom to save changes
+- 🔥 Fixed issue where refreshing a series would cause it to load and save another cover image
+📜 Stats Window
+- ✅ Added Genre Bar chart
+- ✅ Changed stats window layout and design of pie charts
+- 🔥 Fixed chart colors not displaying correctly
+
 v5.2.8.0 - Oct 7th, 2024
 🔥 Fixed volumes read title text
 🔥 Fixed series card edit button size
@@ -443,7 +458,7 @@ v1.6.0 - June 4th
 
 v1.5.2 - May 20th
 🔥 Fixed crash for new users (Need to delete current UserData.json file)
-🔥 Fixed issue with MangaDexQuery when querying for Covers
+🔥 Fixed issue with MangaDex when querying for Covers
 ✅ Changed "Read X" to "Read X Volumes" in series stats save panel
 ✅ Cost text now shows the currency symbol above the input textbox in series stats panel
 ✅ Can now copy any of the stats to clipboard by clicking on the stats box
@@ -470,7 +485,7 @@ v1.5.0 - Apr 17th
 ✅ Added New Languages to Query and get Data For [Need to Re-Add Series to get New Title Data]
 ✅ Added New Languages to Display Your Collection In
 ✅ Added MangaDex endpoint to get series AL does not have and for additional language data (You can get TBATE & Radiant for example)
-✅ Removed ExtraSeries.json as no longer needed with MangadexQuery
+✅ Removed ExtraSeries.json as no longer needed with MangaDex
 ✅ Non-Japanese series now also grab there respective Japanese titles (ex Solo Leveling) [Need to Re-Add these series to get them]
 ✅ Lowered the font size of "Status | Format" to accomdate longer text
 

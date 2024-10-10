@@ -50,7 +50,6 @@ namespace Tsundoku.ViewModels
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
         
         /// <summary>

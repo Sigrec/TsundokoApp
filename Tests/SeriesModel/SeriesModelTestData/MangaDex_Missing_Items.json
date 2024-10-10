@@ -14,6 +14,11 @@
   "Status": "Finished",
   "Cover": "Covers\\MataKiteneShitami-san_MANGA.png",
   "Link": "https://mangadex.org/title/99cdec37-4ca5-4cf8-9031-1ed4a6158a13",
+  "Genres": [
+    "Action",
+    "Comedy",
+    "SliceOfLife"
+  ],
   "SeriesNotes": null,
   "MaxVolumeCount": 5,
   "CurVolumeCount": 0,

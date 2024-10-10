@@ -20,6 +20,12 @@
   "Status": "Ongoing",
   "Cover": "Covers\\KanojoOkarishimasu_MANGA.png",
   "Link": "https://anilist.co/manga/99943",
+  "Genres": [
+    "Comedy",
+    "Drama",
+    "Ecchi",
+    "Romance"
+  ],
   "SeriesNotes": null,
   "MaxVolumeCount": 18,
   "CurVolumeCount": 0,

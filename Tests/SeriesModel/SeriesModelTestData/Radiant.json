@@ -14,6 +14,15 @@
   "Status": "Ongoing",
   "Cover": "Covers\\Radiant_MANFRA.jpg",
   "Link": "https://mangadex.org/title/8de2456c-95ef-4958-8f27-af7a4cc275b7",
+  "Genres": [
+    "Action",
+    "Comedy",
+    "Adventure",
+    "Drama",
+    "Fantasy",
+    "SliceOfLife",
+    "Mystery"
+  ],
   "SeriesNotes": null,
   "MaxVolumeCount": 18,
   "CurVolumeCount": 0,

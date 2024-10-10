@@ -15,6 +15,12 @@
   "Status": "Finished",
   "Cover": "Covers\\IjiranaideNagatoro-san_MANGA.jpg",
   "Link": "https://anilist.co/manga/100664",
+  "Genres": [
+    "Comedy",
+    "Ecchi",
+    "Romance",
+    "SliceOfLife"
+  ],
   "SeriesNotes": null,
   "MaxVolumeCount": 5,
   "CurVolumeCount": 0,

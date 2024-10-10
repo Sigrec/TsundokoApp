@@ -14,7 +14,6 @@ using System.Linq.Dynamic.Core;
 using System.Windows.Input;
 using MangaAndLightNovelWebScrape.Websites;
 using Avalonia.Collections;
-using System.Reflection;
 using Tsundoku.Helpers;
 
 namespace Tsundoku.ViewModels
@@ -57,7 +56,7 @@ namespace Tsundoku.ViewModels
             DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact
         };
 
-        [GeneratedRegex(@"(\w+)(==|<=|>=)(\d+|\w+|\'(?:.*?)\')")] public static partial Regex AdvancedQueryRegex();
+        [GeneratedRegex(@"(\w+)(==|<=|>=)(\d+|\w+|(?:'|"")(?:.*?)(?:'|""))")] public static partial Regex AdvancedQueryRegex();
         
         // TODO Add genres?
         // TODO Manual Entry Option?
@@ -129,7 +128,7 @@ namespace Tsundoku.ViewModels
 
         public void UpdateCurFilter(ComboBoxItem filterBoxItem, bool shouldFilter = true)
         {
-            CurFilter = Enum.Parse<TsundokuFilter>(filterBoxItem.Content.ToString());
+            CurFilter = TsundokuFilterExtensions.GetFilterFromString(filterBoxItem.Content.ToString());
             if (shouldFilter)
             {
                 FilterCollection(CurFilter);
@@ -210,6 +209,60 @@ namespace Tsundoku.ViewModels
                     case TsundokuFilter.Value:
                         FilteredCollection = UserCollection.OrderByDescending(series => series.Value);
                         break;
+                    case TsundokuFilter.Action:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Action));
+                        break;
+                    case TsundokuFilter.Adventure:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Adventure));
+                        break;
+                    case TsundokuFilter.Comedy:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Comedy));
+                        break;
+                    case TsundokuFilter.Drama:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Drama));
+                        break;
+                    case TsundokuFilter.Ecchi:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Ecchi));
+                        break;
+                    case TsundokuFilter.Fantasy:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Fantasy));
+                        break;
+                    case TsundokuFilter.Horror:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Horror));
+                        break; 
+                    case TsundokuFilter.MahouShoujo:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.MahouShoujo));
+                        break; 
+                    case TsundokuFilter.Mecha:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Mecha));
+                        break; 
+                    case TsundokuFilter.Music:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Music));
+                        break; 
+                    case TsundokuFilter.Mystery:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Mystery));
+                        break; 
+                    case TsundokuFilter.Psychological:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Psychological));
+                        break; 
+                    case TsundokuFilter.Romance:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Romance));
+                        break; 
+                    case TsundokuFilter.SciFi:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.SciFi));
+                        break; 
+                    case TsundokuFilter.SliceOfLife:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.SliceOfLife));
+                        break;
+                    case TsundokuFilter.Sports:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Sports));
+                        break; 
+                    case TsundokuFilter.Supernatural:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Supernatural));
+                        break; 
+                    case TsundokuFilter.Thriller:
+                        FilteredCollection = UserCollection.Where(series => series.Genres != null && series.Genres.Contains(Genre.Thriller));
+                        break; 
                     case TsundokuFilter.Query:
                         return;
                     case TsundokuFilter.None:
@@ -281,20 +334,20 @@ namespace Tsundoku.ViewModels
                     foreach (Match SearchFilter in AdvancedSearchMatches)
                     {
                         advFilter = SearchFilter.Groups;
-                        AdvancedFilterExpression.AppendFormat("{0} && ", ParseAdvancedFilter(advFilter[1].Value, advFilter[2].Value, advFilter[3].Value));
+                        AdvancedFilterExpression.AppendFormat("({0}) && ", ParseAdvancedFilter(advFilter[1].Value, advFilter[2].Value, advFilter[3].Value));
                     }
                     AdvancedFilterExpression.Remove(AdvancedFilterExpression.Length - 4, 4);
-                    LOGGER.Info($" Initial Query = \"{AdvancedSearchQuery}\" -> \"{AdvancedFilterExpression}\"");
+                    LOGGER.Info($"Initial Query = \"{AdvancedSearchQuery}\" -> \"{AdvancedFilterExpression}\"");
                     try
                     {
 #pragma warning disable IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
                         FilteredCollection = UserCollection.AsQueryable().Where(AdvancedFilterExpression.ToString());
 #pragma warning restore IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         AdvancedSearchQueryErrorMessage = "Incorrectly Formatted Advanced Search Query!";
-                        LOGGER.Warn("User Inputted Incorrectly Formatted Advanced Search Query");
+                        LOGGER.Warn($"User Inputted Incorrectly Formatted Advanced Search Query => \"{ex.Message}\"");
                     }
                     finally
                     {
@@ -339,8 +392,9 @@ namespace Tsundoku.ViewModels
                 "Format" or "Status" or "Demographic" => $"series.{filterName} == {filterName}.{filterValue}",
                 "Series" => $"series.MaxVolumeCount {(filterValue.Equals("Complete") ? "==" : "<")} series.CurVolumeCount",
                 "Favorite" => $"{(filterValue.Equals("True") ? '!' : "")}series.IsFavorite",
-                "Notes" => $"(!string.IsNullOrWhiteSpace(series.SeriesNotes) && series.SeriesNotes.Contains(\"{filterValue[1..^1]}\"))",
+                "Notes" => $"!string.IsNullOrWhiteSpace(series.SeriesNotes) && series.SeriesNotes.Contains(\"{filterValue[1..^1]}\")",
                 "Publisher" => $"series.Publisher.Contains({(!filterValue.StartsWith('"') ? "\"" : string.Empty)}{filterValue}{(!filterValue.EndsWith('"') ? "\"" : string.Empty)}, StringComparison.OrdinalIgnoreCase)",
+                "Genre" => $"series.Genres != null && series.Genres.Contains(Tsundoku.Models.Genre.{filterValue})",
                 _ => string.Empty,
             };
         }
@@ -511,12 +565,12 @@ namespace Tsundoku.ViewModels
         public async Task RefreshSeries(Series series)
         {
             newCoverCheck = true;
-            Series? newSeriesData = await Series.CreateNewSeriesCardAsync(series.Titles["Romaji"], series.Format, series.MaxVolumeCount, series.CurVolumeCount, series.SeriesContainsAdditionalLanagues(), series.Publisher, series.Demographic, series.VolumesRead, series.Rating, series.Value);
+            Series? newSeries = await Series.CreateNewSeriesCardAsync(series.Link.Segments.Last(), series.Format, series.MaxVolumeCount, series.CurVolumeCount, series.SeriesContainsAdditionalLanagues(), series.Publisher, series.Demographic, series.VolumesRead, series.Rating, series.Value, string.Empty, true);
 
-            if (newSeriesData != null)
+            if (newSeries != null)
             {
-                bool titleChanged = false, staffChanged = false, statusChanged = false;
-                LOGGER.Info($"Refreshing \"{series.Titles["Romaji"]}\" Data");
+                LOGGER.Info($"\nRefreshing Series {series.Titles["Romaji"]}-> \n{newSeries}");
+                bool titleChanged = false, staffChanged = false, statusChanged = false, genresChanged = false;
 
                 int searchIndex = SearchedCollection.ToList().BinarySearch(series, new SeriesComparer(MainUser.CurLanguage));
                 searchIndex = searchIndex < 0 ? ~searchIndex : searchIndex;
@@ -528,30 +582,46 @@ namespace Tsundoku.ViewModels
 
                 int mainIndex = UserCollection.BinarySearch(series, new SeriesComparer(MainUser.CurLanguage));
                 mainIndex = mainIndex < 0 ? ~mainIndex : mainIndex;
+                IEnumerable<Genre> addedGenres = null, removedGenres = null;
 
-                if (!series.Titles.Equals(newSeriesData.Titles))
+                if (!series.Titles.Equals(newSeries.Titles))
                 {
-                    series.Titles = newSeriesData.Titles;
-                    UserCollection[mainIndex].Titles = newSeriesData.Titles;
+                    series.Titles = newSeries.Titles;
+                    UserCollection[mainIndex].Titles = newSeries.Titles;
                     titleChanged = true;
                 }
-                if (!series.Staff.Equals(newSeriesData.Staff))
+                if (!series.Staff.Equals(newSeries.Staff))
                 {
-                    series.Staff = newSeriesData.Staff;
-                    UserCollection[mainIndex].Staff = newSeriesData.Staff;
+                    series.Staff = newSeries.Staff;
+                    UserCollection[mainIndex].Staff = newSeries.Staff;
                     staffChanged = true;
                 }
-                if (!series.Description.Equals(newSeriesData.Description))
+                if (!series.Description.Equals(newSeries.Description))
                 {
-                    series.Description = newSeriesData.Description;
-                    UserCollection[mainIndex].Description = newSeriesData.Description;
+                    series.Description = newSeries.Description;
+                    UserCollection[mainIndex].Description = newSeries.Description;
                 }
-                if (series.Status != newSeriesData.Status)
+                if (series.Status != newSeries.Status)
                 {
-                    series.Status = newSeriesData.Status;
-                    UserCollection[mainIndex].Status = newSeriesData.Status;
+                    series.Status = newSeries.Status;
+                    UserCollection[mainIndex].Status = newSeries.Status;
                     UpdateChartStats();
                     statusChanged = true;
+                }
+                if (series.Genres != newSeries.Genres)
+                {
+                    if (series.Genres == null)
+                    {
+                        addedGenres = newSeries.Genres;
+                    }
+                    else
+                    {
+                        addedGenres = series.Genres.Except(newSeries.Genres);
+                        removedGenres = newSeries.Genres.Except(series.Genres);
+                    }
+                    series.Genres = newSeries.Genres;
+                    UserCollection[mainIndex].Genres = newSeries.Genres;
+                    genresChanged = true;
                 }
                 
                 // If there is a change and the user is searching or filtering apply the filter
@@ -559,7 +629,11 @@ namespace Tsundoku.ViewModels
                 {
                     await RefreshCollection();
                 }
-                else if ((titleChanged && !CurFilter.Equals("None")) || (statusChanged && (CurFilter.Equals("Ongoing") || CurFilter.Equals("Finished") || CurFilter.Equals("Hiatus") || CurFilter.Equals("Cancelled"))))
+                else if (
+                    (titleChanged && !CurFilter.Equals("None")) 
+                    || (statusChanged && (CurFilter.Equals("Ongoing") || CurFilter.Equals("Finished") || CurFilter.Equals("Hiatus") || CurFilter.Equals("Cancelled")))
+                    || (genresChanged && ((addedGenres != null && addedGenres.Any(genre => CurFilter.Equals(genre.GetStringValue()))) || (removedGenres != null && removedGenres.Any(genre => CurFilter.Equals(genre.GetStringValue())))))
+                )
                 {
                     FilterCollection(CurFilter);
                 }

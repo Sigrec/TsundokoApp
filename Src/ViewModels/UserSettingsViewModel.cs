@@ -39,8 +39,11 @@ namespace Tsundoku.ViewModels
             {
                 string COLLECTION_FILE = @"TsundokuCollection.csv";
                 StringBuilder output = new();
-                output.AppendFormat("\"{0}\"", MainUser.Notes).AppendLine();
-                string[] headers = ["Title", "Staff", "Format", "Status", "Cur Volumes", "Max Volumes", "Demographic", "Value", "Rating", "Volumes Read", "Notes"];
+                if (!string.IsNullOrWhiteSpace(MainUser.Notes))
+                {
+                    output.AppendFormat("\"{0}\"", MainUser.Notes).AppendLine();
+                }
+                string[] headers = ["Title", "Staff", "Format", "Status", "Cur Volumes", "Max Volumes", "Demographic", "Value", "Rating", "Volumes Read", "Genres", "Notes"];
                 output.AppendLine(string.Join(",", headers));
 
                 foreach (Series curSeries in MainWindowViewModel.UserCollection)
@@ -48,20 +51,20 @@ namespace Tsundoku.ViewModels
                     string titleLang = curSeries.Titles.ContainsKey(MainUser.CurLanguage) ? MainUser.CurLanguage : "Romaji";
                     string staffLang = curSeries.Staff.ContainsKey(MainUser.CurLanguage) ? MainUser.CurLanguage : "Romaji";
 
-                    output.AppendLine(string.Join(",", 
-                    [ 
+                    output.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}\n",
                         $"\"{curSeries.Titles[titleLang]}{(!titleLang.Equals("Romaji") && !curSeries.Titles[titleLang].Equals(curSeries.Titles["Romaji"], StringComparison.OrdinalIgnoreCase) ? $" ({curSeries.Titles["Romaji"]})\"" : "\"")}",
                         $"\"{curSeries.Staff[staffLang]}{(!staffLang.Equals("Romaji") && !curSeries.Staff[staffLang].Equals(curSeries.Staff["Romaji"], StringComparison.OrdinalIgnoreCase) ? $" ({curSeries.Staff["Romaji"]})\"" : "\"")}", 
                         curSeries.Format.ToString(), 
                         curSeries.Status.ToString(), 
-                        curSeries.CurVolumeCount.ToString(), 
-                        curSeries.MaxVolumeCount.ToString(), 
+                        curSeries.CurVolumeCount, 
+                        curSeries.MaxVolumeCount, 
                         curSeries.Demographic.ToString(), 
                         $"{MainUser.Currency}{curSeries.Value}", 
-                        curSeries.Rating.ToString(), 
-                        curSeries.VolumesRead.ToString(), 
-                        $"\"{curSeries.SeriesNotes}\"" 
-                    ]));
+                        curSeries.Rating != -1 ? curSeries.Rating : string.Empty, 
+                        curSeries.VolumesRead,
+                        curSeries.Genres != null ? $"\"{string.Join("\n", curSeries.Genres)}\"" : string.Empty,
+                        $"\"{curSeries.SeriesNotes}\""
+                    );
                 }
 
                 try

@@ -14,6 +14,11 @@
   "Status": "Hiatus",
   "Cover": "Covers\\TheBeginningAftertheEnd_COMIC.jpg",
   "Link": "https://mangadex.org/title/4ada20eb-085a-491a-8c49-477ab42014d7",
+  "Genres": [
+    "Action",
+    "Adventure",
+    "Fantasy"
+  ],
   "SeriesNotes": null,
   "MaxVolumeCount": 5,
   "CurVolumeCount": 0,

@@ -2,18 +2,20 @@
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using System.Net.Http.Headers;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Tsundoku.Models;
 using Tsundoku.ViewModels;
 
 namespace Tsundoku.Helpers
 {
-    public partial class AniListQuery : IDisposable
+    public partial class AniList : IDisposable
 	{
 		private static readonly GraphQLHttpClient AniListClient;
         private bool disposedValue;
         [GeneratedRegex(@"\(Source: [\S\s]+|\<.*?\>")] private static partial Regex AniListDescRegex();
 
-		static AniListQuery()
+		static AniList()
 		{
             AniListClient = new GraphQLHttpClient("https://graphql.anilist.co", new SystemTextJsonSerializer());
 			AniListClient.HttpClient.DefaultRequestHeaders.Add("RequestType", "POST");
@@ -61,6 +63,7 @@ namespace Tsundoku.Helpers
 								  }
 							    }
 							  }
+                              genres
 							  description(asHtml: false)
 							  status(version: 2)
 							  siteUrl
@@ -132,6 +135,7 @@ namespace Tsundoku.Helpers
 								  }
 							    }
 							  }
+                              genres
 							  description(asHtml: false)
 							  status(version: 2)
 							  siteUrl
@@ -187,6 +191,28 @@ namespace Tsundoku.Helpers
 			return string.IsNullOrWhiteSpace(seriesDescription) ? "" : System.Web.HttpUtility.HtmlDecode(AniListDescRegex().Replace(new StringBuilder(seriesDescription).Replace("\n<br><br>\n", "\n\n").Replace("<br><br>\n\n", "\n\n").Replace("<br><br>", "\n").ToString(), "").Trim().TrimEnd('\n'));
 		}
 
+        public static HashSet<Genre> ParseGenreArray(string romajiTitle, JsonElement genres)
+        {
+            if (genres.ValueKind != JsonValueKind.Null)
+            {
+                HashSet<Genre> newGenres = [];
+                foreach (JsonElement genreElement in genres.EnumerateArray())
+                {
+                    Genre genre = GenreExtensions.GetGenreFromString(genreElement.GetString());
+                    if (genre != Genre.None)
+                    {
+                        newGenres.Add(genre);
+                    }
+                }
+                return newGenres;
+            }
+            else
+            {
+                LOGGER.Debug($"No genre(s) returned for \"{romajiTitle}\" from AniList");
+                return [];
+            }
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -203,7 +229,7 @@ namespace Tsundoku.Helpers
             }
         }
 
-        ~AniListQuery()
+        ~AniList()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: false);
