@@ -45,10 +45,10 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
             string fileExtension = customImageUrl[^3..];
             if (!Series.Cover.EndsWith(fileExtension))
             {
-                MainWindowViewModel.DeleteCover(Series);
+                Series.DeleteCover();
                 Series.Cover = Series.Cover.Remove(Series.Cover.Length - 3, 3) + fileExtension;
             };
-            MainWindowViewModel.UpdateCover(Series, newCover);
+            MainWindowViewModel.ChangeCover(Series, newCover);
             LOGGER.Info($"Changed Cover for \"{Series.Titles["Romaji"]}\" to {customImageUrl}");
         }
         else
@@ -186,7 +186,7 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
                     string fileExtension = filePath[^3..];
                     if (!Series.Cover.EndsWith(fileExtension))
                     {
-                        MainWindowViewModel.DeleteCover(Series);
+                        Series.DeleteCover();
                         Series.Cover = Series.Cover.Remove(Series.Cover.Length - 3, 3) + fileExtension;
                     };
 

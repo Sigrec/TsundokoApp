@@ -81,17 +81,6 @@ namespace Tsundoku.ViewModels
             EditSeriesInfoDialog = new Interaction<EditSeriesInfoViewModel, MainWindowViewModel?>();
         }
 
-        /// <summary>
-        /// Resets the panels edit or stats pane to being closed
-        /// </summary>
-        public static void ResetPanels(IEnumerable<Series> list)
-        {
-            foreach(Series curSeries in list)
-            {
-                if(curSeries.IsEditPaneOpen) curSeries.IsEditPaneOpen = false;
-            }
-        }
-
         private void LanguageChangedUpdate(string lang)
         {
             MainUser.CurLanguage = lang;
@@ -120,7 +109,6 @@ namespace Tsundoku.ViewModels
             SearchedCollection.Clear();
             await Task.Run(() => 
             {
-                ResetPanels(UserCollection);
                 UserCollection.Sort(new SeriesComparer(MainUser.CurLanguage));
             });
             SearchedCollection.AddRange(UserCollection);
@@ -271,7 +259,6 @@ namespace Tsundoku.ViewModels
                         break;
                 }
                 LOGGER.Info($"Sorted Collection by \"{filter}\"");
-                ResetPanels(FilteredCollection);
                 SearchedCollection.Clear();
                 SearchedCollection.AddRange(FilteredCollection);
                 FilteredCollection = [];
@@ -294,16 +281,15 @@ namespace Tsundoku.ViewModels
 
                 FilteredCollection = UserCollection.Where(x => x.Publisher.Contains(searchText, StringComparison.OrdinalIgnoreCase) || x.Titles.Values.AsParallel().Any(title => title.Contains(searchText, StringComparison.OrdinalIgnoreCase)) || x.Staff.Values.AsParallel().Any(staff => staff.Contains(searchText, StringComparison.OrdinalIgnoreCase))); 
                 
-                ResetPanels(FilteredCollection);
                 SearchedCollection.Clear();
                 SearchedCollection.AddRange(FilteredCollection);
                 CanFilter = true;
             }
             else if (SearchIsBusy)
             {
-                ResetPanels(FilteredCollection);
+                SearchIsBusy = false;
                 SearchedCollection.Clear();
-                SearchedCollection.AddRange(FilteredCollection);
+                SearchedCollection.AddRange(UserCollection);
                 CanFilter = true;
             }
         }
@@ -361,7 +347,6 @@ namespace Tsundoku.ViewModels
                     {
                         CurFilter = TsundokuFilter.Query;
                     }
-                    ResetPanels(FilteredCollection);
                     SearchedCollection.Clear();
                     SearchedCollection.AddRange(FilteredCollection);
                     LOGGER.Info($"Valid Advanced Search Query");
@@ -504,36 +489,31 @@ namespace Tsundoku.ViewModels
         /// <param name="series">The series to change the cover for</param>
         /// <param name="newBitmapPath">The path to the new cover</param>
         public static void ChangeCover(Series series, string newBitmapPath) {
-            Bitmap newCover = new Bitmap(newBitmapPath).CreateScaledBitmap(new PixelSize(LEFT_SIDE_CARD_WIDTH, IMAGE_HEIGHT), BitmapInterpolationMode.HighQuality);
-            newCover.Save(series.Cover, 100);
-
             // Update Current Viewed Collection
-            UpdateCover(series, newCover);
-        }
-
-        public static void UpdateCover(Series series, Bitmap newCover)
-        {
-            series.CoverBitMap = newCover;
+            series.UpdateCover(newBitmapPath);
             int index = SearchedCollection.IndexOf(series);
             SearchedCollection.Remove(series);
             SearchedCollection.Insert(index, series);
-            LOGGER.Info("Updated Cover for {}", series.Titles["Romaji"]);
         }
 
-        public static void DeleteCover(Series series)
-        {
-            if (File.Exists(series.Cover))
-            {
-                File.SetAttributes(series.Cover, FileAttributes.Normal);
-                File.Delete(series.Cover);
-            }
+        /// <summary>
+        /// Changes the cover for series
+        /// </summary>
+        /// <param name="series">The series to change the cover for</param>
+        /// <param name="newBitmapPath">The path to the new cover</param>
+        public static void ChangeCover(Series series, Bitmap newCover) {
+            // Update Current Viewed Collection
+            series.UpdateCover(newCover);
+            int index = SearchedCollection.IndexOf(series);
+            SearchedCollection.Remove(series);
+            SearchedCollection.Insert(index, series);
         }
 
         public static void DeleteSeries(Series series)
         {
             SearchedCollection.Remove(series);
             UserCollection.Remove(series);
-            DeleteCover(series);
+            series.DeleteCover();
             collectionStatsWindow.ViewModel.UpdateAllStats(series.CurVolumeCount, (uint)(series.MaxVolumeCount - series.CurVolumeCount), true);
             LOGGER.Info("Removed {} From Collection", series.Titles["Romaji"]);
             series.Dispose();
@@ -646,20 +626,17 @@ namespace Tsundoku.ViewModels
 
         public async Task RefreshCollection()
         {
-            if (!SearchIsBusy)
+            if (CurFilter == TsundokuFilter.Query)
             {
-                if (CurFilter == TsundokuFilter.Query)
-                {
-                    await AdvancedSearchCollection(AdvancedSearchText);
-                }
-                else if (CurFilter != TsundokuFilter.None)
-                {
-                    FilterCollection(CurFilter);
-                }
-                else if (!string.IsNullOrWhiteSpace(SearchText))
-                {
-                    SearchCollection(SearchText);
-                }
+                await AdvancedSearchCollection(AdvancedSearchText);
+            }
+            else if (CurFilter != TsundokuFilter.None)
+            {
+                FilterCollection(CurFilter);
+            }
+            else if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                SearchCollection(SearchText);
             }
         }
     }

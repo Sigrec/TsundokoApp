@@ -24,7 +24,7 @@
 
 	<Border Classes="menu" BorderThickness="3" CornerRadius="0,0,8,8" ClipToBounds="True">
 		<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Theme="{StaticResource ReverseCollectionScroll}"> 
-			<Grid RowDefinitions="Auto,Auto,Auto,15,Auto,20,Auto" ColumnDefinitions="*" Margin="20" VerticalAlignment="Center" HorizontalAlignment="Center">
+			<Grid RowDefinitions="Auto,Auto,Auto,20,Auto,20,Auto" ColumnDefinitions="*" Margin="20" VerticalAlignment="Center" HorizontalAlignment="Center">
 				<Border Name="StatsBG" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0" CornerRadius="8" Height="230" BoxShadow="0 0 10 3 #B3000000" HorizontalAlignment="Center">
                     <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0,0,0,0" MaxWidth="626" HorizontalAlignment="Center">

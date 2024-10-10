@@ -108,6 +108,13 @@ namespace Tsundoku.Tests
 
         [Test]
         [Parallelizable(scope: ParallelScope.Self)]
+        public void ParseDescription_AniList_Note_Test()
+        {
+            Assert.That(AniList.ParseAniListDescription("A plane is seen crashing with black smoke billowing out of it. It seems to have been caused by a \"Choujin\". However, strangely enough, the plane was not damaged and there were 200 survivors. High school students Kurobara Tokio and Higashi Azuma are on their way home from volunteering to help with the accident when they are suddenly tangled up with a delinquent they have a history with... but there is something different about him.\n<br><br>\n<i>Note: The manga chapters are irregularly released on Tonari no Young Jump. At the same time, it received a serialization in Weekly Young Jump, starting from chapter 1. Some chapters receive a version with fewer pages in the magazine, also counting with additions of new pages in certain situations. After chapter 15, the manga went back to being exclusive to Tonari no YJ, ending the serialization in the magazine."), Is.EqualTo("A plane is seen crashing with black smoke billowing out of it. It seems to have been caused by a \"Choujin\". However, strangely enough, the plane was not damaged and there were 200 survivors. High school students Kurobara Tokio and Higashi Azuma are on their way home from volunteering to help with the accident when they are suddenly tangled up with a delinquent they have a history with... but there is something different about him."));
+        }
+
+        [Test]
+        [Parallelizable(scope: ParallelScope.Self)]
         public void ParseDescription_MangaDex_WinnerOfEnd_Test()
         {
             // https://mangadex.org/title/b6fed5d7-9021-4ff5-be9d-74c4925152e7/-hitogatana

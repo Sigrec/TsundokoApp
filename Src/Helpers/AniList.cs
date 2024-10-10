@@ -2,7 +2,6 @@
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using System.Net.Http.Headers;
-using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using Tsundoku.Models;
 using Tsundoku.ViewModels;
@@ -13,7 +12,7 @@ namespace Tsundoku.Helpers
 	{
 		private static readonly GraphQLHttpClient AniListClient;
         private bool disposedValue;
-        [GeneratedRegex(@"\(Source: [\S\s]+|\<.*?\>")] private static partial Regex AniListDescRegex();
+        [GeneratedRegex(@"\(Source: [\S\s]+|\<.*?\>|Note:.*")] private static partial Regex AniListDescRegex();
 
 		static AniList()
 		{

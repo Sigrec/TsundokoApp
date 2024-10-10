@@ -317,7 +317,7 @@
                             <ComboBoxItem Theme="{StaticResource MenuComboBoxItem}">Value</ComboBoxItem>
                         </ComboBox>
                         <TextBox Name="SearchBar" 
-                                Text="{CompiledBinding SearchText, Mode=TwoWay}" 
+                                Text="{CompiledBinding SearchText, Mode=TwoWay}"
                                 KeyUp="SearchCollection"
                                 Classes="menu"
                                 BorderThickness="2"

@@ -17,13 +17,15 @@ TODO:
 v6.0.0.0 - Oct 9th, 2024
 ✅ Added "Genre" series data
 ✅ Added "Genre" collection filters
-🔥 Fixed issue where Refresh would sometimes not pull data from the correct source
+🔥 Fixed issue where removing the search text would not reset the search
+🔥 Fixed AniList description parse not parsing notes
 🔥 Fixed issue where getting a series by title on MangaDex as a backup to AniList would fail
 🔥 Fixed advanced filter notes filter not accepting double quotes
 🔥 Spreadsheet export no longer prints the rating "-1" when user hasn't rated a series yet
 📜 Edit Series Window
 - ✅ Added genres ListBox to select genres for a series, need to click save at the bottom to save changes
 - 🔥 Fixed issue where refreshing a series would cause it to load and save another cover image
+- 🔥 Fixed issue where Refresh would sometimes not pull data from the correct source
 📜 Stats Window
 - ✅ Added Genre Bar chart
 - ✅ Changed stats window layout and design of pie charts

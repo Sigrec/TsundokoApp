@@ -453,6 +453,32 @@ namespace Tsundoku.Models
 			return null;
         }
 
+        public void DeleteCover()
+        {
+            if (File.Exists(this.Cover))
+            {
+                File.SetAttributes(this.Cover, FileAttributes.Normal);
+                File.Delete(this.Cover);
+            }
+        }
+
+        public void UpdateCover(string newBitmapPath)
+        {
+            Bitmap newCover = new Bitmap(newBitmapPath).CreateScaledBitmap(new PixelSize(LEFT_SIDE_CARD_WIDTH, IMAGE_HEIGHT), BitmapInterpolationMode.HighQuality);
+            newCover.Save(this.Cover, 100);
+            this.CoverBitMap.Dispose();
+            this.CoverBitMap = newCover;
+            LOGGER.Info("Updated Cover for {}", this.Titles["Romaji"]);
+        }
+
+        public void UpdateCover(Bitmap newCover)
+        {
+            newCover.Save(this.Cover, 100);
+            this.CoverBitMap.Dispose();
+            this.CoverBitMap = newCover;
+            LOGGER.Info("Updated Cover for {}", this.Titles["Romaji"]);
+        }
+
         private static bool IsSeriesInvalid(string title, string englishTitle, string englishAltTitle)
         {
             return 
