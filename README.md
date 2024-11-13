@@ -1,5 +1,5 @@
 # [Tsundoku](https://en.wikipedia.org/wiki/Tsundoku) (Desktop Manga & Light Novel Collection App)
-### [Donate](https://www.paypal.com/donate/?business=JAYCVEJGDF4GY&no_recurring=0&item_name=Anyone+amount+helps+and+keeps+the+app+going.&currency_code=USD) | [Join The Discord](https://discord.gg/QcZ5jcFPeU) | [Follow Me on AL](https://anilist.co/user/Preminence/)
+### [Join The Discord](https://discord.gg/QcZ5jcFPeU) | [Follow Me on AL](https://anilist.co/user/Preminence/)
 ### [ChangeLog](https://github.com/Sigrec/Tsundoku/blob/main/ChangeLog.txt) (Right Click Exe → Properties → Details to see current File Version)
 ***
 >[**Windows Download** (Current Supported Version = v6.0.0.0)](https://github.com/Sigrec/Tsundoku/releases/tag/v6.0.0.0)
