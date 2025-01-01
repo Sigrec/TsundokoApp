@@ -81,6 +81,7 @@ namespace Tsundoku.Views
             return (ushort)(string.IsNullOrWhiteSpace(value) ? 0 : ushort.Parse(value));
         }
 
+        // TODO - Remove cover if series doesn't get added due to error or something
         public async void OnAddSeriesButtonClicked(object sender, RoutedEventArgs args)
         {
             AddSeriesButton.IsEnabled = false;

@@ -51,6 +51,10 @@ namespace Tsundoku.Models
             return filter switch
             {
                 "Ongoing" => TsundokuFilter.Ongoing,
+                "Finished" => TsundokuFilter.Finished,
+                "Hiatus" => TsundokuFilter.Hiatus,
+                "Cancelled" => TsundokuFilter.Cancelled,
+                "Complete" => TsundokuFilter.Complete,
                 "Incomplete" => TsundokuFilter.Incomplete,
                 "Favorites" => TsundokuFilter.Favorites,
                 "Manga" => TsundokuFilter.Manga,

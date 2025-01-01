@@ -1,10 +1,8 @@
 ﻿using Tsundoku.Models;
 using ReactiveUI.Fody.Helpers;
-using Avalonia.Media.Imaging;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using System.Collections.Specialized;
-using Tsundoku.Helpers;
 
 namespace Tsundoku.ViewModels
 {

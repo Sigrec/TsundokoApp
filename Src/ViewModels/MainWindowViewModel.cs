@@ -141,6 +141,7 @@ namespace Tsundoku.ViewModels
                     SearchIsBusy = false;
                     SearchText = string.Empty;
                 }
+                LOGGER.Info(filter);
                 switch (filter)
                 {
                     case TsundokuFilter.Ongoing:
@@ -420,6 +421,7 @@ namespace Tsundoku.ViewModels
                 MainUser.SaveUserData();
             }
 
+            // TODO - Check to see if Json is empty/formatted correct and throw error or make new one 
             JsonNode userData = JsonNode.Parse(File.ReadAllText(USER_DATA_FILEPATH));
 
             // userData["CurDataVersion"].GetValue<double>() == 0 ||
@@ -431,7 +433,7 @@ namespace Tsundoku.ViewModels
             
             MainUser = JsonSerializer.Deserialize(userData, typeof(User), User.UserJsonModel) as User;
             MainUser.SavedThemes.Add(TsundokuTheme.DEFAULT_THEME);
-            MainUser.SavedThemes = new ObservableCollection<TsundokuTheme>(MainUser.SavedThemes.OrderBy(theme => theme.ThemeName));
+            MainUser.SavedThemes = [.. MainUser.SavedThemes.OrderBy(theme => theme.ThemeName)];
 
             LOGGER.Info($"Loading \"{MainUser.UserName}'s\" Data");
             UserName = MainUser.UserName;

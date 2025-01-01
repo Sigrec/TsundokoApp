@@ -600,13 +600,13 @@
                                                                 Foreground="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesProgressBarColor, Converter={StaticResource ConvertColor}}"
                                                                 BorderBrush="{Binding #CollectionTheme.DataContext.CurrentTheme.SeriesProgressBarBorderColor, Converter={StaticResource ConvertColor}}"
                                                                 BorderThickness="1.5"
+                                                                Orientation="Horizontal"
                                                                 Padding="2"
                                                                 FontWeight="Bold"
                                                                 VerticalAlignment="Center"
                                                                 HorizontalAlignment="Center"
                                                                 FontSize="15"
                                                                 Minimum="0"
-                                                                CornerRadius="4"
                                                                 Maximum="{CompiledBinding MaxVolumeCount}"/>
                                                     <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Margin="10,0,0,0">
                                                         <Button Background="Transparent"

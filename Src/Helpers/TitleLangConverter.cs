@@ -9,9 +9,14 @@ namespace Tsundoku.Helpers
 
         public object? Convert(IList<object?> values, Type type, object? parameter, CultureInfo culture)
         {
-            var titles = values[0] as Dictionary<string, string>;
+            Dictionary<string, string>? titles = values[0] as Dictionary<string, string>;
+            if (titles == null)
+            {
+                return "ERROR";
+            }
+
             string lang = values[1].ToString();
-            string title = titles.ContainsKey(lang) ? titles[lang] : titles["Romaji"];
+            string title = titles.TryGetValue(lang, out string? value) ? value : titles["Romaji"];
 
             if (values.Count == 3)
             {

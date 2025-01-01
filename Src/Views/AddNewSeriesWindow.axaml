@@ -194,7 +194,6 @@
 						   FontWeight="Bold"
 						   FontSize="18"
 						   Mask="000"
-                           HorizontalContentAlignment="Center"
 						   MaxLength="3"/>
 			<TextBlock HorizontalAlignment="Left"
 					   Text="Select Book Type"
@@ -255,7 +254,6 @@
 						   FontWeight="Bold"
 						   FontSize="18"
 						   Mask="000"
-                           HorizontalContentAlignment="Center"
 						   MaxLength="3"/>
             <TextBlock Text="Rating"
                        FontWeight="Bold"

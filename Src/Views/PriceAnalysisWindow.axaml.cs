@@ -101,17 +101,17 @@ namespace Tsundoku.Views
                 LOGGER.Info($"Started Scrape For \"{TitleBox.Text}\" on {Scrape.Browser} Browser w/ Region = \"{Scrape.Region}\" & \"{(StockFilterSelector.SelectedItem as ComboBoxItem).Content} Filter\" & Websites = [{string.Join(", ", ViewModel.SelectedWebsites.Select(site => site.Content.ToString()))}] & Memberships = ({string.Join(" & ", ViewModelBase.MainUser.Memberships)})");
                 
                 await Scrape.InitializeScrapeAsync(
-                        TitleBox.Text, 
-                        MangaButton.IsChecked != null && MangaButton.IsChecked.Value ? BookType.Manga : BookType.LightNovel, 
-                        Scrape.GenerateWebsiteList(ViewModel.SelectedWebsites.Select(site => site.Content.ToString()).ToList())
-                    );
+                    TitleBox.Text, 
+                    MangaButton.IsChecked != null && MangaButton.IsChecked.Value ? BookType.Manga : BookType.LightNovel, 
+                    Scrape.GenerateWebsiteList(ViewModel.SelectedWebsites.Select(site => site.Content.ToString()).ToList())
+                );
                 StartScrapeButton.IsEnabled = ViewModel.IsAnalyzeButtonEnabled;
                 StartScrapeButton.Content = "Analyze"; 
                 LOGGER.Info($"Scrape Finished");
 
                 ViewModel.AnalyzedList.Clear();
                 ViewModel.AnalyzedList.AddRange(Scrape.GetResults());
-                AnalysisDataGrid.Columns[3].Width = DataGridLength.SizeToCells;
+                // AnalysisDataGrid.Columns[3].Width = DataGridLength.SizeToCells;
                 this.SizeToContent = SizeToContent.Height;
             }
             catch (Exception e)

@@ -131,13 +131,15 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
         decimal valueVal = Convert.ToDecimal(valueText.Trim().Replace("_", "0"));
         if (!valueText.Equals("__________________.__") && decimal.Compare(Series.Value, valueVal) != 0)
         {
-            LOGGER.Info($"Updating value for \"{Series.Titles["Romaji"]}\" from {ViewModel.CurCurrency}{Series.Value} to {ViewModel.CurCurrency}{valueVal}");
+            string logMsg = $"value for \"{Series.Titles["Romaji"]}\" from {ViewModel.CurCurrency}{Series.Value} to {ViewModel.CurCurrency}{valueVal}";
+            LOGGER.Info($"Updating {logMsg}");
 
             Series.Value = valueVal;
             ValueTextBlock.Text = $"{ViewModel.CurCurrency}{valueVal}";
             ValueMaskedTextBox.Clear();
 
             MainWindowViewModel.collectionStatsWindow.ViewModel.UpdateCollectionPrice();
+            LOGGER.Info($"Updated {logMsg}");
         }
         
         string publisherText = PublisherTextBox.Text.Trim();
@@ -150,9 +152,9 @@ public partial class EditSeriesInfoWindow : ReactiveWindow<EditSeriesInfoViewMod
             LOGGER.Info($"Updated Publisher for \"{Series.Titles["Romaji"]}\" from \"{Series.Publisher}\" to \"{publisherText}\"");
 
         }
-
+        
         HashSet<Genre> curGenres = EditSeriesInfoViewModel.GetCurrentGenresSelected();
-        if ((Series.Genres == null && curGenres.Count > 0) || !curGenres.SetEquals(Series.Genres))
+        if (curGenres.Count > 0 && (Series.Genres == null || !curGenres.SetEquals(Series.Genres)))
         {
             LOGGER.Info($"Updating Genres for \"{Series.Titles["Romaji"]}\" from [{string.Join(", ", Series.Genres)}] to [{string.Join(", ", curGenres)}]");
             if (Series.Genres != null)

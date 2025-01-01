@@ -5,65 +5,52 @@ using Avalonia.Media.Imaging;
 using MangaAndLightNovelWebScrape;
 using System.Runtime.InteropServices;
 using System.Globalization;
+using ReactiveUI.Fody.Helpers;
+using System.Text.Encodings.Web;
+using ReactiveUI;
 
 namespace Tsundoku.Models
 {
-    public partial class Series : IDisposable, IEquatable<Series?>
+    public partial class Series : ReactiveObject, IDisposable, IEquatable<Series?>
     {
         [GeneratedRegex(@" \(.*\)")] private static partial Regex StaffRegex();
         [GeneratedRegex(@" \((.*)\)")] private static partial Regex NativeStaffRegex();
         [GeneratedRegex(@"^.*(?= \(.*\))")] private static partial Regex FullStaffRegex();
-		[GeneratedRegex(@"[a-z\d]{8}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{11,}")] private static partial Regex MangaDexIDRegex();
+        [GeneratedRegex(@"[a-z\d]{8}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{4}-[a-z\d]{11,}")] private static partial Regex MangaDexIDRegex();
 
         private static SeriesModelContext SeriesJsonModel = new SeriesModelContext(new JsonSerializerOptions()
-        { 
+        {
             WriteIndented = true,
             ReadCommentHandling = JsonCommentHandling.Disallow,
             AllowTrailingCommas = true,
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         });
 
-		[JsonIgnore] private bool disposedValue;
-		[JsonIgnore] public Bitmap CoverBitMap { get; set; }
-        public string Publisher { get; set; }
-		public Dictionary<string, string> Titles { get; set; }
-        public Dictionary<string, string> Staff { get; set; }
-        public uint DuplicateIndex { get; set; }
-		public string Description { get; set; }
+        [JsonIgnore] private bool disposedValue;
 
-		/// <summary>
-		/// The format of the series (Manga, Manhwa, Manhua, Manfra, Comic, or Novel)
-		/// </summary>
-		public Format Format { get; set; }
+        // ReactiveUI.Fody.Helpers automatically makes these properties reactive
+        [JsonIgnore] [Reactive] public Bitmap CoverBitMap { get; set; }
+        [Reactive] public string Publisher { get; set; }
+        [Reactive] public Dictionary<string, string> Titles { get; set; }
+        [Reactive] public Dictionary<string, string> Staff { get; set; }
+        [Reactive] public uint DuplicateIndex { get; set; }
+        [Reactive] public string Description { get; set; }
+        [Reactive] public Format Format { get; set; }
+        [Reactive] public Status Status { get; set; }
+        [Reactive] public string Cover { get; set; }
+        [Reactive] public Uri Link { get; set; }
+        [Reactive] public HashSet<Genre> Genres { get; set; }
+        [Reactive] public string SeriesNotes { get; set; }
+        [Reactive] public ushort MaxVolumeCount { get; set; }
+        [Reactive] public ushort CurVolumeCount { get; set; }
+        [Reactive] public uint VolumesRead { get; set; }
+        [Reactive] public decimal Value { get; set; }
+        [Reactive] public decimal Rating { get; set; }
+        [Reactive] public Demographic Demographic { get; set; }
+        [Reactive] public bool IsFavorite { get; set; } = false;
+        [JsonIgnore] [Reactive] public bool IsEditPaneOpen { get; set; } = false;
 
-		/// <summary>
-		/// The serialization status of the series (Finished, Ongoing, Hiatus, Cancelled, or Error)
-		/// </summary>
-		public Status Status { get; set; }
-
-		/// <summary>
-		/// Path to the cover for a series
-		/// </summary>
-		public string Cover { get; set; }
-
-        /// <summary>
-        /// Link to the AniList or MangaDex page for this series
-        /// </summary>
-        /// <value>String</value>
-		public Uri Link { get; set; }
-        public HashSet<Genre> Genres { get; set; }
-		public string SeriesNotes { get; set; }
-		public ushort MaxVolumeCount { get; set; }
-		public ushort CurVolumeCount { get; set; }
-		public uint VolumesRead { get; set; }
-		public decimal Value { get; set; }
-		public decimal Rating { get; set; }
-		public Demographic Demographic { get; set; }
-		public bool IsFavorite { get; set; } = false;
-        [JsonIgnore] public bool IsEditPaneOpen { get; set; } = false;
-
-        [JsonConstructor]
-		public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, HashSet<Genre> Genres, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Value, Demographic Demographic, Bitmap CoverBitMap, string Publisher = "Unknown", uint DuplicateIndex = 0)
+        [JsonConstructor] public Series(Dictionary<string, string> Titles, Dictionary<string, string> Staff, string Description, Format Format, Status Status, string Cover, Uri Link, HashSet<Genre> Genres, ushort MaxVolumeCount, ushort CurVolumeCount, decimal Rating, uint VolumesRead, decimal Value, Demographic Demographic, Bitmap CoverBitMap, string Publisher = "Unknown", uint DuplicateIndex = 0)
         {
             this.Publisher = Publisher;
             this.Titles = Titles;
